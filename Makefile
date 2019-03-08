@@ -18,7 +18,8 @@ CFLAGS = -g -Wall -Wextra -Werror
 NAME = 42sh
 
 DIR_LIB = ./Libft/
-DIR_INC = ./Include/
+DIR_INC = ./include/
+DIR_INC2 = -I ./include/ -I ./libft/Includes/
 DIR_SRC = ./Sources/
 DIR_OBJ = ./Objects/
 
@@ -114,7 +115,7 @@ $(NAME): $(OBJS)
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)
-	@gcc -o $@ -c $< -I $(DIR_INC) $(CFLAGS)
+	@gcc -o $@ -c $< $(DIR_INC2) $(CFLAGS)
 
 clean:
 	@rm -rf $(DIR_OBJ)

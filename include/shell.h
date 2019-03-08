@@ -24,7 +24,7 @@
 # include <signal.h>
 # include <pwd.h>
 # include "editor.h"
-# include "../libft/Includes/libft.h"
+# include "libft.h"
 
 typedef struct		s_process
 {
