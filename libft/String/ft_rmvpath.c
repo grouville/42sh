@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** ft_rmvpath : le while prend un compte le dernier '/' en fin de path

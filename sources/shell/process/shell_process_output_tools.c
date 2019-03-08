@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 void	shell_set_fd_null(t_output *output, t_cmd *elem)
 {

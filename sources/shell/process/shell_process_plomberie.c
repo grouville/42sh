@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** On envoi send_stdin dans le tuyau temporaire tmp_fd.

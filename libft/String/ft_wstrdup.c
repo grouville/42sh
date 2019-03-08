@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Dupplique {s1} dans une nouvelle chaine de char "fraiche"

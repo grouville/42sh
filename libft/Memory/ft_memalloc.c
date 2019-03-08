@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 /*
 ** Alloue (avec malloc(3)) et retourne une zone de mémoire

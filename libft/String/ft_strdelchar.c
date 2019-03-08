@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Delete le premier {c} dans {str} si trouvé

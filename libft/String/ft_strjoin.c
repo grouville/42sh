@@ -25,7 +25,7 @@
 ** ft_strnew se prend in +1 pour le '\0' en fin de chaine
 */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

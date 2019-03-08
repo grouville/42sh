@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/list.h"
+#include "list.h"
 
 /*
 ** Prend en paramètre l’adresse d’un pointeur sur un maillon et

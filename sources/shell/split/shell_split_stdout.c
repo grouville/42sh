@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** redi_from peut être un fd sur plusieurs chiffre, on rev pour le atoi

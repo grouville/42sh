@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 t_pf_prints	*ft_flags_c(t_pf_prints *print, t_pf_fields *fields)
 {

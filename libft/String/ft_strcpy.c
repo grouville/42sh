@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Copie {src} dans {dst} (including the terminating `\0' character)

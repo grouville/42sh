@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 char			*cut_pwd_dir(char *pwd)
 {

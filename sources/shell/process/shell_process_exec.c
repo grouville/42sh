@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 void	shell_child(t_cmd *elem, t_shell *shell)
 {

@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Compare lexicographiquement s1 et s2. Si les deux chaines

@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** se poisitonne au dernier '/' et remet a '\0' jusqu'a la fin

@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/maths.h"
+#include "maths.h"
 
 int		ft_digitlen(intmax_t n)
 {

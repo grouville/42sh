@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Ajoute {size} char de {src} dans {dst} et renvoi la taille de {dst} + {src}

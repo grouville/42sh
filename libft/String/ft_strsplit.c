@@ -18,7 +18,7 @@
 ** --> ["salut", "les", "etudiants"]
 */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 char			**ft_strsplit(char const *s, char c)
 {

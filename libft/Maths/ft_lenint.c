@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/maths.h"
+#include "maths.h"
 
 /*
 ** Retoune la longeur d'un int. Le signe - est compté comme un chiffre.

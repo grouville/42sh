@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** hrdc = NULL lors du premier heredoc

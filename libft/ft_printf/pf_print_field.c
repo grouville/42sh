@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 int		ft_print_flags_bfr(t_pf_prints *print)
 {

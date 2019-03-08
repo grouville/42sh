@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 int		is_only_digit(char *arg)
 {

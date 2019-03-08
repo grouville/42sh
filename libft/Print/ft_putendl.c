@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/libft.h"
+#include "libft.h"
 
 void	ft_putendl(const char *s)
 {

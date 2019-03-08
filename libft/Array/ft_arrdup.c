@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/array.h"
+#include "array.h"
 
 char	**ft_arrdup(char **arr)
 {

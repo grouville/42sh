@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 int		builtin_echo(char **cmd)
 {

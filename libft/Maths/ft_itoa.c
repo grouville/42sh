@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/maths.h"
+#include "maths.h"
 
 /*
 ** Alloue (avec malloc(3)) et retourne une chaine de caractères

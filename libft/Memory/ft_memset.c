@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 /*
 ** Copie len octet(s) de l'int c dans *b

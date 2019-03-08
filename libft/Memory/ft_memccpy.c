@@ -16,7 +16,7 @@
 ** on retourne {*dst}
 */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
 {

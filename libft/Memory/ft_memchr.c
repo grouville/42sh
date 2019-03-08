@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 /*
 ** Recherche le premiere occurence de c dans s dans la limite de n octet

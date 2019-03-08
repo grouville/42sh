@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/list.h"
+#include "list.h"
 
 /*
 ** Parcourt la liste lst en appliquant à chaque maillon la fonction f.

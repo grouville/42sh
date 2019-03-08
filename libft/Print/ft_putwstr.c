@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/print.h"
+#include "print.h"
 
 /*
 ** La valeur retournée correspond au nombre d'octet print (≠ nbr caractere)

@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/list.h"
+#include "list.h"
 
 /*
 ** Ajoute l’élément new en tête de la liste.

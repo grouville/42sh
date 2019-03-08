@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 void	shell_prepare_alias(t_cmd *elem, char *alias_var)
 {

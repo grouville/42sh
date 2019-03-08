@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 /*
 ** Prend en paramètre l’adresse d’un pointeur dont la zone pointée

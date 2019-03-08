@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/maths.h"
+#include "maths.h"
 
 /*
 ** Compte la longeur d'un int selon une base.

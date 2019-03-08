@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/string.h"
+#include "string.h"
 
 /*
 ** Ajoute {n} char de {s2} a la fin de {s1} puis ajoute '\0'.

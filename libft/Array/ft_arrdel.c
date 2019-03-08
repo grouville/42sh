@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/array.h"
+#include "array.h"
 
 void	ft_arrdel(char ***arr)
 {

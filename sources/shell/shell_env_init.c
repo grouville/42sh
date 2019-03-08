@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** Lorsqu'on lance shell, OLDPWD ne doit pas exister, on le del de dup_envp

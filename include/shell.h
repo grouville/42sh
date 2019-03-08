@@ -22,8 +22,9 @@
 # include <sys/wait.h>
 # include <stdbool.h>
 # include <signal.h>
+# include <pwd.h>
 # include "editor.h"
-# include "../Libft/Includes/libft.h"
+# include "../libft/Includes/libft.h"
 
 typedef struct		s_process
 {

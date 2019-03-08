@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** hrdc[i] prend la valeur de -3 pour indiqué d'être rempli

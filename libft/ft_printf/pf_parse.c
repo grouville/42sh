@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 void		pf_parse_flags(t_pf_fields *fields, const char **format)
 {

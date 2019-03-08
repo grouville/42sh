@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/print.h"
+#include "print.h"
 
 int		ft_putstr(char const *s)
 {

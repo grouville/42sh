@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 intmax_t	ft_type_str(va_list ap, char type)
 {

@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 /*
 ** pf_parse_correct, ft_undef_char, ft_undef_beha sont des fonctions

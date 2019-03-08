@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/char.h"
+#include "char.h"
 
 /*
 ** dupplique dans une chaine  de caractere fraiche le caracte {c} {dup} fois

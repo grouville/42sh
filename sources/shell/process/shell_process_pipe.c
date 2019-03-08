@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 /*
 ** shell exec peut retourner 0=RAS ou -1=quite mais pas dans un pipe

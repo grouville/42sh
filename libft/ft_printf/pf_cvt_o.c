@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/ft_printf.h"
+#include "ft_printf.h"
 
 void		ft_cast_o(t_pf_prints *print, t_pf_fields *fields)
 {

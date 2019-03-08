@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/print.h"
+#include "print.h"
 
 int		ft_putchar_fd(char c, int fd)
 {

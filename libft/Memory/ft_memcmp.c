@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/memory.h"
+#include "memory.h"
 
 /*
 ** compare chaque octet de s1 avec s2 qui ont respectivenent un

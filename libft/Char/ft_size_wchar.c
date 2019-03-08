@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/char.h"
+#include "char.h"
 
 int		ft_size_wchar(wchar_t w)
 {

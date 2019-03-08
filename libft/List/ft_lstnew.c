@@ -11,7 +11,7 @@
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "../Includes/list.h"
+#include "list.h"
 
 /*
 ** Alloue (avec malloc(3)) et retourne un maillon “frais”. Les

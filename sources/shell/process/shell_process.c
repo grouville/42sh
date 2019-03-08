@@ -15,7 +15,7 @@
 ** ATTENTION shell->str peut etre vide apres un heredoc
 */
 
-#include "../../../Include/shell.h"
+#include "shell.h"
 
 int		shell_exec_error(int is_builtin, t_cmd *elem)
 {
