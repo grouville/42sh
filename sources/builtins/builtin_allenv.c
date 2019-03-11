@@ -40,27 +40,6 @@ char	**rmv_key_env(char **envp, char *key)
 	return (ret);
 }
 
-void	builtin_unsetenv(char ***envp, char *key)
-{
-	int		i;
-	char	*env_key;
-
-	i = 0;
-	while (*envp && (*envp)[i] != NULL)
-	{
-		env_key = get_var((*envp)[i]);
-		if (ft_strcmp(key, env_key) == 0)
-		{
-			free((*envp)[i]);
-			free(env_key);
-			(*envp)[i] = ft_strjoin(key, "=");
-			break ;
-		}
-		free(env_key);
-		i++;
-	}
-}
-
 char	**append_key_env(char **envp, char *key, char *value)
 {
 	int		i;
@@ -106,7 +85,7 @@ void	builtin_setenv(char ***envp, char *key, char *value)
 		*envp = append_key_env(*envp, key, value);
 }
 
-void	builtin_env(char **envp, char *key)
+void	builtin_export_print(char **envp, char *key)
 {
 	int		i;
 	BOOL	found;
@@ -118,7 +97,7 @@ void	builtin_env(char **envp, char *key)
 	{
 		env_key = get_var(envp[i]);
 		if (key == NULL)
-			ft_dprintf(1, "%s\n", envp[i]);
+			ft_dprintf(1, "declare -x %s\n", envp[i]);
 		else if (ft_strcmp(key, env_key) == 0)
 		{
 			ft_dprintf(1, "%s\n", ft_strchr(envp[i], '=') + 1);

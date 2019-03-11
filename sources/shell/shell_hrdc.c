@@ -47,6 +47,11 @@ void	hrdc_match(t_prompt *prompt, t_cmd **cmd, t_shell *shell)
 			last++;
 		(*cmd)->input[last] = (char *)-3;
 	}
+	else
+	{
+		ft_strdel(&shell->hrdc_tmp);
+		ft_strdel(&(*cmd)->process.stdin_send);
+	}
 }
 
 void	hrdc_fill_stdin(t_prompt *prompt, t_cmd **cmd, t_shell *shell)

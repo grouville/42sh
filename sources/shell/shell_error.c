@@ -25,7 +25,7 @@ int		shell_error_prepare(char *msg, char *elem)
 		ft_dprintf(2, "42sh: %s: Bad file descriptor\n", elem + 1);
 	else if (ft_strcmp(msg, "ambiguous") == 0)
 		ft_dprintf(2, "42sh: %s: ambiguous redirect\n", elem + 1);
-	return (0);
+	return (EXIT_FAILURE);
 }
 
 int		shell_error_env(char *msg)
@@ -42,7 +42,7 @@ int		shell_error_env(char *msg)
 		ft_dprintf(2, "42sh: $HOME env not set\n");
 	else
 		ft_dprintf(2, "Error ENV : unknown msg type <%s>\n", msg);
-	return (0);
+	return (EXIT_FAILURE);
 }
 
 /*

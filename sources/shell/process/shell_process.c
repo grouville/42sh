@@ -75,6 +75,10 @@ void	shell_ret(t_cmd *elem, t_shell *shell)
 	ft_strdel(&tmp);
 }
 
+/*
+** exec se prend -1 dans le cas d'un exit confirmé
+*/
+
 int		shell_process(t_cmd **cmd, t_shell *shell)
 {
 	t_cmd	*elem;

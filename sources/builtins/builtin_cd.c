@@ -42,28 +42,7 @@ void	cd_clean_path(char *pwd)
 	while (pwd && ft_strchr("./ ", pwd[i]) && i > 0)
 		pwd[i--] = '\0';
 }
-/*
-char	*cd_cur_dir(char **cmd, char ***envp, int *i)
-{
-	char	*cur_dir;
 
-	*i = 1;
-	while (cmd[*i] != NULL && cmd[*i][0] == '-' && cmd[*i][1] != '\0')
-		(*i)++;
-	printf("-<|%s| avec -1|%s|>\n", cmd[*i], cmd[*i -1]);
-	if ((cmd[(*i) - 1][0] == '-' &&
-		cmd[(*i) - 1][ft_strlen(cmd[(*i) - 1]) - 1] == 'P') ||
-		get_envp(*envp, "PWD") == NULL)
-	{
-		printf("-<|get vur dir long|path=%s|>\n", cmd[*i]);
-		//chdir(cmd[*i]);
-		cur_dir = get_cur_dir();
-	}
-	else
-		cur_dir = ft_strdup(get_envp(*envp, "PWD"));
-	return (cur_dir);
-}
-*/
 BOOL	cd_is_recheable(char **envp, char *path, char *dir)
 {
 	if (!path || access(path, X_OK) == -1)
@@ -105,70 +84,46 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	builtin_setenv(envp, "OLDPWD", ft_strdup(get_envp(*envp, "HOME")));
 	cd_clean_path(cur_dir);
 	builtin_setenv(envp, "PWD", cur_dir);
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
-
-int 	builtin_cd(char **cmd, char ***envp)
+BOOL	buildin_cd_opt(char **cmd, int *i)
 {
-	BOOL abs_path;
-	char *path_dest;
-	int i;
-	char *tmp;
+	*i = 1;
+	while (cmd[*i] != NULL && cmd[*i][0] == '-' && cmd[*i][1] != '\0')
+		(*i)++;
+	if (cmd[*i - 1][0] == '-' && cmd[*i - 1][ft_strlen(cmd[*i - 1]) - 1] ==
+																		'P')
+		return (1);
+	else
+		return (0);
+}
+
+int		builtin_cd(char **cmd, char ***envp)
+{
+	BOOL	abs_path;
+	char	*path_dest;
+	int		i;
+	char	*tmp;
+	int 	ret;
 
 	tmp = NULL;
-	i = 1;
-	while (cmd[i] != NULL && cmd[i][0] == '-' && cmd[i][1] != '\0')
-		i++;
-	abs_path = (cmd[i - 1][0] == '-' &&
-				cmd[i - 1][ft_strlen(cmd[i - 1]) - 1] == 'P') ? (char) 1
-															  : (char) 0;
+	abs_path = buildin_cd_opt(cmd, &i);
 	path_dest = NULL;
-	if (ft_strcmp(cmd[i], "-") == 0 && get_envp(*envp, "OLDPWD") == NULL)
-	{
+	if (!cmd[i] && get_envp(*envp, "HOME") == NULL)
+		write(2, "42sh: cd: HOME not set\n", 23);
+	else if (!cmd[i])
+		path_dest = ft_strdup(get_envp(*envp, "HOME"));
+	else if (ft_strcmp(cmd[i], "-") == 0 && get_envp(*envp, "OLDPWD") == NULL)
 		write(2, "42sh: cd: OLDPWD not set\n", 25);
-		return (0);
-	}
 	else if (ft_strcmp(cmd[i], "-") == 0)
 		path_dest = ft_strdup(get_envp(*envp, "OLDPWD"));
 	else if (ft_strcmp(cmd[i], "..") == 0 &&
-			 ft_strcmp(tmp = get_cur_dir(), "/") != 0)
+						ft_strcmp(tmp = get_cur_dir(), "/") != 0)
 		path_dest = cd_rmv_last_path(tmp);
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
-	return (cd_move(path_dest, cmd[i], envp, abs_path));
-}
-
-
-/*
-** Par default cd suit les liens (option -L)
-*/
-/*
-int		builtin_cd(char **cmd, char ***envp)
-{
-	int		i;
-	char	*cur_dir;
-	int		ret;
-
-	ret = 0;
-	cur_dir = cd_cur_dir(cmd, envp, &i);
-	printf("-<|%s|>\n", cur_dir);
-	if (cmd[i] == NULL || ft_strlen(cmd[i]) == 0)
-		cd_change_env(envp, get_envp(*envp, "HOME"), cur_dir, "HOME");
-	else if (ft_strcmp(cmd[i], "-") == 0 && get_envp(*envp, "OLDPWD") == NULL)
-	{
-		write(2, "42sh: cd: OLDPWD not set\n", 25);
-		ret = 0;
-	}
-	else if (ft_strcmp(cmd[i], "-") == 0)
-		cd_change_env(envp, get_envp(*envp, "OLDPWD"), cur_dir, "OLDPWD");
-	else if (ft_strcmp(cmd[i], "..") == 0 && ft_strcmp(cur_dir, "/") != 0)
-		cd_change_env(envp, cd_rmv_last_path(cur_dir), cur_dir, "RMV_LAST");
-	else
-		ret = cd_move(envp, cur_dir, cmd[i]);
-	cd_clean_path(get_envp(*envp, "PWD"));
-	ft_strdel(&cur_dir);
+	ret = !path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path);
 	return (ret);
 }
-*/

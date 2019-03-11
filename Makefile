@@ -60,6 +60,7 @@ SRCS =  shell/main.c \
 		builtins/builtin_alias_tools.c \
         builtins/builtin_unalias.c \
         builtins/builtin_exit.c \
+        builtins/builtin_export.c \
         builtins/builtin.c \
         editor/get_stdin.c \
 		editor/prompt.c \

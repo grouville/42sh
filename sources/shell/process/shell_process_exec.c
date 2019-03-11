@@ -26,7 +26,7 @@ int		shell_father(int pid_child)
 }
 
 /*
-** On retourne 0 si RAS ou 1 si execve fail
+** On retourne 0 si EXIT_SUCCESS ou 1 si EXIT_FAILED
 */
 
 void	shell_execve(t_cmd *elem, t_shell *shell)

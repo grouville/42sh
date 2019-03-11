@@ -115,14 +115,12 @@ typedef enum		e_error
 int					builtin_cd(char **cmd, char ***envp);
 char				*cd_rmv_last_path(char *cur_dir);
 void				builtin_setenv(char ***envp, char *key, char *value);
-void				builtin_unsetenv(char ***envp, char *key);
-void				builtin_delenv(char ***envp, char *key);
-int					builtin_eewefnv(char ***envp, char ***envl, char **args);
 char				**rmv_key_env(char **envp, char *key);
-void				builtin_env(char **envp, char *key);
+void				builtin_export_print(char **envp, char *key);
 int					builtin_echo(char **cmd);
 int					builtin_env_all(char ***envp, char ***envl, char **args);
 int					builtin_exit(char **cmd);
+char				*get_value(char *arg);
 
 int					builtin_type(char **args, char **envp);
 int					builtin_get_options(char **options, char **args,
@@ -141,6 +139,7 @@ char				*get_var(char *var_key);
 char				**append_key_env(char **envp, char *key, char *value);
 int					check_replace_env_variable(char ***env, char *var,
 													char *value);
+int					check_builtin_export(t_shell *shell, char **cmd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -292,7 +291,7 @@ char				*get_next_hrdc(char **hrdc);
 ** >oui<<EOF
 ** <<EOF<file_stdin
 ** <<EOF>file_stdout
-** {test && w} et {test || w}
+** {test && w} et {test || w} --> test renvoi FAIL
 ** env -i env
 ** exit | ls --> ne doit pas exit
 ** setenv VAR file && echo no_var>'$VAR' && echo var>$VAR
@@ -312,6 +311,8 @@ char				*get_next_hrdc(char **hrdc);
 ** exit t --> exit mais pas msg "numeric arg required"
 ** / et /tmp --> "Is directory"
 ** auteur
+** ls doesnotexist . >/dev/null 2>&1 (rien) et ls doesnotexist . 2>&1 >/dev/null (no such file or..)
+** /Users/ythollet/42h/42sh -->exec et ~/42/42sh -->exec et 42sh -->pas exec
 **
 */
 
@@ -326,3 +327,4 @@ char				*get_next_hrdc(char **hrdc);
 //lors d'un output vers un tty quelle test faire pour check si tty ouvert
 //Quelle logique dans "echo test 0>fichier" ?
 //PATH=~/21sh --> foncitonnalité de TAB
+//comment faire pour que Clion rajoute les nouveaux .c dans le Makefile

@@ -13,42 +13,42 @@
 
 #include "shell.h"
 
-int		check_builtin_setenv(char ***envp, char **cmd)
+int		check_builtin_unset(t_shell *shell, char **args)
 {
-	if (cmd[1] != NULL && cmd[2] != NULL && cmd[3] == NULL)
-		builtin_setenv(envp, cmd[1], cmd[2]);
-	else
-		return (shell_error_env("env set usage"));
-	return (1);
+	int i;
+
+	i = 1;
+	while (args[i])
+	{
+		shell_envpsub(&args[i], shell->envp, shell->envl);
+		shl_quotesub(args[i]);
+		if (get_envp(shell->envp, args[i]))
+			shell->envp = rmv_key_env(shell->envp, args[i]);
+		if (get_envp(shell->envl, args[i]))
+			shell->envl = rmv_key_env(shell->envl, args[i]);
+		i++;
+	}
+	return (0);
 }
 
-int		check_builtin_unsetenv(char ***envp, char **cmd)
+int		check_builtin_set(t_shell *shell, char **args)
 {
-	if (cmd[1] != NULL && cmd[2] == NULL && get_envp(*envp, cmd[1]))
-		*envp = rmv_key_env(*envp, cmd[1]);
-	else
-		return (shell_error_env("env unset usage"));
-	return (1);
-}
+	int i;
 
-int		check_builtin_env(char ***envp, char **cmd)
-{
-	if (cmd[1] == NULL)
-		builtin_env(*envp, NULL);
-	else if (cmd[1] != NULL && cmd[2] == NULL)
-		builtin_env(*envp, cmd[1]);
-	else
-		return (shell_error_env("env usage"));
-	return (1);
+	i = 0;
+	if (args[1] == NULL)
+		while (shell->envl[i])
+			ft_dprintf(1, "%s\n", shell->envl[i++]);
+	return (EXIT_SUCCESS);
 }
 
 int		check_shell_variable(char *arg)
 {
 	int i;
 
-	i = -1;
-	while (arg[++i])
-		if (arg[i] == '=')
+	i = 0;
+	while (arg[i])
+		if (arg[i++] == '=')
 			return (1);
 	return (0);
 }
@@ -67,12 +67,12 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 		elem->ret = builtin_echo(elem->args);
 	else if (elem->args[0] && ft_strcmp("cd", elem->args[0]) == 0)
 		elem->ret = builtin_cd(elem->args, &shell->envp);
-	else if (elem->args[0] && ft_strcmp("setenv", elem->args[0]) == 0)
-		elem->ret = check_builtin_setenv(&shell->envp, elem->args);
-	else if (elem->args[0] && ft_strcmp("unsetenv", elem->args[0]) == 0)
-		elem->ret = check_builtin_unsetenv(&shell->envp, elem->args);
-	else if (elem->args[0] && ft_strcmp("env", elem->args[0]) == 0)
-		elem->ret = check_builtin_env(&shell->envp, elem->args);
+	else if (elem->args[0] && ft_strcmp("set", elem->args[0]) == 0)
+		elem->ret = check_builtin_set(shell, elem->args);
+	else if (elem->args[0] && ft_strcmp("unset", elem->args[0]) == 0)
+		elem->ret = check_builtin_unset(shell, elem->args);
+	else if (elem->args[0] && ft_strcmp("export", elem->args[0]) == 0)
+		elem->ret = check_builtin_export(shell, elem->args);
 	else if (elem->args[0] && check_shell_variable(elem->args[0]))
 		elem->ret = builtin_env_all(&shell->envp, &shell->envl, elem->args);
 	else if (elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
