@@ -44,7 +44,13 @@ int		check_builtin_export(t_shell *shell, char **cmd)
 	if (cmd[1] == NULL)
 		while (shell->envp[i] != NULL)
 			ft_dprintf(1, "declare -x %s\n", shell->envp[i++]);
-	else if (cmd[1] != NULL && cmd[2] == NULL)
+	else if (cmd[1] != NULL)
+	{
+		i = 1;
+		while (cmd[i])
+			if (!ft_strchr(cmd[i++], '='))
+				return (shell_error_env("export usage"));
 		builtin_export_add_var(shell, cmd);
+	}
 	return (EXIT_SUCCESS);
 }

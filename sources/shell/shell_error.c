@@ -30,9 +30,9 @@ int		shell_error_prepare(char *msg, char *elem)
 
 int		shell_error_env(char *msg)
 {
-	if (ft_strcmp(msg, "env set usage") == 0)
-		ft_dprintf(2, "42sh: setenv: invalid argument\n"
-						"usage: setenv VAR VALUE\n");
+	if (ft_strcmp(msg, "export usage") == 0)
+		ft_dprintf(2, "42sh: export: invalid argument\n"
+						"usage: export VAR=VALUE\n");
 	else if (ft_strcmp(msg, "env unset usage") == 0)
 		ft_dprintf(2, "42sh: unsetenv: invalid argument\n"
 						"usage: unsetenv VAR\n");

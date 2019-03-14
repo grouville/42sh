@@ -62,6 +62,21 @@ BOOL	shell_hrdc_quotesub(t_cmd *cmd, t_shell *shell, t_prompt *prompt)
 ** On del shell->str car déjà exploité dans cmd->split
 */
 
+BOOL	cmd_check_error(t_cmd *next, t_shell *shell)
+{
+	if ((next->hrdc && (int)next->hrdc[0] == -1) ||
+		(((next->input && (int)next->input[0] == -2) ||
+		  (next->hrdc && (int)next->hrdc[0] == -2)) &&
+		 next->next_cmd == NULL))
+	{
+		write(2, "42sh: syntax error near unexpected token `newline'\n",
+			  51);
+		ft_strdel(&shell->str);
+		return (1);
+	}
+	return (0);
+}
+
 BOOL	cmd_check(t_cmd **cmd, t_shell *shell, t_prompt *prompt)
 {
 	t_cmd	*next;
@@ -73,16 +88,12 @@ BOOL	cmd_check(t_cmd **cmd, t_shell *shell, t_prompt *prompt)
 		if (get_envp(shell->alias, next->args[0]))
 			shell_prepare_alias(next,
 							ft_strdup(get_envp(shell->alias, next->args[0])));
+		//if (!check_expansions(next, shell))
+		//	return (1);
 		if (next->hrdc && ((int)next->hrdc[0] < -3 || (int)next->hrdc[0] > -1))
 			return (shell_hrdc_quotesub((*cmd = next), shell, prompt));
-		if ((next->hrdc && (int)next->hrdc[0] == -1) ||
-			(((next->input && (int)next->input[0] == -2) ||
-			(next->hrdc && (int)next->hrdc[0] == -2)) &&
-			next->next_cmd == NULL))
+		if (cmd_check_error(next, shell))
 		{
-			write(2, "42sh: syntax error near unexpected token `newline'\n",
-					51);
-			ft_strdel(&shell->str);
 			clean_cmd(cmd);
 			return (1);
 		}

@@ -90,7 +90,7 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 	elem = *cmd;
 	while (elem && (elem = elem->next_cmd))
 	{
-		read_lexing(elem);
+		//read_lexing(elem);
 		shell_save_fd(fd);
 		if (elem->sep == SPL_PIPE)
 			exec = shell_exec_pipes(&elem, shell);

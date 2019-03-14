@@ -47,6 +47,7 @@ BOOL	cd_is_recheable(char **envp, char *path, char *dir)
 {
 	if (!path || access(path, X_OK) == -1)
 	{
+		printf("-<|path=|%s| not recheable|>\n", path);
 		write(2, "42sh: cd: ", 10);
 		if (path && path[0] == '\0' && !get_envp(envp, "HOME"))
 			write(2, "$HOME env not set\n", 18);
@@ -81,7 +82,7 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	else
 		cur_dir = ft_strdup(path_dest);
 	ft_strdel(&path_dest);
-	builtin_setenv(envp, "OLDPWD", ft_strdup(get_envp(*envp, "HOME")));
+	builtin_setenv(envp, "OLDPWD", ft_strdup(get_envp(*envp, "PWD")));
 	cd_clean_path(cur_dir);
 	builtin_setenv(envp, "PWD", cur_dir);
 	return (EXIT_SUCCESS);
@@ -120,7 +121,7 @@ int		builtin_cd(char **cmd, char ***envp)
 		path_dest = ft_strdup(get_envp(*envp, "OLDPWD"));
 	else if (ft_strcmp(cmd[i], "..") == 0 &&
 						ft_strcmp(tmp = get_cur_dir(), "/") != 0)
-		path_dest = cd_rmv_last_path(tmp);
+		path_dest = ft_strdup(cd_rmv_last_path(tmp));
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
