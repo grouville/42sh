@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/07 16:25:14 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/01 20:54:15 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/14 05:30:43 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -50,7 +50,8 @@ int		tabulator_read(t_tab *tabu, t_editor *ed, int mode)
 	{
 		if (!mode && ret == 1 && ed->key[0] == 'y' && write(1, "\n", 1))
 			return (1);
-		else if (!mode && ret == 1 && ed->key[0] == 'n' && write(1, "\n", 1))
+		else if ((!mode && ret == 1 && (ed->key[0] == 'n' || ed->key[0] == 127)
+		&& write(1, "\n", 1)) || (mode && ret == 1 && ed->key[0] == 127))
 			return (0);
 		else if (mode && ret == 1 && ed->key[0] == '\n')
 			break ;
@@ -78,6 +79,8 @@ int		tabulator_put_row(t_editor *ed, t_tab *tabu, t_prompt *prompt)
 	else if (((ret = tabulator_multi_row(tabu, ed)) == -1 || ret == -3))
 		return (ret);
 	tputs(tgetstr("vi", NULL), 1, ft_putchar);
+	tputs(tgoto(tgetstr("ch", NULL), 0, 0), 1, ft_putchar);
+	ft_putstr("\E[J");
 	ed->prompt_size = display_prompt(*prompt);
 	ed->first_char = get_cursor_position(0);
 	ed->first_row = get_cursor_position(1);

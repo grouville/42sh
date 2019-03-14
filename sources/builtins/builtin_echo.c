@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/07 19:56:27 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/10/24 22:13:49 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/14 11:00:07 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -35,5 +35,5 @@ int		builtin_echo(char **cmd)
 	}
 	if (newl)
 		write(1, "\n", 1);
-	return (1);
+	return (0);
 }

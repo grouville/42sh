@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/12 00:01:33 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/07 18:08:10 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/14 06:24:04 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -51,7 +51,7 @@ static void		get_keyboard_key_ctrl(t_editor *ed, t_prompt *p)
 static int		get_keyboard_key(t_editor *ed, t_prompt *prompt,
 				char **envp, char **envl)
 {
-	if (CTRL_D || CTRL_C || CTRL_L || CTRL_K || CTRL_P)
+	if ((CTRL_D && !ed->hist->cmd) || CTRL_C || CTRL_L || CTRL_K || CTRL_P)
 		get_keyboard_key_ctrl(ed, prompt);
 	else if (ed->first_row < 1)
 		return (0);
@@ -63,17 +63,18 @@ static int		get_keyboard_key(t_editor *ed, t_prompt *prompt,
 		SHIFT_UP ? move_cursor_up(ed) : move_cursor_down(ed);
 	else if (HOME_KEY || CTRL_A || END_KEY || CTRL_E)
 		HOME_KEY || CTRL_A ? go_to_begin_of_line(ed) : go_to_end_of_line(ed);
-	else if (ft_isprint(ed->key[0]) && enough_space_on_screen(ed))
-		return (print_key(ed));
-	else if (BACKSPACE && ed->hist->cmd && ed->cursor_str_pos)
+	else if (ed->hist->cmd && ((BACKSPACE && ed->cursor_str_pos) ||
+	(CTRL_D && ed->hist->cmd[ed->cursor_str_pos])))
 		backspace(ed);
 	else if (TAB_KEY)
 		ed->ret = term_tabulator(ed, prompt, envp, envl);
 	else if ((UP_KEY || DOWN_KEY))
 		term_history(ed);
-	else if (CTRL_R)
-		if ((ed->ret = term_history_incremental_search(ed, *prompt)))
+	else if (CTRL_R &&
+	((ed->ret = term_history_incremental_search(ed, *prompt))))
 			get_keyboard_key(ed, prompt, envp, envl);
+	else if (ft_isprint(ed->key[0]) && enough_space_on_screen(ed))
+		return (print_key(ed));
 	return (EXIT_SUCCESS);
 }
 
@@ -90,12 +91,12 @@ int				get_stdin(t_shell *shell, t_prompt *prompt)
 	{
 		tputs(tgetstr("vi", NULL), 1, ft_putchar);
 		if (term_size(ed) == EXIT_SUCCESS)
-			window_resize(ed, prompt);
+			window_resize(ed, *prompt, NULL);
 		if (ed->ret && ed->key)
 			get_keyboard_key(ed, prompt, shell->envp, shell->envl);
 		tputs(tgetstr("ve", NULL), 1, ft_putchar);
 		if (ed->key && (ENTER_KEY ||
-		(CTRL_D && !ed->hist->cmd) || CTRL_C))
+		(ed->ret == -2) || CTRL_C))
 			break ;
 		ft_strdel(&ed->key);
 	}

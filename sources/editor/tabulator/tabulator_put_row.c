@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/11/28 11:32:28 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/18 15:50:09 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/14 05:30:45 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -104,7 +104,7 @@ int		tabulator_multi_row(t_tab *tabu, t_editor *ed)
 	while (++n < tabu->nb_row && !(i = 0))
 	{
 		if (n + 1 >= ed->ws_row &&
-		(((ret = tabulator_read(tabu, ed, 1)) == -1 || ret == -3)))
+		((!(ret = tabulator_read(tabu, ed, 1)) || ret == -1 || ret == -3)))
 			return (ret);
 		while (tabu->nb_row && i < tabu->nb_col
 		&& (n + (i * tabu->nb_row)) <= tabu->nb_node)

@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/10/15 20:32:37 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/02 17:59:54 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/12 05:37:39 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,13 +28,9 @@ void	go_to_end_of_line(t_editor *ed)
 
 void	go_to_begin_of_line(t_editor *ed)
 {
-	if (ed->cursor_str_pos)
-	{
-		tputs(tgoto(tgetstr("cv", NULL), 0, ed->first_row - 1), 1, ft_putchar);
-		tputs(tgoto(tgetstr("ch", NULL), 0,
-		ed->first_char - 1), 1, ft_putchar);
-		ed->cursor_str_pos = 0;
-		ed->cur_col = ed->first_char;
-		ed->cur_row = ed->first_row;
-	}
+	tputs(tgoto(tgetstr("cv", NULL), 0, ed->first_row - 1), 1, ft_putchar);
+	tputs(tgoto(tgetstr("ch", NULL), 0, ed->first_char - 1), 1, ft_putchar);
+	ed->cursor_str_pos = !ed->rev_hist ? 0 : ed->cursor_str_pos;
+	ed->cur_col = ed->first_char;
+	ed->cur_row = ed->first_row;
 }

@@ -6,7 +6,7 @@
 /*   By: dzonda <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/09/10 00:46:23 by dzonda       #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/07 17:52:38 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/14 06:06:36 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,29 +28,31 @@
 # define END "\033[0m"
 # define LGRAY "\033[47m"
 # define GREEN "\033[0;49;92m"
-# define LEFT_KEY (!ft_strcmp("\E[D", ed->key))
-# define RIGHT_KEY (!ft_strcmp("\E[C", ed->key))
-# define UP_KEY (!ft_strcmp("\E[A", ed->key))
-# define DOWN_KEY (!ft_strcmp("\E[B", ed->key))
-# define TAB_KEY (!ft_strcmp("\t", ed->key))
-# define ENTER_KEY (!ft_strcmp("\n", ed->key))
-# define HOME_KEY (!ft_strcmp("\E[H", ed->key))
-# define END_KEY (!ft_strcmp("\E[F", ed->key))
-# define SHIFT_UP (!ft_strcmp("\E[1;2A", ed->key))
-# define SHIFT_DOWN (!ft_strcmp("\E[1;2B", ed->key))
-# define SHIFT_RIGHT (!ft_strcmp("\E[1;2C", ed->key))
-# define SHIFT_LEFT (!ft_strcmp("\E[1;2D", ed->key))
-# define CTRL_A (ed->key[0] == 1 && ed->key[1] == 0)
-# define CTRL_E (ed->key[0] == 5 && ed->key[1] == 0)
-# define CTRL_C (ed->key[0]== 3 && ed->key[1] == 0)
-# define CTRL_D (ed->key[0] == 4 && ed->key[1] == 0)
-# define CTRL_L (ed->key[0] == 12 && ed->key[1] == 0)
-# define CTRL_K (ed->key[0] == 11 && ed->key[1] == 0)
-# define CTRL_U (ed->key[0] == 21 && ed->key[1] == 0)
-# define CTRL_W (ed->key[0] == 23 && ed->key[1] == 0)
-# define CTRL_P (ed->key[0] == 16 && ed->key[1] == 0)
-# define CTRL_R (ed->key[0] == 18 && ed->key[1] == 0)
-# define BACKSPACE (ed->key[0] == 127 && ed->key[1]  == 0)
+# define LEFT_KEY (ed->key && !ft_strcmp("\E[D", ed->key))
+# define RIGHT_KEY (ed->key && !ft_strcmp("\E[C", ed->key))
+# define UP_KEY (ed->key && !ft_strcmp("\E[A", ed->key))
+# define DOWN_KEY (ed->key && !ft_strcmp("\E[B", ed->key))
+# define TAB_KEY (ed->key && !ft_strcmp("\t", ed->key))
+# define ENTER_KEY (ed->key && !ft_strcmp("\n", ed->key))
+# define HOME_KEY (ed->key && !ft_strcmp("\E[H", ed->key))
+# define END_KEY (ed->key && !ft_strcmp("\E[F", ed->key))
+# define SHIFT_UP (ed->key && !ft_strcmp("\E[1;2A", ed->key))
+# define SHIFT_DOWN (ed->key && !ft_strcmp("\E[1;2B", ed->key))
+# define SHIFT_RIGHT (ed->key && !ft_strcmp("\E[1;2C", ed->key))
+# define SHIFT_LEFT (ed->key && !ft_strcmp("\E[1;2D", ed->key))
+# define WS (ed->key && !ft_strcmp("\E[1;23R", ed->key))
+# define CTRL_A (ed->key && ed->key[0] == 1 && ed->key[1] == 0)
+# define CTRL_E (ed->key && ed->key[0] == 5 && ed->key[1] == 0)
+# define CTRL_C (ed->key && ed->key[0]== 3 && ed->key[1] == 0)
+# define CTRL_D (ed->key && ed->key[0] == 4 && ed->key[1] == 0)
+# define CTRL_L (ed->key && ed->key[0] == 12 && ed->key[1] == 0)
+# define CTRL_K (ed->key && ed->key[0] == 11 && ed->key[1] == 0)
+# define CTRL_U (ed->key && ed->key[0] == 21 && ed->key[1] == 0)
+# define CTRL_W (ed->key && ed->key[0] == 23 && ed->key[1] == 0)
+# define CTRL_P (ed->key && ed->key[0] == 16 && ed->key[1] == 0)
+# define CTRL_R (ed->key && ed->key[0] == 18 && ed->key[1] == 0)
+# define CTRL_S (ed->key && ed->key[0] == 19 && ed->key[1] == 0)
+# define BACKSPACE (ed->key && ed->key[0] == 127 && ed->key[1]  == 0)
 
 typedef struct winsize	t_sz;
 typedef struct dirent	t_dirent;
@@ -128,7 +130,8 @@ typedef struct			s_editor
 	char			*clipboard;
 	char			*key;
 	char			*hris;
-	char			*h_needle;
+	int				first;
+	char			*ndl;
 	struct termios	term_default;
 	t_data			*hist;
 }						t_editor;
@@ -197,7 +200,7 @@ t_editor				*line_editor_init(char **line, t_prompt prompt,
 int						line_editor_delete(t_editor *ed, t_data **hist);
 void					init_t_tab(t_editor *ed);
 int						term_size(t_editor *ed);
-void					window_resize(t_editor *ed, t_prompt *prompt);
+void					window_resize(t_editor *ed, t_prompt prompt, char *hris);
 int						print_key(t_editor *ed);
 
 void					del_lines(int nb_line);
@@ -242,5 +245,4 @@ int						tabulator_check_executable(t_tab *tabu,
 int						tabulator_check_if_var(t_tab *tabu);
 void					tabulator_autocomplete(char **comp, char *d_name);
 char					*get_user_name(void);
-
 #endif
