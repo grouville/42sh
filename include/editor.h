@@ -6,7 +6,7 @@
 /*   By: dzonda <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/09/10 00:46:23 by dzonda       #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 06:06:36 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/17 07:12:29 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -77,6 +77,7 @@ typedef enum			e_prompt
 typedef struct			s_data
 {
 	char				*cmd;
+	int					nb;
 	struct s_data		*next;
 	struct s_data		*prev;
 }						t_data;

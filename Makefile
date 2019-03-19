@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/03/02 16:37:00 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/03/18 15:20:43 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -33,6 +33,7 @@ SRCS =  shell/main.c \
         shell/shell_hrdc.c \
         shell/shell_check.c \
         shell/shell_clean.c \
+		shell/shell_check_expansions.c \
         shell/split/shell_split.c \
         shell/split/shell_split_getargs.c \
  		shell/split/shell_split_tools.c \

@@ -6,26 +6,12 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/03 14:29:35 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/12 02:09:22 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/17 07:36:04 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
-
-void		fill_hist(t_data **hist, char *line)
-{
-	t_data *new;
-	t_data *now;
-
-	new = NULL;
-	(*hist)->next = new;
-	now = *hist;
-	*hist = new;
-	(*hist)->cmd = ft_strdup(line);
-	(*hist)->prev = now;
-	(*hist)->next = NULL;
-}
 
 void		fill_hist_file(t_data *hist, char *file)
 {
@@ -86,8 +72,9 @@ t_data		*hist_add(t_data *hist)
 
 	new = NULL;
 	now = NULL;
-	if (!(new = (t_data*)malloc(sizeof(t_data))))
+	if (!(new = malloc(sizeof(t_data))))
 		exit(-1);
+	hist->nb = hist->prev ? hist->prev->nb + 1 : 1;
 	hist->next = new;
 	now = hist;
 	hist = new;

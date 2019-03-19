@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/07 00:43:10 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/07 00:43:10 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/16 11:03:37 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -88,8 +88,6 @@ BOOL	cmd_check(t_cmd **cmd, t_shell *shell, t_prompt *prompt)
 		if (get_envp(shell->alias, next->args[0]))
 			shell_prepare_alias(next,
 							ft_strdup(get_envp(shell->alias, next->args[0])));
-		//if (!check_expansions(next, shell))
-		//	return (1);
 		if (next->hrdc && ((int)next->hrdc[0] < -3 || (int)next->hrdc[0] > -1))
 			return (shell_hrdc_quotesub((*cmd = next), shell, prompt));
 		if (cmd_check_error(next, shell))

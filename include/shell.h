@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 05:03:13 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/18 15:24:41 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -231,7 +231,7 @@ int					shell_exit(t_cmd **cmd, t_shell **shell);
 void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						char **env);
 char				*get_next_hrdc(char **hrdc);
-
+BOOL				check_expansions(t_shell *shell);
 /*
 ** Hard test
 ** <  echo ~ ~te~st" ~ '$USER  \""+\\$USER+$US\ER~$USERS' ~ t"e$USER \'~'' ""'`' ""' \' ""'" \'>
