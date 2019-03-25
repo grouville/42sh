@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 11:01:40 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/19 09:41:43 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/25 06:54:01 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -85,7 +85,10 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		if (shl->str && check_expansions(shl))
+		{
+			ft_strdel(&shl->str);
 			continue ;
+		}
 		if (!hrdc_fill(&prmt, &cmd, shl, ret) && !check_shrt(&prmt, ret, shl))
 			break ;
 		if ((shl->str && (cmd = shell_split(shl->str, shl->envp, &prmt))) ||
