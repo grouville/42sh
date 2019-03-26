@@ -30,7 +30,8 @@ int			len_stdout_to(char *str)
 			quote = str[i];
 		else if (str[i] == quote && quote != ' ')
 			quote = ' ';
-		if (quote == ' ' && ft_strchr("><", str[i]))
+		if (quote == ' ' && ft_strchr("><", str[i]) && i > 1 &&
+				str[i - 1] != '\\')
 			break ;
 		if (str[i] == quote && (quote == ' ' || ft_strchr("\0 ", str[i + 1])))
 			break ;

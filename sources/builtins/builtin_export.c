@@ -30,6 +30,8 @@ void	builtin_export_add_var(t_shell *shell, char **cmd)
 		if (ft_strlen(var))
 			if (!(check_replace_env_variable(&shell->envp, var, value)))
 				shell->envp = append_key_env(shell->envp, var, value);
+		if (ft_strcmp("PATH", var) == 0 && shell->t)
+			delete_hash_table(&(shell->t));
 		ft_strdel(&var);
 		ft_strdel(&value);
 		i++;

@@ -42,6 +42,7 @@ int		shell_exec_error(int is_builtin, t_cmd *elem)
 **   0 --> ok elem suivant
 **   1 --> elem fail ou un séparateur stop l'execution des elem
 **  -1 --> un exit est nécessaire
+**  ATTENTION : shell_exec est dans un fork donc ne pas modif les vars
 */
 
 int		shell_exec(t_cmd *elem, t_shell *shell)

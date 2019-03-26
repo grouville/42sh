@@ -25,6 +25,7 @@
 # include <pwd.h>
 # include "editor.h"
 # include "libft.h"
+# include "hash_table.h"
 
 typedef struct		s_process
 {
@@ -81,14 +82,15 @@ typedef struct		s_type
 
 typedef struct		s_shell
 {
-	char	**envp;
-	char	**envl;
-	char	**alias;
-	char	*str;
-	char	*hrdc_tmp;
-	char	*hist_path;
-	int		ret;
-	t_data	*hist;
+	char		**envp;
+	char		**envl;
+	char		**alias;
+	char		*str;
+	char		*hrdc_tmp;
+	char		*hist_path;
+	int			ret;
+	t_data		*hist;
+	t_htable	*t;
 }					t_shell;
 
 typedef enum		e_sep
@@ -232,6 +234,20 @@ void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						char **env);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
+
+/*
+**┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+**┃                                  Hash                                      ┃
+**┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+*/
+
+/*
+** - delete_print_search.c
+*/
+
+void                ft_print_hash(t_shell *env);
+int                 ft_builtin_hash(char **cmd, t_shell *env);
+
 /*
 ** Hard test
 ** <  echo ~ ~te~st" ~ '$USER  \""+\\$USER+$US\ER~$USERS' ~ t"e$USER \'~'' ""'`' ""' \' ""'" \'>

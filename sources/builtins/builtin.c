@@ -26,6 +26,8 @@ int		check_builtin_unset(t_shell *shell, char **args)
 			shell->envp = rmv_key_env(shell->envp, args[i]);
 		if (get_envp(shell->envl, args[i]))
 			shell->envl = rmv_key_env(shell->envl, args[i]);
+		if (ft_strcmp("PATH", args[i]) == 0 && shell->t)
+			delete_hash_table(&(shell->t));
 		i++;
 	}
 	return (0);
@@ -63,7 +65,9 @@ int		check_shell_variable(char *arg)
 
 int		shell_builtin(t_cmd *elem, t_shell *shell)
 {
-	if (elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
+	if (elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
+		elem->ret = ft_builtin_hash(elem->args, shell);
+	else if (elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
 		elem->ret = builtin_echo(elem->args);
 	else if (elem->args[0] && ft_strcmp("cd", elem->args[0]) == 0)
 		elem->ret = builtin_cd(elem->args, &shell->envp);

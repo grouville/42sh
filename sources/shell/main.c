@@ -73,6 +73,10 @@ void	shell_save_histo(t_shell *shl)
 		shl->hist->cmd = ft_strdup(shl->str);
 }
 
+/*
+** shl->str peut être mangé par hrdc_fill (pas besoin de split)
+*/
+
 int		main(void)
 {
 	extern char **environ;

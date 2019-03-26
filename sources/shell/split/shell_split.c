@@ -78,10 +78,14 @@ BOOL	iscomplet(char *str, t_prompt *prompt)
 			quote = ' ';
 		i += (str[i] ? 1 : 0);
 	}
-	if ((i > 0 && quote != ' ') || (i == 1 && str[0] == '\\') ||
-			(i > 1 && str[i - 1] == '\\' && str[i - 2] != '\\'))
+	if ((i > 0 && quote != ' ') || (i == 1 && str[0] == '\\'))
 	{
 		*prompt = (quote == '"') ? D_QUOTE : S_QUOTE;
+		return (0);
+	}
+	else if (str && (i > 1 && str[i - 1] == '\\' && str[i - 2] != '\\'))
+	{
+		*prompt = BACKSLASH;
 		return (0);
 	}
 	else

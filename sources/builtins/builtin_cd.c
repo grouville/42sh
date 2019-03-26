@@ -47,7 +47,6 @@ BOOL	cd_is_recheable(char **envp, char *path, char *dir)
 {
 	if (!path || access(path, X_OK) == -1)
 	{
-		printf("-<|path=|%s| not recheable|>\n", path);
 		write(2, "42sh: cd: ", 10);
 		if (path && path[0] == '\0' && !get_envp(envp, "HOME"))
 			write(2, "$HOME env not set\n", 18);

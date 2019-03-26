@@ -72,6 +72,7 @@ typedef enum			e_prompt
 	S_QUOTE,
 	D_QUOTE,
 	HRDC,
+	BACKSLASH,
 }						t_prompt;
 
 typedef struct			s_data

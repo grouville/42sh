@@ -33,6 +33,20 @@ void	shell_clean_emptyargs(t_cmd *elem)
 	elem->args = args2;
 }
 
+void	check_hash_then_path(t_cmd *elem, t_shell *shell)
+{
+	char *tmp;
+
+	tmp = NULL;
+	if (shell->t)
+		tmp = search_element(shell->t, elem->args[0]);
+	if (tmp)
+		elem->exec = ft_strdup(tmp);
+	if (!elem->exec)
+		elem->exec = shell_getpathexec(elem->args[0], shell->envp);
+}
+
+
 void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 {
 	int i;
@@ -44,7 +58,7 @@ void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 		shl_quotesub(elem->args[i]);
 		if (i == 0)
 		{
-			elem->exec = shell_getpathexec(elem->args[0], shell->envp);
+			check_hash_then_path(elem, shell);
 			if (!elem->exec)
 				elem->exec = ft_strdup("not found");
 			else if ((int)elem->exec == -1)

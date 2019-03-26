@@ -93,12 +93,19 @@ SRCS =  shell/main.c \
 		editor/tabulator/tabulator_tools.c \
 		editor/history/term_hist_recup_cmd.c \
 		editor/history/term_history.c \
-		editor/history/term_history_incremental_search.c
+		editor/history/term_history_incremental_search.c \
+		hash/hash.c \
+        hash/delete_print_search.c \
+        hash/hash_function.c \
+        hash/insert_element_hash.c \
+        hash/new_elements.c \
+        hash/prime.c \
+        hash/resize_hash.c
 
 INCLUDES_FILE = shell.h
 
 OBJS_FOLDERS = builtins editor editor/tabulator editor/history shell \
-                shell/split shell/process
+                shell/split shell/process hash
 OBJS = $(addprefix $(DIR_OBJ),$(SRCS:.c=.o))
 OBJS_FOLDERS_BIS = $(addprefix $(DIR_OBJ),$(OBJS_FOLDERS))
 
