@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 04:01:59 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 06:12:11 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -93,6 +93,19 @@ typedef struct		s_shell
 	t_htable	*t;
 }					t_shell;
 
+typedef	struct		s_fc
+{
+	int				i;
+	int				fd;
+	char			*first;
+	char			*last;
+	int				ret;
+	char			*op;
+	t_shell			*shl;
+	t_cmd			*cmd;
+	t_data			*line;
+}					t_fc;
+
 typedef enum		e_sep
 {
 	SPL_PIPE = 1,
@@ -142,7 +155,7 @@ char				**append_key_env(char **envp, char *key, char *value);
 int					check_replace_env_variable(char ***env, char *var,
 													char *value);
 int					check_builtin_export(t_shell *shell, char **cmd);
-
+int					builtin_fc(char **args, t_shell *shell);
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 **┃                               split_shell                                  ┃

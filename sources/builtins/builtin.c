@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/23 13:13:48 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 04:59:23 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 02:11:10 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -85,6 +85,8 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 		elem->ret = builtin_alias(&shell->alias, elem->args + 1);
 	else if (elem->args[0] && ft_strcmp("unalias", elem->args[0]) == 0)
 		elem->ret = builtin_unalias(&shell->alias, elem->args + 1);
+	else if (elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
+		elem->ret = builtin_fc(elem->args + 1, shell);
 	else if (elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
 		return ((elem->ret = builtin_exit(elem->args)) == -2 ? 1 : -1);
 	else

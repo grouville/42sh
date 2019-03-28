@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 11:01:40 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/25 06:54:01 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/27 16:35:55 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -77,6 +77,29 @@ void	shell_save_histo(t_shell *shl)
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
 
+int		shell(t_shell *shl, t_cmd *cmd, t_shortcut ret, t_prompt *prmt)
+{
+	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
+	{
+		ft_strdel(&shl->str);
+		return (1);
+	}
+	if (!hrdc_fill(prmt, &cmd, shl, ret) && !check_shrt(prmt, ret, shl))
+		return (-1);
+	if ((shl->str && (cmd = shell_split(shl->str, shl->envp, prmt))) ||
+			(prmt == PROMPT && cmd && (cmd->process).stdin_send))
+	{
+		if (cmd_check(&cmd, shl, prmt))
+			return (1);
+		shell_save_histo(shl);
+		if (check_syntax_err(cmd))
+			shell_clean_data(&cmd, shl, 0);
+		else if (shell_process(&cmd, shl) == -1)
+			return (-1);
+	}
+	return (0);
+}
+
 int		main(void)
 {
 	extern char **environ;
@@ -88,7 +111,12 @@ int		main(void)
 	shell_init(&shl, &prmt, &cmd, environ);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
-		if (shl->str && check_expansions(shl))
+		if ((ret = shell(shl, cmd, ret, &prmt)) == 1)
+			continue ;
+		else if (ret == -1)
+			break ;
+		/*
+		if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 		{
 			ft_strdel(&shl->str);
 			continue ;
@@ -105,7 +133,7 @@ int		main(void)
 				shell_clean_data(&cmd, shl, 0);
 			else if (shell_process(&cmd, shl) == -1)
 				break ;
-		}
+		}*/
 	}
 	return (shell_exit(&cmd, &shl));
 }
