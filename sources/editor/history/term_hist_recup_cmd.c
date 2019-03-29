@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/03 14:29:35 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/17 07:36:04 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/29 01:45:38 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -53,6 +53,7 @@ t_data		*recup_hist_from_file(t_data *hist, char *file)
 		if (file[i] == '\n' && c == 0)
 		{
 			hist->cmd = ft_strsub(file, j, i - j);
+			hist->nb = hist->prev ? hist->prev->nb + 1 : 1;
 			hist = hist_add(hist);
 			j = i + 1;
 		}
@@ -74,7 +75,6 @@ t_data		*hist_add(t_data *hist)
 	now = NULL;
 	if (!(new = malloc(sizeof(t_data))))
 		exit(-1);
-	hist->nb = hist->prev ? hist->prev->nb + 1 : 1;
 	hist->next = new;
 	now = hist;
 	hist = new;
@@ -93,9 +93,8 @@ t_data		*init_hist(char *file)
 
 	if (!(hist = malloc(sizeof(t_data))))
 		exit(1);
-	hist->cmd = NULL;
-	hist->next = NULL;
-	hist->prev = NULL;
+	ft_bzero(hist, sizeof(t_data));
+	hist->nb = -1;
 	file_str = NULL;
 	ret = 0;
 	if (!access(file, R_OK | F_OK))

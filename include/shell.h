@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 06:12:11 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/03/28 19:10:38 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -97,13 +97,14 @@ typedef	struct		s_fc
 {
 	int				i;
 	int				fd;
+	int				nb;
 	char			*first;
 	char			*last;
 	int				ret;
 	char			*op;
 	t_shell			*shl;
 	t_cmd			*cmd;
-	t_data			*line;
+	t_data			*lst_cmd;
 }					t_fc;
 
 typedef enum		e_sep
