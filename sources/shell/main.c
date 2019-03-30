@@ -71,6 +71,8 @@ void	shell_save_histo(t_shell *shl)
 					(shl->hist->prev && shl->hist->prev->cmd &&
 					ft_strcmp(shl->hist->prev->cmd, shl->str))))
 		shl->hist->cmd = ft_strdup(shl->str);
+	if (shl->hist->cmd)
+		shl->hist = hist_add(shl->hist);
 }
 
 /*

@@ -53,7 +53,6 @@ t_data		*recup_hist_from_file(t_data *hist, char *file)
 		if (file[i] == '\n' && c == 0)
 		{
 			hist->cmd = ft_strsub(file, j, i - j);
-			hist->nb = hist->prev ? hist->prev->nb + 1 : 1;
 			hist = hist_add(hist);
 			j = i + 1;
 		}
@@ -74,13 +73,13 @@ t_data		*hist_add(t_data *hist)
 	new = NULL;
 	now = NULL;
 	if (!(new = malloc(sizeof(t_data))))
-		exit(-1);
+		exit(EXIT_FAILURE);
+	ft_bzero(new, sizeof(t_data));
+	new->nb = hist->nb + 1;
 	hist->next = new;
 	now = hist;
 	hist = new;
-	hist->cmd = NULL;
 	hist->prev = now;
-	hist->next = NULL;
 	return (new);
 }
 
@@ -92,9 +91,9 @@ t_data		*init_hist(char *file)
 	int			ret;
 
 	if (!(hist = malloc(sizeof(t_data))))
-		exit(1);
+		exit(EXIT_FAILURE);
 	ft_bzero(hist, sizeof(t_data));
-	hist->nb = -1;
+	hist->nb = 1;
 	file_str = NULL;
 	ret = 0;
 	if (!access(file, R_OK | F_OK))

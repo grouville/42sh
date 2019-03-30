@@ -98,6 +98,7 @@ typedef	struct		s_fc
 	int				i;
 	int				fd;
 	int				nb;
+	char			*editor;
 	char			*first;
 	char			*last;
 	int				ret;
