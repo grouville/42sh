@@ -47,12 +47,21 @@ void	shell_pipe_stderr(t_process process)
 
 /*
 ** Les redirections stdout sont prio sur le pipe
+** La dernière redirection se dup2 en dernière
 */
 
 void	shell_plomberie(t_process process)
 {
 	if (process.stdin_send)
 		shell_pipe_stdin(process.stdin_send);
-	shell_pipe_stderr(process);
-	shell_pipe_stdout(process);
+	if (process.last_redi == 1)
+	{
+		shell_pipe_stderr(process);
+		shell_pipe_stdout(process);
+	}
+	else
+	{
+		shell_pipe_stdout(process);
+		shell_pipe_stderr(process);
+	}
 }

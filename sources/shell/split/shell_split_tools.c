@@ -43,3 +43,11 @@ char	*get_stdout_to(char *redi, int pos)
 		redi_to = NULL;
 	return (redi_to);
 }
+
+BOOL	triple_chevrons(char *str)
+{
+	if (str[0] == '<' && str[1] == '<' && str[2] == '<')
+		return (1);
+	else
+		return (0);
+}

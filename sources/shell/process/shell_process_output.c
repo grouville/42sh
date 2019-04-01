@@ -123,9 +123,9 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 	output = elem->output;
 	while (output != NULL)
 	{
-		if (output->from == 1)
+		if (output->from == 1 && (elem->process.last_redi = 1))
 			ft_strdel(&(elem->process).fd_stdout);
-		else if (output->from == 2)
+		else if (output->from == 2 && (elem->process.last_redi = 2))
 			ft_strdel(&(elem->process).fd_stderr);
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);

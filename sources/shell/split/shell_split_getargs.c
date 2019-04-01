@@ -36,9 +36,9 @@ size_t	len_arg(char *str, char quote)
 			quote = ' ';
 			i++;
 		}
-		else if ((quote == ' ' && (ft_strchr(";|", str[i]) || (str[i] == '&' &&
-				str[i + 1] == '&'))) || (str[i] == quote && (quote == ' ' ||
-				ft_strchr("\0 ", str[i + 1]))))
+		else if ((quote == ' ' && (ft_strchr(";|&", str[i]))) ||
+					(str[i] == quote &&
+					(quote == ' ' || ft_strchr("\0 ", str[i + 1]))))
 			break ;
 		else
 			i += (str[i]) ? 1 : 0;
@@ -62,12 +62,11 @@ int		get_nbarg(char *str, t_prompt *prompt)
 		if (ft_strlen(str) && lenarg == 0)
 			*prompt = B_QUOTE;
 		str += lenarg;
-		if (lenarg == 0 && !ft_strchr(";|", str[0]) && str[0] != '&' &&
-															str[1] != '&')
+		if (lenarg == 0 && !ft_strchr(";|&", str[0]))
 			return (0);
 		nb_args += 1;
 		str = shell_trim(&str);
-		if (ft_strchr(";|", str[0]) || (str[0] == '&' && str[1] == '&'))
+		if (ft_strchr(";|&", str[0]))
 			break ;
 	}
 	return (nb_args);

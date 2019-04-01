@@ -25,7 +25,7 @@ int		shell_error_prepare(char *msg, char *elem)
 		ft_dprintf(2, "42sh: %s: Bad file descriptor\n", elem + 1);
 	else if (ft_strcmp(msg, "ambiguous") == 0)
 		ft_dprintf(2, "42sh: %s: ambiguous redirect\n", elem + 1);
-	return (EXIT_FAILURE);
+	return (0);
 }
 
 int		shell_error_env(char *msg)

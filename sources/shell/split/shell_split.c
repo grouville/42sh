@@ -21,6 +21,7 @@ int		get_sep(char **str)
 	sep = 0;
 	sep = (*str)[0] == '|' ? SPL_PIPE : sep;
 	sep = (*str)[0] == ';' ? PTN_VRGL : sep;
+	sep = (*str)[0] == '&' ? SPL_SPRLU : sep;
 	sep = (*str)[0] == '|' && (*str)[1] == '|' ? DBL_PIPE : sep;
 	sep = (*str)[0] == '&' && (*str)[1] == '&' ? DBL_SPRLU : sep;
 	if (sep >= 1 && sep <= 2)

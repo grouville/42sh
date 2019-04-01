@@ -31,6 +31,8 @@ BOOL	check_syntax_err(t_cmd *cmd)
 				write(2, "||'\n", 4);
 			else if (next->sep == 4)
 				write(2, "&&'\n", 4);
+			else if (next->sep == 5)
+				write(2, "&'\n", 3);
 			return (1);
 		}
 		if (!stdout_to(next->output))
@@ -77,24 +79,24 @@ void	shell_save_histo(t_shell *shl)
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
 
-int		shell(t_shell *shl, t_cmd *cmd, t_shortcut ret, t_prompt *prmt)
+int		shell(t_shell *shl, t_cmd **cmd, t_shortcut ret, t_prompt *prmt)
 {
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
 		ft_strdel(&shl->str);
 		return (1);
 	}
-	if (!hrdc_fill(prmt, &cmd, shl, ret) && !check_shrt(prmt, ret, shl))
+	if (!hrdc_fill(prmt, cmd, shl, ret) && !check_shrt(prmt, ret, shl))
 		return (-1);
-	if ((shl->str && (cmd = shell_split(shl->str, shl->envp, prmt))) ||
-			(prmt == PROMPT && cmd && (cmd->process).stdin_send))
+	if ((shl->str && (*cmd = shell_split(shl->str, shl->envp, prmt))) ||
+			(*prmt == PROMPT && *cmd && ((*cmd)->process).stdin_send))
 	{
-		if (cmd_check(&cmd, shl, prmt))
+		if (cmd_check(cmd, shl, prmt))
 			return (1);
 		shell_save_histo(shl);
-		if (check_syntax_err(cmd))
-			shell_clean_data(&cmd, shl, 0);
-		else if (shell_process(&cmd, shl) == -1)
+		if (check_syntax_err(*cmd))
+			shell_clean_data(cmd, shl, 0);
+		else if (shell_process(cmd, shl) == -1)
 			return (-1);
 	}
 	return (0);
@@ -111,11 +113,10 @@ int		main(void)
 	shell_init(&shl, &prmt, &cmd, environ);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
-		if ((ret = shell(shl, cmd, ret, &prmt)) == 1)
+		if ((ret = shell(shl, &cmd, ret, &prmt)) == 1)
 			continue ;
 		else if (ret == -1)
-			break ;
-		/*
+			break ;/*
 		if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 		{
 			ft_strdel(&shl->str);
@@ -123,6 +124,7 @@ int		main(void)
 		}
 		if (!hrdc_fill(&prmt, &cmd, shl, ret) && !check_shrt(&prmt, ret, shl))
 			break ;
+		printf("-<shellstr |%s|>\n", shl->str);
 		if ((shl->str && (cmd = shell_split(shl->str, shl->envp, &prmt))) ||
 			(prmt == PROMPT && cmd && (cmd->process).stdin_send))
 		{

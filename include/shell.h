@@ -35,6 +35,7 @@ typedef struct		s_process
 	int		fd_fileout;
 	char	*fd_stderr;
 	int		fd_fileerr;
+	int 	last_redi;
 }					t_process;
 
 typedef struct		s_stdout
@@ -113,6 +114,7 @@ typedef enum		e_sep
 	PTN_VRGL = 2,
 	DBL_PIPE = 3,
 	DBL_SPRLU = 4,
+	SPL_SPRLU = 5,
 }					t_sep;
 
 typedef enum		e_error
@@ -193,6 +195,7 @@ int					shell_clean_data(t_cmd **cmd, t_shell *shell,
 int					len_stdin(char *str, char quote);
 char				*get_stdout_to(char *redi, int pos);
 void				read_lexing(t_cmd *elem);
+BOOL				triple_chevrons(char *str);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

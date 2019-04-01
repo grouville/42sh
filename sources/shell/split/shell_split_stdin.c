@@ -94,6 +94,8 @@ int		shell_get_stdin(char ***ptn_stdin, char **arg, int i)
 	return (i);
 }
 
+
+//Utiliser strcutword pour gabgner des liugnes
 int		shell_get_hrdc(char **arg, int i, t_cmd *cmd)
 {
 	char	*aft;
@@ -130,8 +132,9 @@ int		shell_get_hrdc(char **arg, int i, t_cmd *cmd)
 **  * -2 si la chaine de char se trouve dans le prochain arg
 **  * -3 pour être indiqué comme rempli par l'utilisateur
 **
-** hrdc_stdin (dont son adresse sera rentré dans **stdin) prend la valeur -1
-** pour ne pas stopper la lecture de stdin et prendra la valeur rentré par user
+** (cmd->process).stdin_send (dont son adresse sera rentré dans **input) prend
+** la valeur -1 pour ne pas stopper la lecture de stdin et prendra la valeur
+** rentré par user
 */
 
 void	shell_std_in(char **arg, char quote, t_cmd *cmd)
@@ -149,12 +152,14 @@ void	shell_std_in(char **arg, char quote, t_cmd *cmd)
 			quote = (*arg)[i];
 		else if ((*arg)[i] == quote && quote != ' ')
 			quote = ' ';
-		if ((*arg)[i] == '<' && (*arg)[i + 1] == '<' && quote == ' ')
+		if (triple_chevrons(*arg) && quote == ' ')
+			i = shell_get_stdin_send(cmd);
+		else if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<')
 		{
 			(cmd->process).stdin_send = (char *)-1;
 			i = shell_get_hrdc(arg, i, cmd);
 		}
-		else if ((*arg)[i] == '<' && quote == ' ')
+		else if (quote == ' ' && (*arg)[i] == '<')
 			i = shell_get_stdin(&cmd->input, arg, i);
 		else
 			i += ((*arg)[i]) ? 1 : 0;
