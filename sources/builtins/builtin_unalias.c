@@ -20,7 +20,7 @@ static int		builtin_unalias_init(char **args, char ***alias)
 
 	i = 0;
 	op = NULL;
-	if (!*args || (i = builtin_get_options(&op, args, "a")) == -1)
+	if (!*args || (i = builtin_get_options(&op, args, "a", 0)) == -1)
 	{
 		if (i == -1)
 			ft_dprintf(2, "42sh: unalias: -%s: invalid option\n", op);

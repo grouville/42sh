@@ -13,7 +13,8 @@
 
 #include "shell.h"
 
-int		builtin_get_options(char **options, char **args, char *possibility)
+int		builtin_get_options(char **options, char **args, char *possibility,
+		int num)
 {
 	int i[2];
 
@@ -30,6 +31,10 @@ int		builtin_get_options(char **options, char **args, char *possibility)
 			}
 			else
 			{
+				if (num && i[1] == 1 && ft_isdigit(args[i[0]][i[1]]) &&
+				ft_strlen(args[i[0]] + i[1]) ==
+				ft_lenint(ft_atoi(args[i[0]] + i[1])))
+					return (i[0]);
 				ft_strdel(options);
 				ft_char_join_free(args[i[0]][i[1]], options);
 				return (-1);

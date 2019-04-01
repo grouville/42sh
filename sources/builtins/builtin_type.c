@@ -32,7 +32,7 @@ int		builtin_type_init(t_type **tp, char **envp, char **args)
 		exit(EXIT_FAILURE);
 	(*tp)->op = NULL;
 	if (((*tp)->i =
-	builtin_get_options(&(*tp)->op, args, "aptP") - 1) == -2)
+	builtin_get_options(&(*tp)->op, args, "aptP", 0) - 1) == -2)
 	{
 		ft_dprintf(2, "42sh: type: -%s: invalid option\ntype: usage: type"
 				"[-afptP] name [name ...]\n", (*tp)->op);
