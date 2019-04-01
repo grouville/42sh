@@ -19,30 +19,38 @@
 
 int		shell_exec_error(int is_builtin, t_cmd *elem)
 {
-	if (!is_builtin && elem->exec &&
-		ft_strcmp("not found", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
-	else if (!is_builtin && elem->exec &&
-			 ft_strcmp("directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
-	else if (!is_builtin && elem->exec &&
-				ft_strcmp("file or directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: No such file or directory\n", elem->args[0]);
-	else if (!is_builtin && elem->exec &&
-				ft_strcmp("no allowed", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
-	else
-		return (0);
-	elem->ret = 1;
-	return (1);
+	int ret;
+
+	ret = 1;
+	if (!is_builtin && elem->exec)
+	{
+		if (ft_strcmp("not found", elem->exec) == 0)
+			ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
+		else if (ft_strcmp("directory", elem->exec) == 0)
+			ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
+		else if (ft_strcmp("file or directory", elem->exec) == 0)
+			ft_dprintf(2, "42sh: %s: No such file or directory\n",
+					   elem->args[0]);
+		else if (ft_strcmp("no allowed", elem->exec) == 0)
+			ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
+		else
+			ret = 0;
+		if (ft_strcmp("no allowed", elem->exec) == 0 ||
+			ft_strcmp("directory", elem->exec) == 0)
+			elem->ret = 126;
+		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
+				ft_strcmp("not found", elem->exec) == 0)
+			elem->ret = 127;
+	}
+	return (ret);
 }
 
 /*
+** ATTENTION : shell_exec est dans un fork donc ne pas modif envp & envl
 ** return :
 **   0 --> ok elem suivant
 **   1 --> elem fail ou un séparateur stop l'execution des elem
 **  -1 --> un exit est nécessaire
-**  ATTENTION : shell_exec est dans un fork donc ne pas modif les vars
 */
 
 int		shell_exec(t_cmd *elem, t_shell *shell)
@@ -60,16 +68,10 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 	return (elem->ret);
 }
 
-/*
-** elem->ret se prend -2 si builtin exit fail, on le corrige pour 1
-** puis on rajoute elem->ret dans shell->envl
-*/
-
 void	shell_ret(t_cmd *elem, t_shell *shell)
 {
 	char *tmp;
 
-	elem->ret = (elem->ret == -2) ? 1 : elem->ret;
 	tmp = ft_itoa(elem->ret);
 	if (!(check_replace_env_variable(&shell->envl, "?", tmp)))
 		shell->envl = append_key_env(shell->envl, "?", tmp);

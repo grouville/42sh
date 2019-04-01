@@ -139,7 +139,7 @@ char				**rmv_key_env(char **envp, char *key);
 void				builtin_export_print(char **envp, char *key);
 int					builtin_echo(char **cmd);
 int					builtin_env_all(char ***envp, char ***envl, char **args);
-int					builtin_exit(char **cmd);
+int					builtin_exit(t_cmd *elem, t_shell *shell);
 char				*get_value(char *arg);
 
 int					builtin_type(char **args, char **envp);

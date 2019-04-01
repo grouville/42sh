@@ -88,7 +88,7 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 	else if (elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
 		elem->ret = builtin_fc(elem->args + 1, shell);
 	else if (elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
-		return ((elem->ret = builtin_exit(elem->args)) == -2 ? 1 : -1);
+		return (builtin_exit(elem, shell));
 	else
 		return (0);
 	return (1);

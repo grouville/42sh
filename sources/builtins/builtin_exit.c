@@ -20,7 +20,7 @@ int		is_only_digit(char *arg)
 	i = 0;
 	while (arg && arg[i])
 	{
-		if (arg[i] >= '0' && arg[i] <= '9')
+		if ((arg[i] >= '0' && arg[i] <= '9') || arg[i] == '-')
 			i++;
 		else
 			return (0);
@@ -29,29 +29,35 @@ int		is_only_digit(char *arg)
 }
 
 /*
-** return -2 si fail (pas d'exit) ou la valeur de retour
-** -1 pour pas que shell_process return -1
+** return 1 si exit fail (pas d'exit mais on confirme que c'est un builtin)
+** return -1 si exit necessaire et shell->ret à return
 */
 
-int		builtin_exit(char **cmd)
+int		builtin_exit(t_cmd *elem, t_shell *shell)
 {
 	unsigned char ret;
 
-	if (cmd[1] == NULL)
-		return (0);
-	else if (!is_only_digit(cmd[1]))
+	if (elem->args[1] == NULL)
 	{
-		ft_dprintf(2, "42sh: exit: %s: numeric argument required\n", cmd[1]);
-		return (2);
+		shell->ret = 0;
+		return (-1);
 	}
-	else if (cmd[2] != NULL)
+	else if (!is_only_digit(elem->args[1]))
+	{
+		ft_dprintf(2, "42sh: exit: %s: numeric argument required\n", elem->args[1]);
+		shell->ret = 2;
+		return (-1);
+	}
+	else if (elem->args[2] != NULL)
 	{
 		ft_dprintf(2, "42sh: exit: too many arguments\n");
-		return (-2);
+		elem->ret = EXIT_FAILURE;
+		return (1);
 	}
 	else
 	{
-		ret = (unsigned char)ft_atoi(cmd[1]);
-		return (ret);
+		ret = (unsigned char)ft_atoi(elem->args[1]);
+		shell->ret = ret;
+		return (-1);
 	}
 }
