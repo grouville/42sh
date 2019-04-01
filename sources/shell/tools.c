@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:19:43 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 16:36:09 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/01 09:42:51 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -88,6 +88,7 @@ t_shell		*init_shell(char **envp)
 	if (!(shell->envl = (char **)malloc(sizeof(char *))))
 		exit(EXIT_FAILURE);
 	shell->envl[0] = NULL;
+	shell->envl = append_key_env(shell->envl, "?", "0");
 	shell->ret = 0;
 	if (!shell->hist)
 		exit(EXIT_FAILURE);

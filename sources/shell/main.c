@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 11:01:40 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/27 16:35:55 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/01 10:48:34 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -79,7 +79,7 @@ void	shell_save_histo(t_shell *shl)
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
 
-int		shell(t_shell *shl, t_cmd *cmd, t_shortcut ret, t_prompt *prmt)
+int		shell_command_execution(t_shell *shl, t_cmd *cmd, t_shortcut ret, t_prompt *prmt)
 {
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
@@ -93,7 +93,7 @@ int		shell(t_shell *shl, t_cmd *cmd, t_shortcut ret, t_prompt *prmt)
 	{
 		if (cmd_check(&cmd, shl, prmt))
 			return (1);
-		shell_save_histo(shl);
+			shell_save_histo(shl);
 		if (check_syntax_err(cmd))
 			shell_clean_data(&cmd, shl, 0);
 		else if (shell_process(&cmd, shl) == -1)
@@ -113,7 +113,7 @@ int		main(void)
 	shell_init(&shl, &prmt, &cmd, environ);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
-		if ((ret = shell(shl, cmd, ret, &prmt)) == 1)
+		if ((ret = shell_command_execution(shl, cmd, ret, &prmt)) == 1)
 			continue ;
 		else if (ret == -1)
 			break ;

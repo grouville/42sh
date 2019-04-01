@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/03 14:29:35 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 01:45:38 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/01 12:30:26 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -47,15 +47,17 @@ t_data		*recup_hist_from_file(t_data *hist, char *file)
 
 	c = 0;
 	i = 0;
-	j = 0;
+	j = -1;
 	while (file && file[i])
 	{
-		if (file[i] == '\n' && c == 0)
+		if (j != -1 && file[i] == '\n' && c == 0)
 		{
 			hist->cmd = ft_strsub(file, j, i - j);
 			hist = hist_add(hist);
-			j = i + 1;
+			j = -1;
 		}
+		if (j == -1 && ft_isprint(file[i]))
+				j = i;
 		if (((file[i] == '\'' || file[i] == '\"' || file[i] == '`') && c == 0)
 			|| ((c == '\'' && file[i] == '\'') || (c == '\"' && file[i] == '\"')
 			|| (c == '`' && file[i] == '`')))

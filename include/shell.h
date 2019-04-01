@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 19:10:38 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/01 10:47:38 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -141,7 +141,7 @@ char				*get_value(char *arg);
 
 int					builtin_type(char **args, char **envp);
 int					builtin_get_options(char **options, char **args,
-											char *possibility);
+					char *possibility, int num);
 int					builtin_type_check_builtin(char *d_name);
 void				builtin_type_display(char *d_name, char *bin,
 											char *options, int mode);
@@ -201,6 +201,8 @@ void				read_lexing(t_cmd *elem);
 **┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 */
 
+int					shell_command_execution(t_shell *shell, t_cmd *cmd,
+					t_shortcut ret, t_prompt *prompt);
 void				shell_prepare(t_cmd *cmd, t_shell *shell);
 char				*shell_getpathexec(char *exec, char **envp);
 void				shell_clean_emptyargs(t_cmd *link);
