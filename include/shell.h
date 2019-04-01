@@ -248,6 +248,7 @@ void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						char **env);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
+char 				*ft_strcutword(char **str, int len_word, int i);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

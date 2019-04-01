@@ -59,3 +59,31 @@ int		ft_read_file(char *filename, char **file_content)
 	close(fd);
 	return (ft_strlen(*file_content));
 }
+
+/*
+** Découpe le mot word dans str commençant à l'indice i.
+** Join les 2 morceaux de str sans word.
+** Retourne word malloc.
+*/
+
+char 	*ft_strcutword(char **str, int len_word, int i)
+{
+	char	*aft;
+	char	*bfr;
+	char 	*ret;
+	size_t	len;
+
+	if (!*str || len_word == 0)
+		return (*str);
+	ft_strncpy(ret = ft_strnew((size_t)len_word), *str + i, (size_t)len_word);
+	len = (size_t)ft_strlen(*str);
+	(*str)[i] = '\0';
+	bfr = ft_strdup(*str);
+	aft = ft_strdup(*str + i + len_word);
+	ft_bzero(*str, len);
+	ft_strdel(str);
+	*str = ft_strjoin(bfr, aft);
+	ft_strdel(&bfr);
+	ft_strdel(&aft);
+	return (ret);
+}
