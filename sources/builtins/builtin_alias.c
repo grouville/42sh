@@ -18,7 +18,7 @@ static int		builtin_alias_init(char **args, char **op)
 	int i;
 
 	i = 0;
-	if (args[0] && (i = builtin_get_options(op, args, "p")) == -1)
+	if (args[0] && (i = builtin_get_options(op, args, "p", 0)) == -1)
 	{
 		ft_dprintf(2, "42sh: alias: -%s: invalid option\nalias: usage:"
 		" alias [-p] [name[=value] ... ]\n", *op);

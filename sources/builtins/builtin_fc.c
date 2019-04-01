@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/29 01:45:33 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/01 13:04:11 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,7 +18,7 @@ static int		builtin_fc_init_op(char **args, char **op)
 	int i;
 
 	i = 0;
-	if ((args[0] && (i = builtin_get_options(op, args, "elnrs")) == -1) ||
+	if ((args[0] && (i = builtin_get_options(op, args, "elnrs", 1)) == -1) ||
 	(*op && ft_strchr(*op, 'e') && !args[i]))
 	{
 		i == -1 ? ft_dprintf(2, "42sh: fc: -%s: invalid option\n", *op)
@@ -31,21 +31,6 @@ static int		builtin_fc_init_op(char **args, char **op)
 	return (i);
 }
 
-t_shell		*builtin_fc_init_cmd(t_shell *shell)
-{
-	t_shell *shl;
-
-	if (!(shl = malloc(sizeof(t_shell))))
-		exit(EXIT_FAILURE);
-	ft_bzero(shl, sizeof(t_shell));
-	shl->envp = shell->envp;
-	shl->envl = shell->envl;
-	shl->alias = shell->alias;
-	shl->t = shell->t;
-	shl->hist = shell->hist;
-	return (shl);
-}
-
 int		builtin_search_occurence_pos(t_fc *fc, t_data *hist, int pos)
 {
 	t_data *tmp;
@@ -53,74 +38,194 @@ int		builtin_search_occurence_pos(t_fc *fc, t_data *hist, int pos)
 	int nb;
 	char *occurence;
 
-	nb = 1;
-	dprintf(2, "cmd: %s\n", hist->cmd);
-	dprintf(2, "cmd+1: %s\n", hist->prev->cmd);
-	tmp = !hist->cmd ? hist->prev->prev : hist->prev;
-	cmd_nb = -1;
+	tmp = hist->prev->prev;
 	occurence = !pos ? fc->first : fc->last;
-	dprintf(2, "nb: %d\n", ft_atoi(occurence));
-	while (tmp)
+	cmd_nb = -1;
+	nb = ft_atoi(occurence);
+	if (tmp && ft_isdigit(occurence[occurence[0] == '-' ? 1 : 0]))
 	{
-		dprintf(2, "res: %d\n", ft_atoi(occurence) + nb);
-		dprintf(2, "cmd: %s\n", tmp->cmd);
-
-		//if ()
-		if (tmp->cmd && ((ft_isdigit(occurence[occurence[0] == '-' ? 1 : 0])
-		&& ((ft_atoi(occurence) >= 0 && ft_atoi(occurence) == tmp->nb)
-		|| (ft_atoi(occurence) < 0 && !(ft_atoi(occurence) + nb))))))
-		{
-			dprintf(2, "tmp->nb: %d\n", tmp->nb);
-			cmd_nb = tmp->nb;
-			break ;
-		}
-		nb++;
-		tmp = tmp->prev;
+		if (nb < 0 && ((nb + 1) + tmp->nb) > 0)
+			cmd_nb = (nb + 1) + tmp->nb;
+		else if (nb > 0 && nb <= tmp->nb)
+			cmd_nb = nb;
 	}
+	while (!nb && tmp && ((tmp->cmd &&
+	ft_strncmp(tmp->cmd, occurence, ft_strlen(occurence))) || !tmp->cmd))
+		tmp = tmp->prev;
+	if (!nb && tmp)
+		cmd_nb = tmp->nb;
+	if (cmd_nb == -1)
+		ft_putstr_fd("42sh: fc: history specification out of range\n", 2);
 	return (cmd_nb);
 }
 
-int		builtin_fc_search_first_occurence(t_fc *fc, t_data *hist)
+void	builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
+		int last_nb, t_data *hist)
 {
 	t_data *tmp;
+	int	first_occurence;
+
+	tmp = hist;
+	first_occurence = 0;
+	while (tmp && !(first_occurence && (!last_nb || first_nb == last_nb ||
+		((last_nb < 0 ? last_nb - 1 : last_nb + 1)) == tmp->nb)))
+	{
+		if ((!first_occurence && first_nb == tmp->nb && (first_occurence = 1))
+		|| (first_occurence && last_nb && first_nb != tmp->nb))
+		{
+			if (fc->fd >= 0)
+			{
+				ft_putstr_fd(tmp->cmd, fc->fd);
+				ft_putstr_fd("\n", fc->fd);
+			}
+			else
+			{
+				if (fc->op && ft_strchr(fc->op, 'l') && !ft_strchr(fc->op, 'n'))
+					dprintf(2, "%d\t", tmp->nb);
+				dprintf(2, "%s\n", tmp->cmd);
+			}
+		}
+		tmp = first_occurence && last_nb > first_nb ? tmp->next : tmp->prev;
+	}
+}
+
+void	ft_swap(int *a, int *b)
+{
+	int c;
+
+	c = *a;
+	*a = *b;
+	*b = c;
+}
+
+int		builtin_fc_search_occurence(t_fc *fc, t_data *hist)
+{
 	int first_nb;
 	int last_nb;
 
-	tmp = hist;
-
-	first_nb = builtin_search_occurence_pos(fc, hist, 0);
-	last_nb = !fc->last ? 0 : builtin_search_occurence_pos(fc, hist, 1);
-
-	dprintf(2, "first_nb: %d\n", first_nb);
-	dprintf(2, "last_nb: %d\n", last_nb);
-	if (first_nb == -1 || last_nb == -1)
-	{
-		ft_putstr_fd("42sh: fc: history specification out of range\n", 2);
+	first_nb = 0;
+	last_nb = 0;
+	if (((first_nb = builtin_search_occurence_pos(fc,
+	hist, 0)) != -1) && fc->last)
+		last_nb = builtin_search_occurence_pos(fc, hist, 1);
+	if (first_nb == -1 || last_nb == -1 || ((!fc->op || (fc->op
+	&& ft_strchr(fc->op, 'e') && !ft_strchr(fc->op, 'l'))) &&
+	((fc->fd = open("/tmp/.42sh-fc_cmd_list",
+	O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, 0644)) < 0)))
 		return (1);
+	if (first_nb && last_nb && fc->op && ft_strchr(fc->op, 'r'))
+		ft_swap(&first_nb, &last_nb);
+	builtin_fc_browse_history_for_occurence(fc, first_nb, last_nb, hist);
+	if (fc->fd >= 0)
+		close(fc->fd);
+	return (0);
+}
+
+void	builtin_fc_search_first_and_last(char **args, t_fc *fc)
+{
+	int nb;
+
+	nb = 0;
+	while(args && args[++fc->i] && nb < 2)
+	{
+		if ((args[fc->i][0] == '-' && ft_isdigit(args[fc->i][1])) ||
+				ft_isdigit(args[fc->i][0]))
+			!nb ? (fc->first = ft_itoa(ft_atoi(args[fc->i])))
+				: (fc->last = ft_itoa(ft_atoi(args[fc->i])));
+		else
+			!nb ? (fc->first = ft_strdup(args[fc->i]))
+				: (fc->last = ft_strdup(args[fc->i]));
+		nb++;
 	}
+	if (!fc->first && fc->op && ft_strchr(fc->op, 'l'))
+	{
+		fc->first = ft_strdup("-15");
+		fc->last = ft_strdup("-1");
+	}
+	else if (!fc->first)
+		fc->first = ft_strdup("-1");
+}
+
+int		builtin_fc_exit(t_fc **fc)
+{
+	int ret;
+
+	ret = (*fc)->ret;
+	ft_strdel(&(*fc)->first);
+	ft_strdel(&(*fc)->last);
+	ft_strdel(&(*fc)->op);
+	free((*fc));
+	return (ret);
+}
+
+void	builtin_fc_remove_hist_node(t_shell *shell)
+{
+	t_data *tmp;
+	t_data *tmp1;
+
+	tmp = shell->hist->prev;
+	shell->hist = shell->hist->prev->prev;
+	ft_strdel(&shell->hist->cmd);
+	shell->hist->next = NULL;
 	while (tmp)
 	{
-		if (!(fc->lst_cmd) && first_nb == tmp->nb)
-		{
-			if (!(fc->lst_cmd = malloc(sizeof(t_data))))
-				exit(EXIT_FAILURE);
-			ft_bzero(fc->lst_cmd, sizeof(t_data));
-			fc->lst_cmd->cmd = ft_strdup(tmp->cmd);
-			fc->lst_cmd->nb = tmp->nb;
-			dprintf(2, "nb: %d\t", tmp->nb);
-			dprintf(2, "cmd: %s\n", fc->lst_cmd->cmd);
-		}
-		if (fc->lst_cmd && last_nb && first_nb != tmp->nb)
-		{
-			fc->lst_cmd = hist_add(fc->lst_cmd);
-			fc->lst_cmd->cmd = ft_strdup(tmp->cmd);
-			fc->lst_cmd->nb = tmp->nb;
-			dprintf(2, "nb: %d\t", tmp->nb);
-			dprintf(2, "cmd: %s\n", fc->lst_cmd->cmd);
-		}
-		if (fc->lst_cmd && (!last_nb || first_nb == last_nb || last_nb == tmp->nb))
-			break ;
-		tmp = fc->lst_cmd && last_nb > first_nb ? tmp->next : tmp->prev;
+		if (tmp->cmd)
+			ft_strdel(&tmp->cmd);
+		tmp1 = tmp->next;
+		free(tmp);
+		tmp = tmp1;
+	}
+}
+
+void	builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
+{
+	t_data *cmd_list;
+	t_data *tmp;
+	t_prompt prompt;
+
+	prompt = PROMPT;
+	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
+		if ((fc->ret = shell_command_execution(shell, NULL, 0, &prompt) == -1)
+		 || ((ft_atoi(get_envp(shell->envl, "?"))) == 1))
+			return ;
+	builtin_fc_remove_hist_node(shell);
+	cmd_list = init_hist("/tmp/.42sh-fc_cmd_list");
+	while (cmd_list->prev)
+		cmd_list = cmd_list->prev;
+	while (cmd_list)
+	{
+		if ((shell->str = cmd_list->cmd) && write(1, cmd_list->cmd,
+		ft_strlen(cmd_list->cmd)) && write(1, "\n", 1))
+			if ((fc->ret = shell_command_execution(shell, NULL, 0,
+			&prompt)) == -1)
+				return ;
+		dprintf(2, "fc->ret: %d\n", fc->ret);
+		tmp = cmd_list->next;
+		free(cmd_list);
+		cmd_list = tmp;
+	}
+}
+
+int		builtin_fc_init(t_fc **fc, t_shell *shell, char **args)
+{
+	if (!(*fc = ft_memalloc(sizeof(t_fc))))
+		exit(EXIT_FAILURE);
+	(*fc)->i = -1;
+	(*fc)->fd = -1;
+	if (args[0] && args[0][0] == '-'
+	&& ((*fc)->i = builtin_fc_init_op(args, &(*fc)->op) - 1) == -2)
+		return (1);
+	if (!(*fc)->op && !((*fc)->editor =
+	ft_strdup(get_envp(shell->envp, "FCEDIT"))))
+		(*fc)->editor = ft_strdup("vi");
+	else if ((*fc)->op && ft_strchr((*fc)->op, 'e')
+	&& !ft_strchr((*fc)->op, 'l') && !ft_strchr((*fc)->op, 's'))
+		(*fc)->editor = ft_strdup(args[++(*fc)->i]);
+	if ((*fc)->editor)
+	{
+		ft_strjoin_free(&(*fc)->editor, " /tmp/.42sh-fc_cmd_list");
+		ft_strdel(&shell->str);
+		shell->str = (*fc)->editor;
 	}
 	return (0);
 }
@@ -128,32 +233,15 @@ int		builtin_fc_search_first_occurence(t_fc *fc, t_data *hist)
 int		builtin_fc(char **args, t_shell *shell)
 {
 	t_fc	*fc;
+	int		ret;
 
-	(void)shell;
-	if (!(fc = malloc(sizeof(t_fc))))
-		exit(EXIT_FAILURE);
-	ft_bzero(fc, sizeof(t_fc));
-	fc->i = -1;
-	if (args[0] && args[0][0] == '-' && !ft_isdigit(args[0][1])
-	&& (fc->i = builtin_fc_init_op(args, &fc->op) - 1) == -2)
-		return (1);
-	//fc->shl = builtin_fc_init_cmd(shell);
-	while(args && args[++fc->i] && fc->nb < 2)
+	if (!(ret = builtin_fc_init(&fc, shell, args)))
 	{
-		if ((args[fc->i][0] == '-' && ft_isdigit(args[fc->i][1])) ||
-		ft_isdigit(args[fc->i][0]))
-			!fc->nb ? (fc->first = ft_itoa(ft_atoi(args[fc->i])))
-			: (fc->last = ft_itoa(ft_atoi(args[fc->i])));
-		else
-			!fc->nb ? (fc->first = ft_strdup(args[fc->i]))
-			: (fc->last = ft_strdup(args[fc->i]));
-		fc->nb++;
+		builtin_fc_search_first_and_last(args, fc);
+		if (!fc->first || (fc->first && !(ret = builtin_fc_search_occurence(fc, shell->hist))))
+			if (!fc->op || (ft_strchr(fc->op, 'e') && !ft_strchr(fc->op, 'l')))
+				builtin_fc_execute_commands(fc, shell);
 	}
-	if (fc->first && builtin_fc_search_first_occurence(fc, shell->hist))
-		return (1);
-//	dprintf(2, "ops: %s\n", fc->op);
-//	dprintf(2, "first: %s\n", fc->first);
-//	dprintf(2, "last: %s\n", fc->last);
-	//ret = shell();
-	return (0);
+	dprintf(2, "ret: %d\n", fc->ret);
+	return (builtin_fc_exit(&fc));
 }
