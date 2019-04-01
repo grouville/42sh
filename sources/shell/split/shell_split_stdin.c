@@ -152,9 +152,9 @@ void	shell_std_in(char **arg, char quote, t_cmd *cmd)
 			quote = (*arg)[i];
 		else if ((*arg)[i] == quote && quote != ' ')
 			quote = ' ';
-		if (triple_chevrons(*arg) && quote == ' ')
-			i = shell_get_stdin_send(cmd);
-		else if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<')
+		//if (triple_chevrons(*arg) && quote == ' ')
+		//	i = shell_get_stdin_send(cmd);
+		if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<')
 		{
 			(cmd->process).stdin_send = (char *)-1;
 			i = shell_get_hrdc(arg, i, cmd);

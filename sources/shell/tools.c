@@ -73,6 +73,7 @@ t_shell		*init_shell(char **envp)
 
 	if (!(shell = malloc(sizeof(t_shell))))
 		exit(EXIT_FAILURE);
+	ft_bzero(shell, sizeof(t_shell));
 	if (!(shell->envp = init_env(ft_arrdup(envp))))
 	{
 		free(shell);
@@ -80,8 +81,6 @@ t_shell		*init_shell(char **envp)
 	}
 	if (check_if_env_var_existing(shell->envp, "OLDPWD"))
 		shell->envp = rmv_key_env(shell->envp, "OLDPWD");
-	shell->str = NULL;
-	shell->hrdc_tmp = NULL;
 	shell->hist = init_hist((shell->hist_path =
 	build_full_path(get_envp(shell->envp, "HOME"), ".21sh_history")));
 	shell->alias = builtin_alias_get_alias_from_file(".21sh_alias");
@@ -89,7 +88,7 @@ t_shell		*init_shell(char **envp)
 		exit(EXIT_FAILURE);
 	shell->envl[0] = NULL;
 	shell->envl = append_key_env(shell->envl, "?", "0");
-	shell->ret = 0;
+
 	if (!shell->hist)
 		exit(EXIT_FAILURE);
 	return (shell);

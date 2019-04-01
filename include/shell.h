@@ -92,6 +92,7 @@ typedef struct		s_shell
 	int			ret;
 	t_data		*hist;
 	t_htable	*t;
+	int 		count;
 }					t_shell;
 
 typedef	struct		s_fc
@@ -204,7 +205,7 @@ BOOL				triple_chevrons(char *str);
 **┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 */
 
-int					shell_command_execution(t_shell *shell, t_cmd *cmd,
+int					shell_command_execution(t_shell *shell, t_cmd **cmd,
 					t_shortcut ret, t_prompt *prompt);
 void				shell_prepare(t_cmd *cmd, t_shell *shell);
 char				*shell_getpathexec(char *exec, char **envp);

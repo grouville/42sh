@@ -182,13 +182,16 @@ void	builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	t_data *cmd_list;
 	t_data *tmp;
 	t_prompt prompt;
+	t_cmd	*cmd;
 
+	cmd = NULL;
 	prompt = PROMPT;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
-		if ((fc->ret = shell_command_execution(shell, NULL, 0, &prompt) == -1)
+		if ((fc->ret = shell_command_execution(shell, &cmd, 0, &prompt) == -1)
 		 || ((ft_atoi(get_envp(shell->envl, "?"))) == 1))
 			return ;
 	builtin_fc_remove_hist_node(shell);
+	shell_clean_data(&cmd, shell, 1);
 	cmd_list = init_hist("/tmp/.42sh-fc_cmd_list");
 	while (cmd_list->prev)
 		cmd_list = cmd_list->prev;
@@ -196,9 +199,10 @@ void	builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	{
 		if ((shell->str = cmd_list->cmd) && write(1, cmd_list->cmd,
 		ft_strlen(cmd_list->cmd)) && write(1, "\n", 1))
-			if ((fc->ret = shell_command_execution(shell, NULL, 0,
+			if ((fc->ret = shell_command_execution(shell, &cmd, 0,
 			&prompt)) == -1)
 				return ;
+		shell_clean_data(&cmd, shell, 1);
 		dprintf(2, "fc->ret: %d\n", fc->ret);
 		tmp = cmd_list->next;
 		free(cmd_list);
