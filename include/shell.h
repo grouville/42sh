@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 10:47:38 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/04 13:11:13 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -104,10 +104,11 @@ typedef	struct		s_fc
 	char			*first;
 	char			*last;
 	int				ret;
+	int				heredoc[2];
 	char			*op;
 	t_shell			*shl;
 	t_cmd			*cmd;
-	t_data			*lst_cmd;
+	t_data			*cmd_list;
 }					t_fc;
 
 typedef enum		e_sep
@@ -161,6 +162,8 @@ int					check_replace_env_variable(char ***env, char *var,
 													char *value);
 int					check_builtin_export(t_shell *shell, char **cmd);
 int					builtin_fc(char **args, t_shell *shell);
+int					builtin_fc_search_occurence(t_fc *fc, t_data *hist);
+void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 **┃                               split_shell                                  ┃

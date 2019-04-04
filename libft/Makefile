@@ -6,7 +6,7 @@
 #    By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/03/14 01:36:40 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/02/21 18:00:43 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/04 12:57:19 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -36,7 +36,7 @@ GNL =	get_next_line.c
 LST =	ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c ft_lstnew.c
 
 MEM =	ft_bzero.c ft_memset.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memdel.c \
-		ft_memmove.c ft_memalloc.c ft_memccpy.c
+		ft_memmove.c ft_memalloc.c ft_memccpy.c ft_swap.c
 
 PUT =	ft_putchar.c ft_putchar_fd.c ft_putnbr_signed.c ft_putnbr_unsigned.c \
 		ft_putstr.c ft_putstr_fd.c ft_putwchar.c ft_putwstr.c ft_putchar_dup.c \

@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/03/28 01:54:14 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/04/04 13:16:01 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -65,6 +65,8 @@ SRCS =  shell/main.c \
         builtins/builtin.c \
 		builtins/builtin_tools.c \
 		builtins/builtin_fc.c \
+		builtins/builtin_fc_search_occurence.c \
+		builtins/builtin_fc_execute_command.c \
         editor/get_stdin.c \
 		editor/prompt.c \
 		editor/cursor_position.c \
