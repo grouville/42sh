@@ -183,7 +183,7 @@ void				shell_std_in(char **arg, char quote, t_cmd *cmd);
 BOOL				cmd_check(t_cmd **cmd, t_shell *shell, t_prompt *prompt);
 int					hrdc_fill(t_prompt *prompt, t_cmd **cmd, t_shell *shell,
 						t_shortcut ret);
-
+void				complete_all_stdin(char **arg, char quote, t_cmd *cmd);
 size_t				len_arg(char *str, char quote);
 void				clean_cmd(t_cmd **cmd);
 char				*shell_trim(char **str);
@@ -192,7 +192,6 @@ BOOL				stdout_to(t_output *redis);
 int					len_stdout_to(char *str);
 t_output			*get_last_stdout(t_output *redi);
 char				*complete_stdout_to(char **arg, t_output *add_to);
-void				complete_stdin(char **arg, char quote, char ***std_in);
 int					shell_stdin_sub(char **arg, int i, char ***std_in);
 char				**add_stdin(char **hrdc);
 int					shell_clean_data(t_cmd **cmd, t_shell *shell,
@@ -258,7 +257,8 @@ void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						char **env);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
-char 				*ft_strcutword(char **str, int len_word, int i);
+char 				*ft_strcutword(char **str, int i, int len_word);
+BOOL				check_syntax_err(t_cmd *cmd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

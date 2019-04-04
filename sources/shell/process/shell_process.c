@@ -158,7 +158,7 @@ void	read_lexing(t_cmd *elem)
 		else
 			ft_dprintf(2, "|%s| - ", (elem->hrdc)[i++]);
 	}
-	if ((int)(elem->process).stdin_send == -1)
+	if ((int)(elem->process).stdin_send == -1 || (int)(elem->process).stdin_send == -2)
 		ft_dprintf(2, "\nRead stdin : |%d|\n", (int)elem->process.stdin_send);
 	else
 		ft_dprintf(2, "\nRead stdin : |%s|\n", elem->process.stdin_send);

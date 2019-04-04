@@ -56,10 +56,10 @@ int		check_shell_variable(char *arg)
 }
 
 /*
-** Return value :
-**  - 0 not builtin
-**  - 1 is builtin
-**  - -1 need exit
+** Return :
+**   0 --> not builtin
+**   1 --> is builtin
+**  -1 --> need exit
 ** elem->ret contient 0 si builtin failed ou 1+ si succeeded ou -2 si exit fail
 */
 

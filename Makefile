@@ -32,14 +32,16 @@ SRCS =  shell/main.c \
         shell/shell_error.c \
         shell/shell_hrdc.c \
         shell/shell_check.c \
+        shell/shell_check_syntax.c \
         shell/shell_clean.c \
 		shell/shell_check_expansions.c \
         shell/split/shell_split.c \
         shell/split/shell_split_getargs.c \
  		shell/split/shell_split_tools.c \
  		shell/split/shell_split_stdout.c \
+ 		shell/split/shell_split_stdout_tools.c \
  		shell/split/shell_split_stdin.c \
- 		shell/split/shell_split_stdtools.c \
+ 		shell/split/shell_split_stdin_tools.c \
         shell/process/shell_process.c \
         shell/process/shell_process_prepare.c \
         shell/process/shell_process_output.c \

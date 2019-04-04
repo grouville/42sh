@@ -60,7 +60,8 @@ void	clean_cmd(t_cmd **cmd)
 			ft_strdel(&(*cmd)->process.fd_stdin);
 			ft_strdel(&(*cmd)->process.fd_stdout);
 			ft_strdel(&(*cmd)->process.fd_stderr);
-			if ((int)(*cmd)->process.stdin_send != -1)
+			if ((int)(*cmd)->process.stdin_send != -1 &&
+				(int)(*cmd)->process.stdin_send != -2)
 				ft_strdel(&(*cmd)->process.stdin_send);
 			ft_strdel(&(*cmd)->exec);
 			if ((*cmd)->output)

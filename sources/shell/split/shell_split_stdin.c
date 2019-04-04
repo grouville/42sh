@@ -47,29 +47,8 @@ char	**add_stdin(char **hrdc)
 	return (ret);
 }
 
-void	complete_stdin(char **arg, char quote, char ***std_in)
-{
-	int		last;
-	int		lenhrdc;
-	char	*tmp;
-
-	last = 0;
-	lenhrdc = 0;
-	while (*std_in && (*std_in)[last] != NULL)
-		last++;
-	if (*std_in && (int)(*std_in)[last - 1] == -2 && len_stdin(*arg, quote) > 0)
-	{
-		lenhrdc = len_stdin(*arg, quote);
-		(*std_in)[last - 1] = ft_strsub(*arg, (unsigned)0, (size_t)lenhrdc);
-		**arg = '\0';
-	}
-	tmp = *arg;
-	*arg = ft_strdup(*arg + lenhrdc);
-	ft_strdel(&tmp);
-}
-
 /*
-** sub la valeur dans stdin et recolle les 2 morceau avec i au milieu
+** sub la valeur dans stdin et recolle les 2 morceaux avec i au milieu
 */
 
 int		shell_get_stdin(char ***ptn_stdin, char **arg, int i)
@@ -94,15 +73,12 @@ int		shell_get_stdin(char ***ptn_stdin, char **arg, int i)
 	return (i);
 }
 
-
-//Utiliser strcutword pour gabgner des liugnes
 int		shell_get_hrdc(char **arg, int i, t_cmd *cmd)
 {
-	char	*aft;
-	char	*bfr;
 	int		last;
 	char	quote;
 	int		len;
+	char	*tmp;
 
 	cmd->hrdc = add_stdin(cmd->hrdc);
 	shell_stdin_sub(arg, i + 2, &cmd->hrdc);
@@ -110,18 +86,34 @@ int		shell_get_hrdc(char **arg, int i, t_cmd *cmd)
 	i += 2;
 	quote = ft_strchr("\"'", (*arg)[i]) ? (*arg)[i] : (char)' ';
 	len = len_stdin(*arg + i, quote);
-	bfr = ft_strdup(*arg);
-	aft = ft_strdup(*arg + i + len);
-	ft_strdel(arg);
-	*arg = ft_strjoin(bfr, aft);
-	i = ft_strlen(bfr);
-	ft_strdel(&bfr);
-	ft_strdel(&aft);
+	tmp = ft_strcutword(arg, i, len);
+	ft_strdel(&tmp);
 	cmd->input = add_stdin(cmd->input);
 	last = 0;
 	while ((cmd->input)[last] != NULL)
 		last++;
 	cmd->input[last - 1] = (cmd->process).stdin_send;
+	return (i);
+}
+
+int 	shell_get_stdin_send(char **arg, int i, t_cmd *cmd)
+{
+	int		len;
+	char	quote;
+	char 	*tmp;
+
+	tmp = ft_strcutword(arg, i, 3);
+	ft_strdel(&tmp);
+	quote = ft_strchr("\"'", (*arg)[i]) ? (*arg)[i] : (char)' ';
+	len = len_stdin(*arg + i, quote);
+	if (len > 0)
+	{
+		tmp = ft_strcutword(arg, i, len);
+		cmd->process.stdin_send = ft_strjoin(tmp, "\n");
+		ft_strdel(&tmp);
+	}
+	else
+		cmd->process.stdin_send = (char *)-2;
 	return (i);
 }
 
@@ -141,8 +133,7 @@ void	shell_std_in(char **arg, char quote, t_cmd *cmd)
 {
 	int		i;
 
-	complete_stdin(arg, quote, &cmd->hrdc);
-	complete_stdin(arg, quote, &cmd->input);
+	complete_all_stdin(arg, quote, cmd);
 	i = (quote == ' ' || (*arg)[0] == '\0') ? 0 : 1;
 	while (*arg && (*arg)[i])
 	{
@@ -152,8 +143,8 @@ void	shell_std_in(char **arg, char quote, t_cmd *cmd)
 			quote = (*arg)[i];
 		else if ((*arg)[i] == quote && quote != ' ')
 			quote = ' ';
-		//if (triple_chevrons(*arg) && quote == ' ')
-		//	i = shell_get_stdin_send(cmd);
+		if (triple_chevrons(*arg + i) && quote == ' ')
+			i = shell_get_stdin_send(arg, i, cmd);
 		if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<')
 		{
 			(cmd->process).stdin_send = (char *)-1;

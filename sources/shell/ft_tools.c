@@ -66,7 +66,7 @@ int		ft_read_file(char *filename, char **file_content)
 ** Retourne word malloc.
 */
 
-char 	*ft_strcutword(char **str, int len_word, int i)
+char 	*ft_strcutword(char **str, int i, int len_word)
 {
 	char	*aft;
 	char	*bfr;
@@ -74,7 +74,7 @@ char 	*ft_strcutword(char **str, int len_word, int i)
 	size_t	len;
 
 	if (!*str || len_word == 0)
-		return (*str);
+		return (NULL);
 	ft_strncpy(ret = ft_strnew((size_t)len_word), *str + i, (size_t)len_word);
 	len = (size_t)ft_strlen(*str);
 	(*str)[i] = '\0';

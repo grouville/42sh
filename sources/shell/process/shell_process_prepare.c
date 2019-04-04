@@ -73,7 +73,8 @@ void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 }
 
 /*
-** Clean des arg vide et get exec path et clean les inputs à -1 de HRDC
+** Clean des arg vide et get exec path
+** elem->process.stdin_send à NULL est une protection d'un seg
 */
 
 void	shell_prepare(t_cmd *cmd, t_shell *shell)
@@ -85,5 +86,8 @@ void	shell_prepare(t_cmd *cmd, t_shell *shell)
 	{
 		shell_clean_emptyargs(elem);
 		shell_prepare_args(elem, shell);
+		if ((int)elem->process.stdin_send == -1 ||
+			(int)elem->process.stdin_send == -2)
+			elem->process.stdin_send = NULL;
 	}
 }

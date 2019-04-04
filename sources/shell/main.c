@@ -13,37 +13,6 @@
 
 #include "shell.h"
 
-BOOL	check_syntax_err(t_cmd *cmd)
-{
-	t_cmd	*next;
-
-	next = cmd;
-	while (next && (next = next->next_cmd))
-	{
-		if (!ft_strlen(next->args[0]) && next->sep)
-		{
-			write(2, "42sh: syntax error near unexpected token `", 42);
-			if (next->sep == 1)
-				write(2, "|'\n", 3);
-			else if (next->sep == 2)
-				write(2, ";'\n", 3);
-			else if (next->sep == 3)
-				write(2, "||'\n", 4);
-			else if (next->sep == 4)
-				write(2, "&&'\n", 4);
-			else if (next->sep == 5)
-				write(2, "&'\n", 3);
-			return (1);
-		}
-		if (!stdout_to(next->output))
-		{
-			write(2, "42sh: syntax error near unexpected token `>'\n", 45);
-			return (1);
-		}
-	}
-	return (0);
-}
-
 BOOL	check_shrt(t_prompt *prompt, t_shortcut shortcut, t_shell *shl)
 {
 	char quote;
@@ -90,7 +59,6 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret, t_prompt
 	}
 	if (!hrdc_fill(prmt, cmd, shl, ret) && !check_shrt(prmt, ret, shl))
 		return (-1);
-	printf("-<|%s|>\n", shl->str);
 	if ((shl->str && ((*cmd) = shell_split(shl->str, shl->envp, prmt))) ||
 			(*prmt == PROMPT && *cmd && ((*cmd)->process).stdin_send))
 	{
