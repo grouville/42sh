@@ -26,6 +26,7 @@
 # include "editor.h"
 # include "libft.h"
 # include "hash_table.h"
+# include "test.h"
 
 typedef struct		s_process
 {
@@ -61,6 +62,7 @@ typedef struct		s_cmd
 {
 	char			*exec;
 	char			**args;
+	char 			**args_raw;
 	t_output		*output;
 	char			**input;
 	char			**hrdc;
@@ -278,7 +280,7 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 ** <  echo ~ ~te~st" ~ '$USER  \""+\\$USER+$US\ER~$USERS' ~ t"e$USER \'~'' ""'`' ""' \' ""'" \'>
 ** <echo "test>
 ** <echo test\ {ENTER} ' {ENTER} test {ENTER} '>
-** <echo 'test\'
+** <echo 'test\'.
 ** echo tes't $USER te'st
 ** echo tes"t $USER te"st
 ** lancer minishell et <cd -> bash: cd: OLDPWD not set

@@ -84,6 +84,7 @@ void	shell_prepare(t_cmd *cmd, t_shell *shell)
 	elem = cmd;
 	while ((elem = elem->next_cmd))
 	{
+		elem->args_raw = ft_arrdup(elem->args);
 		shell_clean_emptyargs(elem);
 		shell_prepare_args(elem, shell);
 		if ((int)elem->process.stdin_send == -1 ||

@@ -24,6 +24,8 @@ int		is_only_digit(char *arg)
 			i++;
 		else
 			return (0);
+		if ((arg[0] != '-' && i > 18) || (arg[0] == '-' && i > 19))
+			return (0);
 	}
 	return (ft_atoi(arg));
 }

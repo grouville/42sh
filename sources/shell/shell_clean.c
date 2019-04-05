@@ -55,6 +55,7 @@ void	clean_cmd(t_cmd **cmd)
 		while ((*cmd = (*cmd)->next_cmd))
 		{
 			ft_arrdel(&(*cmd)->args);
+			ft_arrdel(&(*cmd)->args_raw);
 			clean_arr_mlti((*cmd)->hrdc);
 			clean_arr_mlti((*cmd)->input);
 			ft_strdel(&(*cmd)->process.fd_stdin);

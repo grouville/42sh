@@ -99,6 +99,7 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 			exec = shell_exec_pipes(&elem, shell);
 		else
 			exec = shell_exec(elem, shell);
+		printf("-<elem-ret|%d|>\n", elem->ret);
 		shell_reinit_fd(fd);
 		shell_ret(elem, shell);
 		if (exec == -1)
@@ -114,7 +115,7 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 
 void	read_lexing(t_cmd *elem)
 {
-	t_output	*read;
+	//t_output	*read;
 	int 		i;
 
 	ft_dprintf(2, "-------------\n");
@@ -126,6 +127,14 @@ void	read_lexing(t_cmd *elem)
 		ft_dprintf(2, "arg[%i]=<%s> ", i, elem->args[i]);
 		i++;
 	}
+	i = 0;
+	ft_dprintf(2, "\nRead arraw : ");
+	while (elem->args_raw && elem->args_raw[i])
+	{
+		ft_dprintf(2, "arg[%i]=<%s> ", i, elem->args_raw[i]);
+		i++;
+	}
+	printf("\n");/*
 	ft_dprintf(2, "\nRead output : ");
 	read = elem->output;
 	if (read == NULL)
@@ -168,5 +177,5 @@ void	read_lexing(t_cmd *elem)
 	ft_dprintf(2, "Read fd stderr : |%s|\n", elem->process.fd_stderr);
 	ft_dprintf(2, "Read fileerr : |%d|\n", elem->process.fd_fileerr);
 	ft_dprintf(2, "Et sep %d\n", elem->sep);
-	ft_dprintf(2, "-------------\n");
+	ft_dprintf(2, "-------------\n");*/
 }

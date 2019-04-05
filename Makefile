@@ -106,12 +106,18 @@ SRCS =  shell/main.c \
         hash/insert_element_hash.c \
         hash/new_elements.c \
         hash/prime.c \
-        hash/resize_hash.c
+        hash/resize_hash.c \
+        test/test.c \
+        test/process_2_3args_test.c \
+        test/process_binary.c \
+        test/process_unary.c \
+        test/tokenize_test.c \
+        test/utils_test.c
 
 INCLUDES_FILE = shell.h
 
 OBJS_FOLDERS = builtins editor editor/tabulator editor/history shell \
-                shell/split shell/process hash
+                shell/split shell/process hash test
 OBJS = $(addprefix $(DIR_OBJ),$(SRCS:.c=.o))
 OBJS_FOLDERS_BIS = $(addprefix $(DIR_OBJ),$(OBJS_FOLDERS))
 

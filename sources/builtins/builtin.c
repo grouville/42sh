@@ -44,14 +44,42 @@ int		check_builtin_set(t_shell *shell, char **args)
 	return (EXIT_SUCCESS);
 }
 
-int		check_shell_variable(char *arg)
+int		del_locvars(char ***ptn_args, int i)
 {
-	int i;
+	int		len;
+	char 	**ret;
+	char 	**args;
+	int 	j;
 
+	args = *ptn_args;
+	len = ft_arrlen(args);
+	ret = (char **)malloc(sizeof(char *) * (len - i + 1));
+	j = 0;
+	while (args[i])
+		ret[j++] = args[i++];
+	ret[j] = NULL;
+	ft_arrdel(ptn_args);
+	ptn_args = &ret;
+	return (0);
+}
+
+//checker tous les args s'ils sont tous a=1 et les dels pour ignorer si certains ne le sont pas
+//ou tous les rajouter
+int		builtin_locvar(char ***ptn_args)
+{
+	int		i;
+	char	**args;
+
+	args = *ptn_args;
+	if (!ft_strchr(args[0], '='))
+		return (0);
 	i = 0;
-	while (arg[i])
-		if (arg[i++] == '=')
-			return (1);
+	while (args[i])
+		if (!ft_strchr(args[0], '='))
+			return(del_locvars(ptn_args, i));
+	i = 0;
+	//while (args[i])
+
 	return (0);
 }
 
@@ -65,7 +93,9 @@ int		check_shell_variable(char *arg)
 
 int		shell_builtin(t_cmd *elem, t_shell *shell)
 {
-	if (elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
+	if (elem->args[0] && builtin_locvar(&elem->args))
+		elem->ret = builtin_env_all(&shell->envp, &shell->envl, elem->args);
+	else if (elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
 		elem->ret = ft_builtin_hash(elem->args, shell);
 	else if (elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
 		elem->ret = builtin_echo(elem->args);
@@ -77,8 +107,6 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 		elem->ret = check_builtin_unset(shell, elem->args);
 	else if (elem->args[0] && ft_strcmp("export", elem->args[0]) == 0)
 		elem->ret = check_builtin_export(shell, elem->args);
-	else if (elem->args[0] && check_shell_variable(elem->args[0]))
-		elem->ret = builtin_env_all(&shell->envp, &shell->envl, elem->args);
 	else if (elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
 		elem->ret = builtin_type(elem->args + 1, shell->envp);
 	else if (elem->args[0] && ft_strcmp("alias", elem->args[0]) == 0)
@@ -87,6 +115,8 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 		elem->ret = builtin_unalias(&shell->alias, elem->args + 1);
 	else if (elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
 		elem->ret = builtin_fc(elem->args + 1, shell);
+	else if (elem->args[0] && ft_strcmp("test", elem->args[0]) == 0)
+		elem->ret = ft_builtin_test(elem->args, elem->args_raw);
 	else if (elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
 		return (builtin_exit(elem, shell));
 	else
