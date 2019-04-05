@@ -115,6 +115,8 @@ int             process_unary(t_test_tok tok, char *arg)
     struct stat buf;
 
     ret = 0;
+    buf.st_mode = 0;
+    buf.st_size = 0;
     path = find_file_path(arg);
     if ((stat(path, &buf) == -1) &&
         (tok == T_E || tok == T_R || tok == T_LL || tok == T_G
