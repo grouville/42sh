@@ -46,12 +46,12 @@ int             ft_atoi_checker(char *str1, char *str2, int *one, int *two)
 {
     if (!is_proper_number(str1))
         *one = ft_atoi(str1);
-    else if (dprintf(1, "bash: test: %s: integer expression expected\n",
+    else if (ft_dprintf(1, "bash: test: %s: integer expression expected\n",
         str1))
         return (2);
     if (!is_proper_number(str2))
         *two = ft_atoi(str2);
-    else if (dprintf(1, "bash: test: %s: integer expression expected\n",
+    else if (ft_dprintf(1, "bash: test: %s: integer expression expected\n",
         str2))
         return (2);
     return (0);

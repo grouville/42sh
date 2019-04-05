@@ -73,7 +73,8 @@ int             ft_test_2_args(t_args_tok  **t, int boul)
     else
     {
         if (boul == 0)
-            dprintf(1, "bash: test: %s: unary operator expected\n", t[0]->op);
+            ft_dprintf(1, "bash: test: %s: unary operator expected\n",
+                t[0]->op);
         ret = 2;
     }
     return (ret);
@@ -97,14 +98,16 @@ int             ft_test_3_args(t_args_tok  **t, int boul)
     {
         if (t[0]->type == T_NOT && t[1]->type == T_NOT && is_any(t[2])
             && (ret = 2) && boul == 0)
-            dprintf(1, "bash: test: too many arguments\n");
+            ft_dprintf(1, "bash: test: too many arguments\n");
         else if (is_all(t[0]) && is_any(t[1]) && is_any(t[2]) && (ret = 2)
             && boul == 0)
-            dprintf(1, "bash: test: %s: binary operator expected\n", t[1]->op);
+            ft_dprintf(1, "bash: test: %s: binary operator expected\n",
+                t[1]->op);
         else if (t[0]->type == T_NOT && (t[1]->type == T_ARGS
             || t[1]->type == T_EXPANSED) && is_any(t[2]) && (ret = 2)
                 && boul == 0)
-            dprintf(1, "bash: test: %s: unary operator expected\n", t[1]->op);
+            ft_dprintf(1, "bash: test: %s: unary operator expected\n",
+                t[1]->op);
     }
     return (ret);
 }

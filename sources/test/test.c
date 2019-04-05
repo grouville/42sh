@@ -53,14 +53,14 @@ int             ft_test_4_args(t_args_tok  **t, int boul)
         if (((is_all(t[0]) && is_any(t[1]) && is_any(t[2]) && is_any(t[3])) ||
             (t[0]->type == T_NOT && t[1]->type == T_NOT && t[2]->type == T_NOT
                 && is_any(t[3]))) && (ret = 2) && boul == 0)
-            dprintf(1, "bash: test: too many arguments\n");
+            ft_dprintf(1, "bash: test: too many arguments\n");
         else if (t[0]->type == T_NOT && t[1]->type == T_NOT
             && (t[2]->type == T_ARGS || t[2]->type == T_EXPANSED) 
                 && is_any(t[3]) && (ret = 2) && boul == 0)
-            dprintf(1, "bash: test: %s: unary operator expected\n", t[2]->op);
+            ft_dprintf(1, "bash: test: %s: unary operator expected\n", t[2]->op);
         else if (t[0]->type == T_NOT && is_all(t[1]) && is_s_bin(t[2])
             && is_any(t[3]) && (ret = 2) && boul == 0)
-            dprintf(1, "bash: test: %s: binary operator expected\n", t[2]->op);
+            ft_dprintf(1, "bash: test: %s: binary operator expected\n", t[2]->op);
     }
     return (ret);
 }
@@ -84,17 +84,17 @@ int             ft_test_5plus_args(t_args_tok  **t, int boul, char **cmd,
         i++;
     len = ft_len_array_char_test(&cmd[i + 1], &raw_cmd[i + 1]);
     if (len > 3 && (ret = 2))
-        dprintf(1, "bash: test: too many arguments\n");
+        ft_dprintf(1, "bash: test: too many arguments\n");
     else if (len == 0 && (ret = 2))
-        dprintf(1, "bash: test: argument expected\n");
+        ft_dprintf(1, "bash: test: argument expected\n");
     else if (len == 1)
         ret = 0;
     else if (len == 2 && (ret = process_exclam(i,
         ft_test_2_args(&t[i], boul))))
-        ret == 2 ? dprintf(1, "bash: test: too many arguments\n") : 0;
+        ret == 2 ? ft_dprintf(1, "bash: test: too many arguments\n") : 0;
     else if (len == 3 && (ret = process_exclam(i,
         ft_test_3_args(&t[i], boul))))
-        ret == 2 ? dprintf(1, "bash: test: too many arguments\n") : 0;
+        ret == 2 ? ft_dprintf(1, "bash: test: too many arguments\n") : 0;
     return (ret);
 }
 
@@ -111,7 +111,6 @@ int			    ft_builtin_test(char **cmd, char **raw_cmd)
 
     ret = 0;
     len = ft_len_array_char_test(cmd + 1, raw_cmd + 1);
-    dprintf(1, "len: %d\n", len);
     t = initialize_arr_tok(len);
     tokenize_test(cmd, &t, raw_cmd);
     if (len == 0 || (len == 1 && t[0]->tok == T_QUOTE))
@@ -127,6 +126,5 @@ int			    ft_builtin_test(char **cmd, char **raw_cmd)
     else if (len > 4)
         ret = ft_test_5plus_args(t, 1, cmd, raw_cmd);
     free_tokens(&t, len);
-    dprintf(1, "RETURN_TEST: %d\n", ret);
     return (ret);
 }
