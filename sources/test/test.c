@@ -111,7 +111,9 @@ int			    ft_builtin_test(char **cmd, char **raw_cmd)
 
     ret = 0;
     len = ft_len_array_char_test(cmd + 1, raw_cmd + 1);
+    dprintf(1, "len: %d\n", len);
     t = initialize_arr_tok(len);
+    tokenize_test(cmd, &t, raw_cmd);
     if (len == 0 || (len == 1 && t[0]->tok == T_QUOTE))
         ret = 1;
     else if (len == 1)
