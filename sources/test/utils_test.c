@@ -64,7 +64,7 @@ int             free_tokens(t_args_tok  ***t, int len)
     int     i;
 
     i = 0;
-    while (i++ < len)
+    while (i < len)
     {
         if (*t && (*t)[i] && ((*t)[i])->op)
             free(((*t)[i])->op);
@@ -73,6 +73,7 @@ int             free_tokens(t_args_tok  ***t, int len)
         if ((*t)[i])
             free((*t)[i]);
         (*t)[i] = NULL;
+        i++;
     }
     free(*t);
     *t = NULL;
