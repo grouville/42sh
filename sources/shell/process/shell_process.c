@@ -88,25 +88,26 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 	int		fd[3];
 	int		exec;
 
-	shell_prepare(*cmd, shell);
+	shell_prepare(*cmd);
 	signal(SIGINT, shell_prcs_sigint);
 	elem = *cmd;
 	while (elem && (elem = elem->next_cmd))
 	{
+		if (!shell_prepare_args(elem, shell))
+			break ;
 		read_lexing(elem);
 		shell_save_fd(fd);
 		if (elem->sep == SPL_PIPE)
 			exec = shell_exec_pipes(&elem, shell);
 		else
 			exec = shell_exec(elem, shell);
-		printf("-<elem-ret|%d|>\n", elem->ret);
 		shell_reinit_fd(fd);
 		shell_ret(elem, shell);
 		if (exec == -1)
 			return (-1);
 		else if ((exec == EXIT_SUCCESS && elem->sep == DBL_PIPE) ||
 			(exec > 0 && elem->sep == DBL_SPRLU))
-			elem = elem->next_cmd;
+			elem = elem->next_cmd;//chercher le prochain qui valide la condition
 	}
 	shell_clean_data(cmd, shell, 1);
 	return (1);
@@ -115,26 +116,25 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 
 void	read_lexing(t_cmd *elem)
 {
-	//t_output	*read;
+	t_output	*read;
 	int 		i;
 
 	ft_dprintf(2, "-------------\n");
 	ft_dprintf(2, "Read exec : %s\n", elem->exec);
 	i = 0;
-	ft_dprintf(2, "Read array : ");
-	while (elem->args && elem->args[i])
-	{
-		ft_dprintf(2, "arg[%i]=<%s> ", i, elem->args[i]);
-		i++;
-	}
-	i = 0;
-	ft_dprintf(2, "\nRead arraw : ");
+	ft_dprintf(2, "Read arraw : ");
 	while (elem->args_raw && elem->args_raw[i])
 	{
 		ft_dprintf(2, "arg[%i]=<%s> ", i, elem->args_raw[i]);
 		i++;
 	}
-	printf("\n");/*
+	i = 0;
+	ft_dprintf(2, "\nRead array : ");
+	while (elem->args && elem->args[i])
+	{
+		ft_dprintf(2, "arg[%i]=<%s> ", i, elem->args[i]);
+		i++;
+	}
 	ft_dprintf(2, "\nRead output : ");
 	read = elem->output;
 	if (read == NULL)
@@ -177,5 +177,5 @@ void	read_lexing(t_cmd *elem)
 	ft_dprintf(2, "Read fd stderr : |%s|\n", elem->process.fd_stderr);
 	ft_dprintf(2, "Read fileerr : |%d|\n", elem->process.fd_fileerr);
 	ft_dprintf(2, "Et sep %d\n", elem->sep);
-	ft_dprintf(2, "-------------\n");*/
+	ft_dprintf(2, "-------------\n");
 }
