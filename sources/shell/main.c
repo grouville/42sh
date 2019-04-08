@@ -50,7 +50,8 @@ void	shell_save_histo(t_shell *shl)
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
 
-int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret, t_prompt *prmt)
+int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
+									t_prompt *prmt)
 {
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{

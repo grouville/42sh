@@ -28,7 +28,7 @@ int             process_exclam(int nb, int ret_in)
         ret = (nb % 2 == 0 ? 1 : 0);
     else
         ret = (nb % 2 == 0 ? 0 : 1);
-    
+
     return (ret);
 }
 

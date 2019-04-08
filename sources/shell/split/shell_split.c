@@ -59,41 +59,6 @@ BOOL	ft_isempty(char *str)
 }
 
 /*
-** Verifie si les quotes sont fermées et {\} en fin non présent
-*/
-
-BOOL	iscomplet(char *str, t_prompt *prompt)
-{
-	int		i;
-	char	quote;
-
-	i = 0;
-	quote = ' ';
-	while (str && str[i])
-	{
-		if (str[i] == '\\' && ft_strlen(str) >= (i + 2) && quote != '\'')
-			i += 2;
-		if (ft_strchr("'\"", str[i]) && quote == ' ')
-			quote = str[i];
-		else if (str[i] == quote && quote != ' ')
-			quote = ' ';
-		i += (str[i] ? 1 : 0);
-	}
-	if ((i > 0 && quote != ' ') || (i == 1 && str[0] == '\\'))
-	{
-		*prompt = (quote == '"') ? D_QUOTE : S_QUOTE;
-		return (0);
-	}
-	else if (str && (i > 1 && str[i - 1] == '\\' && str[i - 2] != '\\'))
-	{
-		*prompt = BACKSLASH;
-		return (0);
-	}
-	else
-		return (1);
-}
-
-/*
 ** Split line jusqu'au prochain delimiteur
 ** Le premier maillon start de {cmd} (pointé par tous les autres) est vide.
 */

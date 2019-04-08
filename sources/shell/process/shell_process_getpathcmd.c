@@ -13,19 +13,6 @@
 
 #include "shell.h"
 
-char	*get_var(char *var_key)
-{
-	int		i;
-	char	*ret;
-
-	i = 0;
-	while (var_key[i] != '=')
-		i++;
-	ret = ft_strnew(i);
-	ft_strncpy(ret, var_key, i);
-	return (ret);
-}
-
 char	*get_envp(char **envp, char *var)
 {
 	char *tmp;
