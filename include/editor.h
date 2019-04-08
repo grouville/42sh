@@ -73,6 +73,7 @@ typedef enum			e_prompt
 	D_QUOTE,
 	HRDC,
 	BACKSLASH,
+	BRACE,
 }						t_prompt;
 
 typedef struct			s_data
@@ -183,7 +184,8 @@ void					delete_from_cursor_to_end(t_editor *ed);
 void					paste_clipboard(t_editor *ed);
 void					save_ed(t_editor *ed, int mode);
 void					term_history(t_editor *ed);
-int						term_history_incremental_search(t_editor *ed, t_prompt prompt);
+int						term_history_incremental_search(t_editor *ed,
+														t_prompt prompt);
 int						term_reinit(struct termios *raw_mode);
 int						get_term_raw_mode(int mode);
 char					*find_env_var(char **env, char *var, int mode);
@@ -202,7 +204,8 @@ t_editor				*line_editor_init(char **line, t_prompt prompt,
 int						line_editor_delete(t_editor *ed, t_data **hist);
 void					init_t_tab(t_editor *ed);
 int						term_size(t_editor *ed);
-void					window_resize(t_editor *ed, t_prompt prompt, char *hris);
+void					window_resize(t_editor *ed, t_prompt prompt,
+										char *hris);
 int						print_key(t_editor *ed);
 
 void					del_lines(int nb_line);

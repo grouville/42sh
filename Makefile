@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 
 NAME = 42sh
 
@@ -28,6 +28,7 @@ SRCS =  shell/main.c \
         shell/ft_tools.c \
         shell/shell_tools.c \
         shell/shell_envsub.c \
+        shell/shell_argsub_env.c \
         shell/shell_env_init.c \
         shell/shell_error.c \
         shell/shell_hrdc.c \
@@ -69,6 +70,7 @@ SRCS =  shell/main.c \
 		builtins/builtin_fc.c \
 		builtins/builtin_fc_search_occurence.c \
 		builtins/builtin_fc_execute_command.c \
+		builtins/builtin_localvar.c \
         editor/get_stdin.c \
 		editor/prompt.c \
 		editor/cursor_position.c \

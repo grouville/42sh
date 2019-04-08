@@ -141,7 +141,7 @@ void				builtin_setenv(char ***envp, char *key, char *value);
 char				**rmv_key_env(char **envp, char *key);
 void				builtin_export_print(char **envp, char *key);
 int					builtin_echo(char **cmd);
-int					builtin_env_all(char ***envp, char ***envl, char **args);
+int					builtin_env_add(char ***envp, char ***envl, char *arg);
 int					builtin_exit(t_cmd *elem, t_shell *shell);
 char				*get_value(char *arg);
 
@@ -166,6 +166,9 @@ int					check_builtin_export(t_shell *shell, char **cmd);
 int					builtin_fc(char **args, t_shell *shell);
 int					builtin_fc_search_occurence(t_fc *fc, t_data *hist);
 void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
+BOOL				is_var(char *arg);
+int					builtin_localvar(char ***ptn_args, char **args_raw);
+
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 **┃                               split_shell                                  ┃
@@ -174,7 +177,7 @@ void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
 
 t_cmd				*shell_split(char *line, char **envp, t_prompt *prompt);
 t_cmd				*get_args(char **line, char **envp, t_prompt *prompt);
-void				shell_envpsub(char **arg, char **envp, char **envl);
+int					shell_envpsub(char **arg, char **envp, char **envl);
 int					shell_argsub_env(char **arg, int i, char **envp,
 										char **envl);
 int					shell_process(t_cmd **cmd, t_shell *shell);
@@ -202,6 +205,7 @@ int					len_stdin(char *str, char quote);
 char				*get_stdout_to(char *redi, int pos);
 void				read_lexing(t_cmd *elem);
 BOOL				triple_chevrons(char *str);
+BOOL				iscomplet(char *str, t_prompt *prompt);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -211,7 +215,7 @@ BOOL				triple_chevrons(char *str);
 
 int					shell_command_execution(t_shell *shell, t_cmd **cmd,
 					t_shortcut ret, t_prompt *prompt);
-void				shell_prepare(t_cmd *cmd, t_shell *shell);
+void				shell_prepare(t_cmd *cmd);
 char				*shell_getpathexec(char *exec, char **envp);
 void				shell_clean_emptyargs(t_cmd *link);
 int					complete_stdout_path(t_output *std_out, t_shell *shell);
@@ -220,7 +224,7 @@ int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
 void				shell_execve(t_cmd *elem, t_shell *shell);
 int					shell_exec(t_cmd *elem, t_shell *shell);
-
+int					shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
 void				shell_reinit_fd(int *fd);
 void				shell_prcs_sigint(int signum);
@@ -261,6 +265,8 @@ char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
 char 				*ft_strcutword(char **str, int i, int len_word);
 BOOL				check_syntax_err(t_cmd *cmd);
+size_t 				shell_argsub_len_var(char *argi);
+char 				*ft_remplace_char_by_str(char *word, char c, char *str);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -356,6 +362,11 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 ** auteur
 ** ls doesnotexist . >/dev/null 2>&1 (rien) et ls doesnotexist . 2>&1 >/dev/null (no such file or..)
 ** /Users/ythollet/42h/42sh -->exec et ~/42/42sh -->exec et 42sh -->pas exec
+** a="1'2{ENTER}3" --> echo $a = 1'2 3
+** "no'var"=command_not_found
+** a={te"st}|ENTER|" --> a=$'{test}\n'
+** 1=pasok mais a1=ok
+** a={test
 **
 */
 

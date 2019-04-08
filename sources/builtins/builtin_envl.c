@@ -13,14 +13,50 @@
 
 #include "shell.h"
 
+char	*get_var(char *var_key)
+{
+	int		i;
+	char	*ret;
+
+	i = 0;
+	while (var_key[i] != '=')
+		i++;
+	ret = ft_strnew(i);
+	ft_strncpy(ret, var_key, i);
+	return (ret);
+}
+
+char 	*value_multiline(char *value)
+{
+	char 	*ret;
+
+	if (ft_strchr(value, '\n'))
+		value = ft_remplace_char_by_str(value, '\n', "\\n");
+	if (ft_strchr(value, '\''))
+		value = ft_remplace_char_by_str(value, '\'', "\\'");
+	ret = ft_strjoin("'", value);
+	ft_strdel(&value);
+	ft_strjoin_free(&ret, "'");
+	return (ret);
+}
+
 char	*get_value(char *arg)
 {
-	int i;
+	int		i;
+	char 	*tmp;
 
-	i = -1;
-	while (arg && arg[++i])
+	i = 0;
+	while (arg && arg[i])
+	{
 		if (arg[i] == '=')
-			return (ft_strdup(arg + i + 1));
+		{
+			tmp =  ft_strdup(arg + i + 1);
+			if (ft_strchr(tmp, '\n') || ft_strchr(tmp, '\''))
+				tmp = value_multiline(tmp);
+			return (tmp);
+		}
+		i++;
+	}
 	return (NULL);
 }
 
@@ -46,26 +82,18 @@ int		check_replace_env_variable(char ***env, char *var, char *value)
 	return (0);
 }
 
-int		builtin_env_all(char ***envp, char ***envl, char **args)
+int		builtin_env_add(char ***envp, char ***envl, char *arg)
 {
 	char	*var;
 	char	*value;
 
-	if (ft_arrlen(args) > 1)
-	{
-		ft_putstr_fd("42sh: too much arguments\n", 2);
-		return (1);
-	}
-	else
-	{
-		var = get_var(args[0]);
-		value = get_value(args[0]);
-		if (ft_strlen(var))
-			if (!(check_replace_env_variable(envp, var, value)))
-				if (!(check_replace_env_variable(envl, var, value)))
-					*envl = append_key_env(*envl, var, value);
-		ft_strdel(&var);
-		ft_strdel(&value);
-	}
+	var = get_var(arg);
+	value = get_value(arg);
+	if (ft_strlen(var))
+		if (!(check_replace_env_variable(envp, var, value)))
+			if (!(check_replace_env_variable(envl, var, value)))
+				*envl = append_key_env(*envl, var, value);
+	ft_strdel(&var);
+	ft_strdel(&value);
 	return (0);
 }

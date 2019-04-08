@@ -14,6 +14,27 @@
 #include "shell.h"
 
 /*
+** Vérifie que var contient seulement des caractère autorisé [a-zA-Z0-9_]
+** Si var est un seul digit c'est invalid
+*/
+
+BOOL		is_var(char *arg)
+{
+	int 	i;
+
+	i = 0;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+			return (0);
+		i++;
+	}
+	if (i == 1 && ft_isdigit(arg[0]))
+		return (0);
+	return (1);
+}
+
+/*
 ** se poisitonne au dernier '/' et remet a '\0' jusqu'a la fin
 ** sauf si on est a la racine
 */
