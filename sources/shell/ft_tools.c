@@ -87,3 +87,29 @@ char 	*ft_strcutword(char **str, int i, int len_word)
 	ft_strdel(&aft);
 	return (ret);
 }
+
+/*
+** Dans {word} remplace chaque occurence de {c} par la string {str}
+** retourne {word} avec {str} à la place de {c}
+*/
+
+char 	*ft_remplace_char_by_str(char *word, char c, char *str)
+{
+	char	**split_value;
+	int		i;
+	char 	*ret;
+	char 	*tmp;
+
+	split_value = ft_strsplit(word, c);
+	ft_strdel(&word);
+	ret = ft_strdup(split_value[0]);
+	i = 1;
+	while (split_value[i])
+	{
+		tmp = ret;
+		ret = ft_strjoin_mltp(3, ret, str, split_value[i++]);
+		ft_strdel(&tmp);
+	}
+	ft_arrdel(&split_value);
+	return (ret);
+}
