@@ -49,7 +49,7 @@ int		shell_exec_error(int is_builtin, t_cmd *elem)
 ** ATTENTION : shell_exec est dans un fork donc ne pas modif envp & envl
 ** return :
 **   0 --> ok elem suivant
-**   1 --> elem fail ou un séparateur stop l'execution des elem
+**   1 --> elem fail
 **  -1 --> un exit est nécessaire
 */
 
@@ -79,6 +79,17 @@ void	shell_ret(t_cmd *elem, t_shell *shell)
 }
 
 /*
+** recherche le prochaine commande qui ne dépend pas du separateur {sep}
+*/
+
+t_cmd	*shell_process_skip_cmd(t_cmd *elem, t_sep sep)
+{
+	while (elem->sep == sep)
+		elem = elem->next_cmd;
+	return (elem);
+}
+
+/*
 ** exec se prend -1 dans le cas d'un exit confirmé
 */
 
@@ -105,14 +116,14 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 		shell_ret(elem, shell);
 		if (exec == -1)
 			return (-1);
-		else if ((exec == EXIT_SUCCESS && elem->sep == DBL_PIPE) ||
-			(exec > 0 && elem->sep == DBL_SPRLU))
-			elem = elem->next_cmd;//chercher le prochain qui valide la condition
+		else if (exec == EXIT_SUCCESS && elem->sep == DBL_PIPE)
+			elem = shell_process_skip_cmd(elem, DBL_PIPE);
+		else if (exec > 0 && elem->sep == DBL_SPRLU)
+			elem = shell_process_skip_cmd(elem, DBL_SPRLU);
 	}
 	shell_clean_data(cmd, shell, 1);
 	return (1);
 }
-
 
 void	read_lexing(t_cmd *elem)
 {

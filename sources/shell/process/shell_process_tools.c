@@ -18,3 +18,24 @@ void	shell_prcs_sigint(int signum)
 	(void)signum;
 	write(1, "\n", 1);
 }
+
+void	shell_ret(t_cmd *elem, t_shell *shell)
+{
+	char *tmp;
+
+	tmp = ft_itoa(elem->ret);
+	if (!(check_replace_env_variable(&shell->envl, "?", tmp)))
+		shell->envl = append_key_env(shell->envl, "?", tmp);
+	ft_strdel(&tmp);
+}
+
+/*
+** recherche le prochaine commande qui ne dépend pas du separateur {sep}
+*/
+
+t_cmd	*shell_process_skip_cmd(t_cmd *elem, t_sep sep)
+{
+	while (elem->sep == sep)
+		elem = elem->next_cmd;
+	return (elem);
+}

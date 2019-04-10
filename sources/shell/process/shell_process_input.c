@@ -73,7 +73,7 @@ int		check_input_file(char **std_in, t_shell *shell)
 }
 
 /*
-** Même si c'est seulement le dernier input qui est lu ont les check tous
+** Même si c'est seulement le dernier input qui est lu ont les check tous.
 ** On remplit stdin_send seulement si c'est le dernier input et qu'il
 ** ne correspond pas à un HRDC
 */
@@ -82,6 +82,7 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 {
 	int i;
 	int is_fd;
+	int fd;
 
 	i = 0;
 	while (elem->input && elem->input[i])
@@ -98,7 +99,13 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 		{
 			if (i == ft_arrlen(elem->input) - 1 && (int)elem->input[i] != -3
 					&& (int)elem->input[i] != -1)
-				ft_read_file(elem->input[i], &(elem->process).stdin_send);
+			{
+				if ((fd = open(elem->input[i], O_RDONLY)) == -1)
+					return (0);
+				printf("-<|read file|>\n");
+				(elem->process).fd_stdin = ft_strjoin("&", ft_itoa(fd));
+				//ft_read_file(elem->input[i], &(elem->process).stdin_send);
+			}
 		}
 		else
 			return (0);

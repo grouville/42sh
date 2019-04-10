@@ -59,6 +59,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell)
 	BOOL	elem_no_pipe;
 	int		status;
 
+	printf("-<|%s|>\n", (*elem)->process.fd_stdin);
 	elem_no_pipe = 0;
 	while (elem_no_pipe == 0)
 	{

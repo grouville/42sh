@@ -60,18 +60,26 @@ typedef struct		s_stdout
 
 typedef struct		s_cmd
 {
-	char			*exec;
-	char			**args;
-	char 			**args_raw;
-	t_output		*output;
-	char			**input;
-	char			**hrdc;
-	t_process		process;
-	int				sep;
-	int				ret;
+	char			*exec; //path du binaire
+	char			**args; //binaire + les paranètres
+	char 			**args_raw; // pour builtin test
+	t_output		*output; //redirection de sortie
+	char			**input; //tableau des fichier/fd en input
+	char			**hrdc; //liste des char* attendu en tant que heredoc
+	t_process		process; //les fd à dup2
+	int				sep; //separateur
+	int				ret; //valeur de retour
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
 }					t_cmd;
+
+typedef struct		s_job
+{
+	t_cmd			*cmds;
+	pid_t 			pgid;
+	struct termios	tmodes; //saved terminal modes
+	struct s_job	*next;
+}					t_job;
 
 typedef struct		s_type
 {
@@ -240,6 +248,8 @@ void				shell_set_fd_null(t_output *output, t_cmd *elem);
 
 int					get_nbarg(char *str, t_prompt *prompt);
 char				*get_arg(char **str, t_cmd *cmd);
+void				shell_ret(t_cmd *elem, t_shell *shell);
+t_cmd				*shell_process_skip_cmd(t_cmd *elem, t_sep sep);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -367,6 +377,7 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 ** a={te"st}|ENTER|" --> a=$'{test}\n'
 ** 1=pasok mais a1=ok
 ** a={test
+** alias ls="echo noprint" && \ls --> ls est exec
 **
 */
 
