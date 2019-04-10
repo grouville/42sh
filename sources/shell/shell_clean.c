@@ -44,6 +44,24 @@ void	clean_redi(t_output **redi)
 	free(*redi);
 }
 
+int 	clean_jobs(t_job **jobs)
+{
+	t_job	*prev;
+
+	if (*jobs)
+	{
+		prev = *jobs;
+		while ((*jobs = (*jobs)->next))
+		{
+			free(prev);
+			prev = *jobs;
+		}
+		free(prev);
+		*jobs = NULL;
+	}
+	return (-1);
+}
+
 void	clean_cmd(t_cmd **cmd)
 {
 	t_cmd	*prev;

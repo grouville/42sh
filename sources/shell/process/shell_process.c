@@ -69,37 +69,65 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 }
 
 /*
+** return 0 pour passer au job suivant
+** return 1 pour passer à la commande suivante
+** return -1 dans le cas d'un exit confirmé
+*/
+
+int 	shell_process_cmd(t_cmd *elem, t_shell *shell)
+{
+	int exec;
+	int fd[3];
+
+	if (!shell_prepare_args(elem, shell))
+		return (0);
+	read_lexing(elem);
+	shell_save_fd(fd);
+	if (elem->sep == SPL_PIPE)
+		exec = shell_exec_pipes(&elem, shell);
+	else
+		exec = shell_exec(elem, shell);
+	shell_reinit_fd(fd);
+	shell_ret(elem, shell);
+	if (exec == -1)
+		return (-1);
+	else if (exec == EXIT_SUCCESS && elem->sep == DBL_PIPE)
+		elem = shell_process_skip_cmd(elem, DBL_PIPE);
+	else if (exec > 0 && elem->sep == DBL_SPRLU)
+		elem = shell_process_skip_cmd(elem, DBL_SPRLU);
+	else if (elem->sep == 0)
+		return (0);
+	return (1);
+}
+
+/*
 ** exec se prend -1 dans le cas d'un exit confirmé
 */
 
 int		shell_process(t_cmd **cmd, t_shell *shell)
 {
 	t_cmd	*elem;
-	int		fd[3];
-	int		exec;
+	t_job	*jobs;
+	t_job	*free_jobs;
+	int 	ret;
 
-	shell_prepare(*cmd);
-	signal(SIGINT, shell_prcs_sigint);
-	elem = *cmd;
-	while (elem && (elem = elem->next_cmd))
+	jobs = shell_prepare(*cmd);
+	free_jobs = jobs;
+	while ((jobs = jobs->next)) //le premier maillon de jobs est vide
 	{
-		if (!shell_prepare_args(elem, shell))
-			break ;
-		read_lexing(elem);
-		shell_save_fd(fd);
-		if (elem->sep == SPL_PIPE)
-			exec = shell_exec_pipes(&elem, shell);
-		else
-			exec = shell_exec(elem, shell);
-		shell_reinit_fd(fd);
-		shell_ret(elem, shell);
-		if (exec == -1)
-			return (-1);
-		else if (exec == EXIT_SUCCESS && elem->sep == DBL_PIPE)
-			elem = shell_process_skip_cmd(elem, DBL_PIPE);
-		else if (exec > 0 && elem->sep == DBL_SPRLU)
-			elem = shell_process_skip_cmd(elem, DBL_SPRLU);
+		elem = jobs->cmds;
+		while (elem)
+		{
+			ret = shell_process_cmd(elem, shell);
+			if (ret == 0)
+				break ;
+			else if (ret == -1)
+				return (clean_jobs(&jobs));
+			else
+				elem = elem->next_cmd;
+		}
 	}
+	clean_jobs(&jobs);
 	shell_clean_data(cmd, shell, 1);
 	return (1);
 }
@@ -134,7 +162,6 @@ void	read_lexing(t_cmd *elem)
 		ft_dprintf(2, "from %d to <%s> append=%d - ", read->from, read->to, read->append);
 		read = read->next;
 	}
-
 	ft_dprintf(2, "\nRead input : ");
 	if (!elem->input)
 		ft_dprintf(2, "(NULL)");

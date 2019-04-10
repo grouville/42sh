@@ -73,15 +73,41 @@ int		shell_prepare_args(t_cmd *elem, t_shell *shell)
 	return (1);
 }
 
+t_job	*shell_prepare_jobs(t_cmd *cmd)
+{
+	t_job	*jobs;
+	t_job	*job_nxt;
+	t_cmd	*elem;
+	int 	i;
+
+	jobs = (t_job *)malloc(sizeof(t_job));
+	job_nxt = jobs;
+	elem = cmd;
+	while ((elem = elem->next_cmd))
+	{
+		job_nxt->next = (t_job *)malloc(sizeof(t_job));
+		job_nxt = job_nxt->next;
+		job_nxt->cmds = elem;
+		while (elem->sep && elem->sep != PTN_VRGL && elem->sep != SPL_SPRLU)
+			elem = elem->next_cmd;
+		job_nxt->sep = elem->sep;
+		elem->sep = 0;
+	}
+	job_nxt->next = NULL;
+	return (jobs);
+}
+
 /*
 ** Clean des arg vide et get exec path
 ** elem->process.stdin_send à NULL est une protection d'un seg
 */
 
-void	shell_prepare(t_cmd *cmd)
+t_job	*shell_prepare(t_cmd *cmd)
 {
 	t_cmd	*elem;
+	t_job	*jobs;
 
+	signal(SIGINT, shell_prcs_sigint);
 	elem = cmd;
 	while ((elem = elem->next_cmd))
 	{
@@ -91,4 +117,6 @@ void	shell_prepare(t_cmd *cmd)
 			(int)elem->process.stdin_send == -2)
 			elem->process.stdin_send = NULL;
 	}
+	jobs = shell_prepare_jobs(cmd);
+	return (jobs);
 }
