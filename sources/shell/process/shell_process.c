@@ -74,28 +74,28 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 ** return -1 dans le cas d'un exit confirmé
 */
 
-int 	shell_process_cmd(t_cmd *elem, t_shell *shell)
+int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
 {
 	int exec;
 	int fd[3];
 
-	if (!shell_prepare_args(elem, shell))
+	if (!shell_prepare_args(*elem, shell))
 		return (0);
-	read_lexing(elem);
+	read_lexing(*elem);
 	shell_save_fd(fd);
-	if (elem->sep == SPL_PIPE)
-		exec = shell_exec_pipes(&elem, shell);
+	if ((*elem)->sep == SPL_PIPE)
+		exec = shell_exec_pipes(elem, shell);
 	else
-		exec = shell_exec(elem, shell);
+		exec = shell_exec(*elem, shell);
 	shell_reinit_fd(fd);
-	shell_ret(elem, shell);
+	shell_ret(*elem, shell);
 	if (exec == -1)
 		return (-1);
-	else if (exec == EXIT_SUCCESS && elem->sep == DBL_PIPE)
-		elem = shell_process_skip_cmd(elem, DBL_PIPE);
-	else if (exec > 0 && elem->sep == DBL_SPRLU)
-		elem = shell_process_skip_cmd(elem, DBL_SPRLU);
-	else if (elem->sep == 0)
+	else if (exec == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
+		*elem = shell_process_skip_cmd(*elem, DBL_PIPE);
+	else if (exec > 0 && (*elem)->sep == DBL_SPRLU)
+		*elem = shell_process_skip_cmd(*elem, DBL_SPRLU);
+	else if ((*elem)->sep == 0)
 		return (0);
 	return (1);
 }
@@ -113,21 +113,20 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 
 	jobs = shell_prepare(*cmd);
 	free_jobs = jobs;
-	while ((jobs = jobs->next)) //le premier maillon de jobs est vide
+	while ((jobs = jobs->next))
 	{
 		elem = jobs->cmds;
 		while (elem)
 		{
-			ret = shell_process_cmd(elem, shell);
+			ret = shell_process_cmd(&elem, shell);
 			if (ret == 0)
 				break ;
 			else if (ret == -1)
-				return (clean_jobs(&jobs));
-			else
-				elem = elem->next_cmd;
+				return (clean_jobs(&free_jobs));
+			elem = elem->next_cmd;
 		}
 	}
-	clean_jobs(&jobs);
+	clean_jobs(&free_jobs);
 	shell_clean_data(cmd, shell, 1);
 	return (1);
 }
