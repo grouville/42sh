@@ -80,9 +80,10 @@ int		check_input_file(char **std_in, t_shell *shell)
 
 int		shell_read_input(t_cmd *elem, t_shell *shell)
 {
-	int i;
-	int is_fd;
-	int fd;
+	int		i;
+	int		is_fd;
+	int		fd;
+	char	*tmp;
 
 	i = 0;
 	while (elem->input && elem->input[i])
@@ -102,8 +103,9 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 			{
 				if ((fd = open(elem->input[i], O_RDONLY)) == -1)
 					return (0);
-				printf("-<|read file|>\n");
-				(elem->process).fd_stdin = ft_strjoin("&", ft_itoa(fd));
+				tmp = ft_itoa(fd);
+				(elem->process).fd_stdin = ft_strjoin("&", tmp);
+				ft_strdel(&tmp);
 				//ft_read_file(elem->input[i], &(elem->process).stdin_send);
 			}
 		}

@@ -70,7 +70,15 @@ void	shell_save_fd(int fd[3])
 
 void	shell_reinit_fd(int fd[3])
 {
+	int tmp_fd;
+
+	tmp_fd = fd[0];
 	dup2(fd[0], 0);
+	close(tmp_fd);
+	tmp_fd = fd[1];
 	dup2(fd[1], 1);
+	close(tmp_fd);
+	tmp_fd = fd[2];
 	dup2(fd[2], 2);
+	close(tmp_fd);
 }

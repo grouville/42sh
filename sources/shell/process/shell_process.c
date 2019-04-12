@@ -59,12 +59,31 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
+	//read_lexing(elem);
+	printf("-<|%s|===fd stdin=%s>\n", elem->args[0], elem->process.fd_stdin);
+	printf("-<|%s|===fd stdout=%s>\n", elem->args[0], elem->process.fd_stdout);
 	shell_plomberie(elem->process);
 	is_builtin = shell_builtin(elem, shell);
 	if (!shell_exec_error(is_builtin, elem) && !is_builtin && elem->exec)
 		shell_execve(elem, shell);
 	else if (is_builtin == -1)
 		return (-1);
+	printf("-<fin exec|%s|>\n", elem->args[0]);
+	if (elem->process.fd_stdin[1] != '0')
+	{
+		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stdin);
+		close(ft_atoi(elem->process.fd_stdin + 1));
+	}
+	if (elem->process.fd_stdout[1] != '1')
+	{
+		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stdout);
+		close(ft_atoi(elem->process.fd_stdout + 1));
+	}
+	if (elem->process.fd_stderr[1] != '2')
+	{
+		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stderr);
+		close(ft_atoi(elem->process.fd_stderr + 1));
+	}
 	return (elem->ret);
 }
 
@@ -79,15 +98,16 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
 	int exec;
 	int fd[3];
 
+	printf("-<args|%s|>\n", (*elem)->args[0]);
 	if (!shell_prepare_args(*elem, shell))
 		return (0);
-	read_lexing(*elem);
-	shell_save_fd(fd);
+	//read_lexing(*elem);
+	//shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
 		exec = shell_exec_pipes(elem, shell);
 	else
 		exec = shell_exec(*elem, shell);
-	shell_reinit_fd(fd);
+	//shell_reinit_fd(fd);
 	shell_ret(*elem, shell);
 	if (exec == -1)
 		return (-1);

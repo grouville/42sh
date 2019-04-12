@@ -32,7 +32,10 @@ void	shell_pipe_stdin(char *send_stdin)
 void	shell_pipe_stdout(t_process process)
 {
 	if (process.fd_stdout[0] == '&' && process.fd_stdout[1] != '1')
+	{
+		printf("-<|dup2 de %s dans 1|>\n", process.fd_stdout);
 		dup2(ft_atoi(process.fd_stdout + 1), 1);
+	}
 	else if (process.fd_fileout != 0)
 		dup2(process.fd_fileout, 1);
 }
@@ -54,6 +57,11 @@ void	shell_plomberie(t_process process)
 {
 	if (process.stdin_send)
 		shell_pipe_stdin(process.stdin_send);
+	if (process.fd_stdin[1] != '0')
+	{
+		printf("-<|on dup2 %s dans 0|>\n", process.fd_stdin);
+		dup2(ft_atoi(process.fd_stdin + 1), 0);
+	}
 	if (process.last_redi == 1)
 	{
 		shell_pipe_stderr(process);
