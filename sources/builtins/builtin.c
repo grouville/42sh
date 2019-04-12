@@ -70,11 +70,11 @@ BOOL	shell_is_builtin(t_cmd *elem, t_shell *shell)
 
 void 	shell_builtin2(t_cmd *elem, t_shell *shell)
 {
-	if (elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
 		elem->ret = builtin_type(elem->args + 1, shell->envp);
-	if (elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
 		elem->ret = builtin_fc(elem->args + 1, shell);
-	if (elem->args[0] && ft_strcmp("test", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("test", elem->args[0]) == 0)
 		elem->ret = ft_builtin_test(elem->args, elem->args_raw);
 }
 
@@ -91,24 +91,24 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 	int ret;
 
 	ret = shell_is_builtin(elem, shell);
-	if (elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
 		elem->ret = ft_builtin_hash(elem->args, shell);
-	if (elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
 		elem->ret = builtin_echo(elem->args);
-	if (elem->args[0] && ft_strcmp("cd", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("cd", elem->args[0]) == 0)
 		elem->ret = builtin_cd(elem->args, &shell->envp);
-	if (elem->args[0] && ft_strcmp("set", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("set", elem->args[0]) == 0)
 		elem->ret = check_builtin_set(shell, elem->args);
-	if (elem->args[0] && ft_strcmp("unset", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("unset", elem->args[0]) == 0)
 		elem->ret = check_builtin_unset(shell, elem->args);
-	if (elem->args[0] && ft_strcmp("export", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("export", elem->args[0]) == 0)
 		elem->ret = check_builtin_export(shell, elem->args);
-	if (elem->args[0] && ft_strcmp("alias", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("alias", elem->args[0]) == 0)
 		elem->ret = builtin_alias(&shell->alias, elem->args + 1);
-	if (elem->args[0] && ft_strcmp("unalias", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("unalias", elem->args[0]) == 0)
 		elem->ret = builtin_unalias(&shell->alias, elem->args + 1);
 	shell_builtin2(elem, shell);
-	if (elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
+	if (elem->args && elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
 		return (builtin_exit(elem, shell));
 	return (ret);
 }

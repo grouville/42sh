@@ -233,7 +233,7 @@ int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
 void				shell_execve(t_cmd *elem, t_shell *shell);
 int					shell_exec(t_cmd *elem, t_shell *shell);
-//int					shell_prepare_args(t_cmd *elem, t_shell *shell);
+BOOL				shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
 void				shell_reinit_fd(int *fd);
 void				shell_prcs_sigint(int signum);

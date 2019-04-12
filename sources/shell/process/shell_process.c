@@ -59,7 +59,6 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
-	//read_lexing(elem);
 	shell_plomberie(elem->process);
 	is_builtin = shell_builtin(elem, shell);
 	if (!shell_exec_error(is_builtin, elem) && !is_builtin && elem->exec)
@@ -92,6 +91,8 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 	elem = *cmd;
 	while (elem && (elem = elem->next_cmd))
 	{
+		if (!shell_prepare_args(elem, shell))
+			return (0);
 		read_lexing(elem);
 		shell_save_fd(fd);
 		if (elem->sep == SPL_PIPE)

@@ -47,14 +47,15 @@ void	check_hash_then_path(t_cmd *elem, t_shell *shell)
 }
 
 
-void	shell_prepare_args(t_cmd *elem, t_shell *shell)
+BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 {
 	int i;
 
 	i = 0;
 	while (elem->args && elem->args[i])
 	{
-		shell_envpsub(&elem->args[i], shell->envp, shell->envl);
+		if (!shell_envpsub(&elem->args[i], shell->envp, shell->envl))
+			return (0);
 		shl_quotesub(elem->args[i]);
 		if (i == 0)
 		{
@@ -70,6 +71,7 @@ void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 		}
 		i++;
 	}
+	return (1);
 }
 
 /*
@@ -86,7 +88,6 @@ void	shell_prepare(t_cmd *cmd, t_shell *shell)
 	{
 		elem->args_raw = ft_arrdup(elem->args);
 		shell_clean_emptyargs(elem);
-		shell_prepare_args(elem, shell);
 		if ((int)elem->process.stdin_send == -1 ||
 			(int)elem->process.stdin_send == -2)
 			elem->process.stdin_send = NULL;
