@@ -60,30 +60,18 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
 	//read_lexing(elem);
-	printf("-<|%s|===fd stdin=%s>\n", elem->args[0], elem->process.fd_stdin);
-	printf("-<|%s|===fd stdout=%s>\n", elem->args[0], elem->process.fd_stdout);
 	shell_plomberie(elem->process);
 	is_builtin = shell_builtin(elem, shell);
 	if (!shell_exec_error(is_builtin, elem) && !is_builtin && elem->exec)
 		shell_execve(elem, shell);
 	else if (is_builtin == -1)
 		return (-1);
-	printf("-<fin exec|%s|>\n", elem->args[0]);
 	if (elem->process.fd_stdin[1] != '0')
-	{
-		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stdin);
 		close(ft_atoi(elem->process.fd_stdin + 1));
-	}
 	if (elem->process.fd_stdout[1] != '1')
-	{
-		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stdout);
 		close(ft_atoi(elem->process.fd_stdout + 1));
-	}
 	if (elem->process.fd_stderr[1] != '2')
-	{
-		printf("-<%s close|%s|>\n", elem->args[0], elem->process.fd_stderr);
 		close(ft_atoi(elem->process.fd_stderr + 1));
-	}
 	return (elem->ret);
 }
 
@@ -93,60 +81,31 @@ int		shell_exec(t_cmd *elem, t_shell *shell)
 ** return -1 dans le cas d'un exit confirmé
 */
 
-int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
-{
-	int exec;
-	int fd[3];
-
-	printf("-<args|%s|>\n", (*elem)->args[0]);
-	if (!shell_prepare_args(*elem, shell))
-		return (0);
-	//read_lexing(*elem);
-	//shell_save_fd(fd);
-	if ((*elem)->sep == SPL_PIPE)
-		exec = shell_exec_pipes(elem, shell);
-	else
-		exec = shell_exec(*elem, shell);
-	//shell_reinit_fd(fd);
-	shell_ret(*elem, shell);
-	if (exec == -1)
-		return (-1);
-	else if (exec == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
-		*elem = shell_process_skip_cmd(*elem, DBL_PIPE);
-	else if (exec > 0 && (*elem)->sep == DBL_SPRLU)
-		*elem = shell_process_skip_cmd(*elem, DBL_SPRLU);
-	else if ((*elem)->sep == 0)
-		return (0);
-	return (1);
-}
-
-/*
-** exec se prend -1 dans le cas d'un exit confirmé
-*/
-
 int		shell_process(t_cmd **cmd, t_shell *shell)
 {
 	t_cmd	*elem;
-	t_job	*jobs;
-	t_job	*free_jobs;
-	int 	ret;
+	int		fd[3];
+	int		exec;
 
-	jobs = shell_prepare(*cmd);
-	free_jobs = jobs;
-	while ((jobs = jobs->next))
+	shell_prepare(*cmd, shell);
+	signal(SIGINT, shell_prcs_sigint);
+	elem = *cmd;
+	while (elem && (elem = elem->next_cmd))
 	{
-		elem = jobs->cmds;
-		while (elem)
-		{
-			ret = shell_process_cmd(&elem, shell);
-			if (ret == 0)
-				break ;
-			else if (ret == -1)
-				return (clean_jobs(&free_jobs));
+		read_lexing(elem);
+		shell_save_fd(fd);
+		if (elem->sep == SPL_PIPE)
+			exec = shell_exec_pipes(&elem, shell);
+		else
+			exec = shell_exec(elem, shell);
+		shell_reinit_fd(fd);
+		shell_ret(elem, shell);
+		if (exec == -1)
+			return (-1);
+		else if ((exec == EXIT_SUCCESS && elem->sep == DBL_PIPE) ||
+				 (exec > 0 && elem->sep == DBL_SPRLU))
 			elem = elem->next_cmd;
-		}
 	}
-	clean_jobs(&free_jobs);
 	shell_clean_data(cmd, shell, 1);
 	return (1);
 }

@@ -46,15 +46,15 @@ void	check_hash_then_path(t_cmd *elem, t_shell *shell)
 		elem->exec = shell_getpathexec(elem->args[0], shell->envp);
 }
 
-int		shell_prepare_args(t_cmd *elem, t_shell *shell)
+
+void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 {
 	int i;
 
 	i = 0;
 	while (elem->args && elem->args[i])
 	{
-		if (!shell_envpsub(&elem->args[i], shell->envp, shell->envl))
-			return (0);
+		shell_envpsub(&elem->args[i], shell->envp, shell->envl);
 		shl_quotesub(elem->args[i]);
 		if (i == 0)
 		{
@@ -70,31 +70,6 @@ int		shell_prepare_args(t_cmd *elem, t_shell *shell)
 		}
 		i++;
 	}
-	return (1);
-}
-
-t_job	*shell_prepare_jobs(t_cmd *cmd)
-{
-	t_job	*jobs;
-	t_job	*job_nxt;
-	t_cmd	*elem;
-	int 	i;
-
-	jobs = (t_job *)malloc(sizeof(t_job));
-	job_nxt = jobs;
-	elem = cmd;
-	while ((elem = elem->next_cmd))
-	{
-		job_nxt->next = (t_job *)malloc(sizeof(t_job));
-		job_nxt = job_nxt->next;
-		job_nxt->cmds = elem;
-		while (elem->sep && elem->sep != PTN_VRGL && elem->sep != SPL_SPRLU)
-			elem = elem->next_cmd;
-		job_nxt->sep = elem->sep;
-		elem->sep = 0;
-	}
-	job_nxt->next = NULL;
-	return (jobs);
 }
 
 /*
@@ -102,21 +77,18 @@ t_job	*shell_prepare_jobs(t_cmd *cmd)
 ** elem->process.stdin_send à NULL est une protection d'un seg
 */
 
-t_job	*shell_prepare(t_cmd *cmd)
+void	shell_prepare(t_cmd *cmd, t_shell *shell)
 {
 	t_cmd	*elem;
-	t_job	*jobs;
 
-	signal(SIGINT, shell_prcs_sigint);
 	elem = cmd;
 	while ((elem = elem->next_cmd))
 	{
 		elem->args_raw = ft_arrdup(elem->args);
 		shell_clean_emptyargs(elem);
+		shell_prepare_args(elem, shell);
 		if ((int)elem->process.stdin_send == -1 ||
 			(int)elem->process.stdin_send == -2)
 			elem->process.stdin_send = NULL;
 	}
-	jobs = shell_prepare_jobs(cmd);
-	return (jobs);
 }
