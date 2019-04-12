@@ -6,7 +6,7 @@
 /*   By: dzonda <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/09/10 00:46:23 by dzonda       #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 07:42:15 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/12 18:54:06 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,7 @@
 # define ENTER_KEY (ed->key && !ft_strcmp("\n", ed->key))
 # define HOME_KEY (ed->key && !ft_strcmp("\E[H", ed->key))
 # define END_KEY (ed->key && !ft_strcmp("\E[F", ed->key))
+# define DEL_KEY (ed->key && !ft_strcmp("\E[3~", ed->key))
 # define SHIFT_UP (ed->key && !ft_strcmp("\E[1;2A", ed->key))
 # define SHIFT_DOWN (ed->key && !ft_strcmp("\E[1;2B", ed->key))
 # define SHIFT_RIGHT (ed->key && !ft_strcmp("\E[1;2C", ed->key))

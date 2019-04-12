@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/06/19 04:10:17 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 04:57:42 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/12 18:54:02 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -34,7 +34,7 @@ int		backspace(t_editor *ed)
 {
 	char *tmp;
 
-	if (!CTRL_D)
+	if (!CTRL_D && !DEL_KEY)
 		move_cursor_left(ed);
 	if (ed->hist->cmd[ed->cursor_str_pos] == '\n')
 		ed->last_row--;

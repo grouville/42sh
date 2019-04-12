@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/12 00:01:33 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 06:24:04 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/04/12 19:20:32 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -64,7 +64,7 @@ static int		get_keyboard_key(t_editor *ed, t_prompt *prompt,
 	else if (HOME_KEY || CTRL_A || END_KEY || CTRL_E)
 		HOME_KEY || CTRL_A ? go_to_begin_of_line(ed) : go_to_end_of_line(ed);
 	else if (ed->hist->cmd && ((BACKSPACE && ed->cursor_str_pos) ||
-	(CTRL_D && ed->hist->cmd[ed->cursor_str_pos])))
+	((CTRL_D  || DEL_KEY) && ed->hist->cmd[ed->cursor_str_pos])))
 		backspace(ed);
 	else if (TAB_KEY)
 		ed->ret = term_tabulator(ed, prompt, envp, envl);
