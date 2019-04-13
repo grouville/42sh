@@ -104,9 +104,9 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 				if ((fd = open(elem->input[i], O_RDONLY)) == -1)
 					return (0);
 				tmp = ft_itoa(fd);
+				ft_strdel(&(elem->process).fd_stdin);
 				(elem->process).fd_stdin = ft_strjoin("&", tmp);
 				ft_strdel(&tmp);
-				//ft_read_file(elem->input[i], &(elem->process).stdin_send);
 			}
 		}
 		else
