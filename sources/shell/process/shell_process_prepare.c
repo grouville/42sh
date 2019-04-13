@@ -71,6 +71,7 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 		}
 		i++;
 	}
+	shell_clean_emptyargs(elem);
 	return (1);
 }
 
@@ -87,7 +88,6 @@ void	shell_prepare(t_cmd *cmd, t_shell *shell)
 	while ((elem = elem->next_cmd))
 	{
 		elem->args_raw = ft_arrdup(elem->args);
-		shell_clean_emptyargs(elem);
 		if ((int)elem->process.stdin_send == -1 ||
 			(int)elem->process.stdin_send == -2)
 			elem->process.stdin_send = NULL;

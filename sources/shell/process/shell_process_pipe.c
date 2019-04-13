@@ -79,8 +79,8 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell)
 			shell_father_pipe(*elem, fd_pipe);
 		if (elem_no_pipe == 0)
 			*elem = (*elem)->next_cmd;
-		//close(fd_pipe[0]);
-		//close(fd_pipe[1]);
+		if (!shell_prepare_args(*elem, shell))
+			return (0);
 	}
 	waitpid(child, &status, 0);
 	while (wait(NULL) > 0)
