@@ -110,12 +110,12 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 {
 	t_cmd	*elem;
 	t_job	*jobs;
-	t_job	*free_jobs;
+	//t_job	*free_jobs;
 	int 	ret;
 
 	signal(SIGINT, shell_prcs_sigint);
 	jobs = shell_prepare(*cmd);
-	free_jobs = jobs;
+	//free_jobs = jobs;
 	while ((jobs = jobs->next))
 	{
 		elem = jobs->cmds;
@@ -125,11 +125,14 @@ int		shell_process(t_cmd **cmd, t_shell *shell)
 			if (ret == 0)
 				break ;
 			else if (ret == -1)
-				return (clean_jobs(&free_jobs));
+			{
+				//return (clean_jobs(&free_jobs));
+				return (1);
+			}
 			elem = elem->next_cmd;
 		}
 	}
-	clean_jobs(&free_jobs);
+	//clean_jobs(&free_jobs);
 	shell_clean_data(cmd, shell, 1);
 	return (1);
 }
