@@ -13,7 +13,7 @@
 
 # include "shell.h"
 
-void launch_process (process *p, pid_t pgid,
+void launch_process (t_process *p, pid_t pgid,
 					 int infile, int outfile, int errfile,
 					 int foreground)
 {
@@ -64,9 +64,9 @@ void launch_process (process *p, pid_t pgid,
 }
 
 
-void launch_job (job *j, int foreground)
+void launch_job (t_job *j, int foreground)
 {
-	process *p;
+	t_process *p;
 	pid_t pid;
 	int mypipe[2], infile, outfile;
 

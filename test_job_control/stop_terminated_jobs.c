@@ -18,8 +18,8 @@
 
 int mark_process_status (pid_t pid, int status)
 {
-	job *j;
-	process *p;
+	t_job *j;
+	t_process *p;
 
 
 	if (pid > 0)
@@ -73,7 +73,7 @@ void update_status (void)
 /* Check for processes that have status information available,
    blocking until all processes in the given job have reported.  */
 
-void wait_for_job (job *j)
+void wait_for_job (t_job *j)
 {
 	int status;
 	pid_t pid;
@@ -88,7 +88,7 @@ void wait_for_job (job *j)
 
 /* Format information about job status for the user to look at.  */
 
-void format_job_info (job *j, const char *status)
+void format_job_info (t_job *j, const char *status)
 {
 	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
@@ -99,8 +99,8 @@ void format_job_info (job *j, const char *status)
 
 void do_job_notification (void)
 {
-	job *j, *jlast, *jnext;
-	process *p;
+	t_job *j, *jlast, *jnext;
+	t_process *p;
 
 	/* Update status information for child processes.  */
 	update_status ();

@@ -18,7 +18,7 @@
    restore the saved terminal modes and send the process group a
    SIGCONT signal to wake it up before we block.  */
 
-void put_job_in_foreground (job *j, int cont)
+void put_job_in_foreground (t_job *j, int cont)
 {
 	/* Put the job into the foreground.  */
 	tcsetpgrp (shell_terminal, j->pgid);
@@ -47,7 +47,7 @@ void put_job_in_foreground (job *j, int cont)
 /* Put a job in the background.  If the cont argument is true, send
    the process group a SIGCONT signal to wake it up.  */
 
-void put_job_in_background (job *j, int cont)
+void put_job_in_background (t_job *j, int cont)
 {
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)

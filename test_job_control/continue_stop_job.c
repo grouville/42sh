@@ -16,9 +16,9 @@
 
 /* Mark a stopped job J as being running again.  */
 
-void mark_job_as_running (job *j)
+void mark_job_as_running (t_job *j)
 {
-	process *p;
+	t_process *p;
 
 	for (p = j->first_process; p; p = p->next)
 		p->stopped = 0;
@@ -28,7 +28,7 @@ void mark_job_as_running (job *j)
 
 /* Continue the job J.  */
 
-void continue_job (job *j, int foreground)
+void continue_job (t_job *j, int foreground)
 {
 	mark_job_as_running (j);
 	if (foreground)

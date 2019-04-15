@@ -13,9 +13,9 @@
 
 # include "shell.h"
 
-job *find_job (pid_t pgid)
+t_job *find_job (pid_t pgid)
 {
-	job *j;
+	t_job *j;
 
 	for (j = first_job; j; j = j->next)
 		if (j->pgid == pgid)
@@ -25,9 +25,9 @@ job *find_job (pid_t pgid)
 
 
 /* Return true if all processes in the job have stopped or completed.  */
-int job_is_stopped (job *j)
+int job_is_stopped (t_job *j)
 {
-	process *p;
+	t_process *p;
 
 	for (p = j->first_process; p; p = p->next)
 		if (!p->completed && !p->stopped)
@@ -37,9 +37,9 @@ int job_is_stopped (job *j)
 
 
 /* Return true if all processes in the job have completed.  */
-int job_is_completed (job *j)
+int job_is_completed (t_job *j)
 {
-	process *p;
+	t_process *p;
 
 	for (p = j->first_process; p; p = p->next)
 		if (!p->completed)

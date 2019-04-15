@@ -59,6 +59,31 @@ int     main(int ac, char **av)
 {
 	first_job = NULL;
     init_shell();
-    
+    t_process *process = malloc(sizeof(t_process));
+	bzero(process, sizeof(t_process));
+//    char *str[3];
+//    str[0] = "sleep";
+//    str[1] = "5";
+//    str[2] = NULL;
+	char *str[2];
+	str[0] = "vim";
+	str[1] = NULL;
+    process->argv = str;
+
+    t_job *job = malloc(sizeof(t_job));
+    bzero(job, sizeof(t_job));
+    job->command = "test";
+    job->first_process = process;
+    job->stdin = 0;
+    job->stdout = 1;
+    job->stderr = 2;
+
+	launch_job(job, 0);
+//	launch_job(job, 1);
+
+//    process->pid = 0;
+//    process->completed = 0;
+//    process->stopped = 0;
+//    process->status = 0;
     return (1);
 }
