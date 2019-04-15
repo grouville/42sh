@@ -53,6 +53,7 @@ SRCS =  shell/main.c \
         shell/process/shell_process_exec.c \
         shell/process/shell_process_plomberie.c \
         shell/process/shell_process_pipe.c \
+        shell/jobs/shell_init_jobs.c \
 		builtins/builtin_cd.c \
 		builtins/builtin_cd_tools.c \
         builtins/builtin_allenv.c \
@@ -119,7 +120,7 @@ SRCS =  shell/main.c \
 INCLUDES_FILE = shell.h
 
 OBJS_FOLDERS = builtins editor editor/tabulator editor/history shell \
-                shell/split shell/process hash test
+                shell/split shell/process hash test shell/jobs
 OBJS = $(addprefix $(DIR_OBJ),$(SRCS:.c=.o))
 OBJS_FOLDERS_BIS = $(addprefix $(DIR_OBJ),$(OBJS_FOLDERS))
 

@@ -104,6 +104,7 @@ typedef struct		s_shell
 	t_data		*hist;
 	t_htable	*t;
 	int 		count;
+	int			is_interactive;
 }					t_shell;
 
 typedef	struct		s_fc
@@ -292,6 +293,20 @@ char 				*ft_remplace_char_by_str(char *word, char c, char *str);
 
 void                ft_print_hash(t_shell *env);
 int                 ft_builtin_hash(char **cmd, t_shell *env);
+
+
+/*
+**┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+**┃                                  Jobs                                      ┃
+**┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+*/
+
+/*
+** - shell_init_jobs.c
+*/
+
+void				init_shell_job(t_shell *shell);
+
 
 /*
 ** Hard test

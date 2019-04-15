@@ -74,6 +74,7 @@ t_shell		*init_shell(char **envp)
 	if (!(shell = malloc(sizeof(t_shell))))
 		exit(EXIT_FAILURE);
 	ft_bzero(shell, sizeof(t_shell));
+	//init_shell_job(shell);
 	if (!(shell->envp = init_env(ft_arrdup(envp))))
 	{
 		free(shell);
