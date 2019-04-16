@@ -22,11 +22,15 @@ int mark_process_status (pid_t pid, int status)
 	t_process *p;
 
 
+	printf("-<|on veut status du pid=%d|>\n", pid);
+	int i = 0;
 	if (pid > 0)
 	{
 		/* Update the record for the process.  */
 		for (j = first_job; j; j = j->next)
+		{
 			for (p = j->first_process; p; p = p->next)
+			{
 				if (p->pid == pid)
 				{
 					p->status = status;
@@ -36,12 +40,16 @@ int mark_process_status (pid_t pid, int status)
 					{
 						p->completed = 1;
 						if (WIFSIGNALED (status))
-							fprintf (stderr, "%d: Terminated by signal %d.\n",
-									 (int) pid, WTERMSIG (p->status));
+							fprintf(stderr, "%d: Terminated by signal %d.\n",
+									(int) pid, WTERMSIG (p->status));
 					}
 					return 0;
 				}
-		fprintf (stderr, "No child process %d.\n", pid);
+				fprintf(stderr, "process %d et %d\n", pid, p->pid);
+			}
+			printf("-<|boucle %d|>\n", i++);
+		}
+		fprintf (stderr, "No child process %d et %d\n", pid, p->pid);
 		return -1;
 	}
 

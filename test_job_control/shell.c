@@ -54,22 +54,55 @@ void init_shell ()
 	}
 }
 
+int mygetch ( void )
+{
+	int ch;
+	struct termios oldt, newt;
+
+	tcgetattr ( STDIN_FILENO, &oldt );
+	newt = oldt;
+	newt.c_lflag &= ~( ICANON | ECHO );
+	tcsetattr ( STDIN_FILENO, TCSANOW, &newt );
+	ch = getchar();
+	tcsetattr ( STDIN_FILENO, TCSANOW, &oldt );
+
+	return ch;
+}
+
+t_process	*create_process()
+{
+	t_process *ret;
+	t_process *process = malloc(sizeof(t_process));
+	ret = process;
+	bzero(process, sizeof(t_process));
+	process->argv = malloc(sizeof(char *) * 3);
+	process->argv[0] = strdup("cat");
+	process->argv[1] = strdup("ok");
+	process->argv[1] = NULL;
+	t_process *process2 = malloc(sizeof(t_process));
+	process->next = process2;
+	bzero(process2, sizeof(t_process));
+	process2->argv = malloc(sizeof(char *) * 3);
+	process2->argv[0] = strdup("vim");
+	process2->argv[1] = strdup("ok2");
+	process2->argv[1] = NULL;
+
+/*
+	process->next = malloc(sizeof(t_process));
+	process = process->next;
+	bzero(process, sizeof(t_process));
+	char *str3[2];
+	str3[0] = "vim";
+	str3[1] = NULL;
+	process->argv = str;*/
+	return (ret);
+}
 
 int     main(int ac, char **av)
 {
-	first_job = NULL;
     init_shell();
-    t_process *process = malloc(sizeof(t_process));
-	bzero(process, sizeof(t_process));
-//    char *str[3];
-//    str[0] = "sleep";
-//    str[1] = "5";
-//    str[2] = NULL;
-	char *str[2];
-	str[0] = "vim";
-	str[1] = NULL;
-    process->argv = str;
 
+	t_process *process = create_process();
     t_job *job = malloc(sizeof(t_job));
     bzero(job, sizeof(t_job));
     job->command = "test";
@@ -78,7 +111,14 @@ int     main(int ac, char **av)
     job->stdout = 1;
     job->stderr = 2;
 
-	launch_job(job, 0);
+	first_job = job;
+    launch_job(job, 0);
+	//printf("-<|press touch|>\n");
+	mygetch();
+	do_job_notification();
+	mygetch();
+	//put_job_in_foreground(job, 1);
+	//printf("-<|fin|>\n");
 //	launch_job(job, 1);
 
 //    process->pid = 0;

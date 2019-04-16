@@ -40,7 +40,7 @@ void launch_process (t_process *p, pid_t pgid,
 		signal (SIGCHLD, SIG_DFL);
 	}
 
-	/* Set the standard input/output channels of the new process.  */
+	/* Set the standard input/output channels of the new process.  *//*
 	if (infile != STDIN_FILENO)
 	{
 		dup2 (infile, STDIN_FILENO);
@@ -56,7 +56,7 @@ void launch_process (t_process *p, pid_t pgid,
 		dup2 (errfile, STDERR_FILENO);
 		close (errfile);
 	}
-
+*/
 	/* Exec the new process.  Make sure we exit.  */
 	execvp (p->argv[0], p->argv);
 	perror ("execvp");
@@ -70,9 +70,11 @@ void launch_job (t_job *j, int foreground)
 	pid_t pid;
 	int mypipe[2], infile, outfile;
 
+	printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
 	infile = j->stdin;
 	for (p = j->first_process; p; p = p->next)
 	{
+		printf("-<|boucle|>\n");
 		/* Set up pipes, if necessary.  */
 		if (p->next)
 		{
@@ -86,21 +88,25 @@ void launch_job (t_job *j, int foreground)
 		else
 			outfile = j->stdout;
 
-		/* Fork the child processes.  */
+		/* Fork the child processes. */
 		pid = fork ();
 		if (pid == 0)
+		{
+			printf("-<launch |%s|>\n", p->argv[0]);
+			//if (strcmp("cat", p->argv[0]) == 0)
+			//	foreground = 0;
 			/* This is the child process.  */
-			launch_process (p, j->pgid, infile,
-							outfile, j->stderr, foreground);
+			launch_process(p, j->pgid, infile, outfile, j->stderr, foreground);
+		}
 		else if (pid < 0)
 		{
-			/* The fork failed.  */
+			/* The fork failed. */
 			perror ("fork");
 			exit (1);
 		}
 		else
 		{
-			/* This is the parent process.  */
+			/* This is the parent process. */
 			p->pid = pid;
 			if (shell_is_interactive)
 			{
@@ -110,7 +116,7 @@ void launch_job (t_job *j, int foreground)
 			}
 		}
 
-		/* Clean up after pipes.  */
+		/* Clean up after pipes. */
 		if (infile != j->stdin)
 			close (infile);
 		if (outfile != j->stdout)
