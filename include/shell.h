@@ -69,6 +69,10 @@ typedef struct		s_cmd
 	t_process		process; //les fd à dup2
 	int				sep; //separateur
 	int				ret; //valeur de retour
+	pid_t			pid;          /* process ID */
+	char			completed;    /* true if process has completed */
+	char			stopped;      /* true if process has stopped */
+	int				status;       /* reported status value */
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
 }					t_cmd;
@@ -76,11 +80,25 @@ typedef struct		s_cmd
 typedef struct		s_job
 {
 	t_cmd			*cmds;
-	pid_t 			pgid;
 	int 			sep;
-	struct termios	tmodes; //saved terminal modes
+
+	pid_t			pgid;                 /* process group ID */
+	int 			state;
+	char			notified;              /* true if user told about stopped job */
+	struct termios	tmodes;      /* saved terminal modes */
+	int 			stdin;
+	int 			stdout;
+	int 			stderr;  /* standard i/o channels */
+	char			*command;              /* command line, used for messages */
 	struct s_job	*next;
 }					t_job;
+
+/* The active jobs are linked into a list.  This is its head.   */
+t_job *first_job;
+pid_t shell_pgid;
+struct termios shell_tmodes;
+int shell_terminal;
+int shell_is_interactive;
 
 typedef struct		s_type
 {
@@ -306,6 +324,27 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 */
 
 void				init_shell_job(t_shell *shell);
+void				put_job_in_background (t_job *j, int cont);
+void				put_job_in_foreground (t_job *j, int cont);
+int					mark_process_status (pid_t pid, int status);
+void 				update_status (void);
+void				wait_for_job (t_job *j);
+void				format_job_info (t_job *j, const char *status);
+void				do_job_notification (void);
+void				mark_job_as_running (t_job *j);
+void				continue_job (t_job *j, int foreground);
+
+/* Find the active job with the indicated pgid.  */
+t_job				*find_job (pid_t pgid);
+
+
+/* Return true if all processes in the job have stopped or completed.  */
+int					job_is_stopped (t_job *j);
+
+
+/* Return true if all processes in the job have completed.  */
+int					job_is_completed (t_job *j);
+void				process_init_shell_job(void);
 
 
 /*
@@ -395,7 +434,6 @@ void				init_shell_job(t_shell *shell);
 ** 1=pasok mais a1=ok
 ** a={test
 ** alias ls="echo noprint" && \ls --> ls est exec
-**
 */
 
 /*

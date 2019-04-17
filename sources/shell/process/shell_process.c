@@ -17,63 +17,6 @@
 
 #include "shell.h"
 
-int		shell_exec_error(int is_builtin, t_cmd *elem)
-{
-	int ret;
-
-	ret = 1;
-	if (!is_builtin && elem->exec)
-	{
-		if (ft_strcmp("not found", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
-		else if (ft_strcmp("directory", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
-		else if (ft_strcmp("file or directory", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: No such file or directory\n",
-					   elem->args[0]);
-		else if (ft_strcmp("no allowed", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
-		else
-			ret = 0;
-		if (ft_strcmp("no allowed", elem->exec) == 0 ||
-			ft_strcmp("directory", elem->exec) == 0)
-			elem->ret = 126;
-		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
-				ft_strcmp("not found", elem->exec) == 0)
-			elem->ret = 127;
-	}
-	return (ret);
-}
-
-/*
-** ATTENTION : shell_exec est dans un fork donc ne pas modif envp & envl
-** return :
-**   0 --> ok elem suivant
-**   1 --> elem fail
-**  -1 --> un exit est nécessaire
-*/
-
-int		shell_exec(t_cmd *elem, t_shell *shell)
-{
-	int	is_builtin;
-
-	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
-		return (1);
-	shell_plomberie(elem->process);
-	is_builtin = shell_builtin(elem, shell);
-	if (!shell_exec_error(is_builtin, elem) && !is_builtin && elem->exec)
-		shell_execve(elem, shell);
-	else if (is_builtin == -1)
-		return (-1);
-	if (elem->process.fd_stdin[1] != '0')
-		close(ft_atoi(elem->process.fd_stdin + 1));
-	if (elem->process.fd_stdout[1] != '1')
-		close(ft_atoi(elem->process.fd_stdout + 1));
-	if (elem->process.fd_stderr[1] != '2')
-		close(ft_atoi(elem->process.fd_stderr + 1));
-	return (elem->ret);
-}
-
 /*
 ** return 0 pour passer au job suivant
 ** return 1 pour passer à la commande suivante
@@ -106,31 +49,142 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
 	return (1);
 }
 
-int		shell_process(t_cmd **cmd, t_shell *shell)
+void 	launch_process(t_cmd *elem, pid_t pgid,
+					   int infile, int outfile, int errfile,
+					   int foreground)
+{
+	pid_t pid;
+
+	if (shell_is_interactive)
+	{
+		/* Put the process into the process group and give the process group
+		   the terminal, if appropriate.
+		   This has to be done both by the shell and in the individual
+		   child processes because of potential race conditions.  */
+		pid = getpid ();
+		if (pgid == 0) pgid = pid;
+		setpgid (pid, pgid);
+		if (foreground)
+			tcsetpgrp (shell_terminal, pgid);
+
+		/* Set the handling for job control signals back to the default.  */
+		signal (SIGINT, SIG_DFL);
+		signal (SIGQUIT, SIG_DFL);
+		signal (SIGTSTP, SIG_DFL);
+		signal (SIGTTIN, SIG_DFL);
+		signal (SIGTTOU, SIG_DFL);
+		signal (SIGCHLD, SIG_DFL);
+	}
+
+	/* Set the standard input/output channels of the new process.  *//*
+	if (infile != STDIN_FILENO)
+	{
+		dup2 (infile, STDIN_FILENO);
+		close (infile);
+	}
+	if (outfile != STDOUT_FILENO)
+	{
+		dup2 (outfile, STDOUT_FILENO);
+		close (outfile);
+	}
+	if (errfile != STDERR_FILENO)
+	{
+		dup2 (errfile, STDERR_FILENO);
+		close (errfile);
+	}
+*/
+	/* Exec the new process.  Make sure we exit.  */
+	execvp (elem->args[0], elem->args);
+	perror ("execvp");
+	exit (1);
+}
+
+int		launch_job(t_job *job, t_shell *shell, int foreground)
 {
 	t_cmd	*elem;
-	t_job	*jobs;
+	pid_t	pid;
 	//t_job	*free_jobs;
 	int 	ret;
+	int 	mypipe[2];
+	int		infile;
+	int		outfile;
 
-	signal(SIGINT, shell_prcs_sigint);
-	jobs = shell_prepare(*cmd);
-	//free_jobs = jobs;
-	while ((jobs = jobs->next))
+	printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
+	infile = job->stdin;
+	elem = job->cmds;
+	while (elem)
 	{
-		elem = jobs->cmds;
-		while (elem)
+		if (elem->next_cmd)
 		{
-			ret = shell_process_cmd(&elem, shell);
-			if (ret == 0)
-				break ;
-			else if (ret == -1)
-			{
-				//return (clean_jobs(&free_jobs));
-				return (1);
-			}
-			elem = elem->next_cmd;
+			pipe(mypipe);
+			outfile = mypipe[1];
 		}
+		else
+			outfile = job->stdout;
+
+
+		if ((pid = fork ()) == 0)
+			launch_process(elem, job->pgid, infile, outfile, job->stderr, foreground);
+		else
+		{
+			/* This is the parent process. */
+			elem->pid = pid;
+			if (shell_is_interactive)
+			{
+				if (!job->pgid)
+					job->pgid = pid;
+				setpgid (pid, job->pgid);
+			}
+		}
+
+		/* Clean up after pipes. */
+		if (infile != job->stdin)
+			close (infile);
+		if (outfile != job->stdout)
+			close (outfile);
+		infile = mypipe[0];
+
+		/*
+		ret = shell_process_cmd(&elem, shell);
+		if (ret == 0)
+			break;
+		else if (ret == -1)
+		{
+			//return (clean_jobs(&free_jobs));
+			return (1);
+		}*/
+		elem = elem->next_cmd;
+	}
+
+	ft_dprintf(2, "%ld (launched): %s", (long)job->pgid, job->command);
+
+	if (!shell_is_interactive)
+		wait_for_job (job);
+	else if (foreground)
+		put_job_in_foreground (job, 0);
+	else
+		put_job_in_background (job, 0);
+	return (1);
+}
+
+
+int		shell_process(t_cmd **cmd, t_shell *shell)
+{
+
+	t_job	*job;
+	int 	ret;
+	int 	forground;
+
+	//Toujours nécessaire d'intercepter Ctrl-C ?
+	//signal(SIGINT, shell_prcs_sigint);
+	process_init_shell_job();
+	job = shell_prepare(*cmd);
+	//free_jobs = jobs;
+	while ((job = job->next))
+	{
+		forground = (job->sep) == SPL_SPRLU ? 0 : 1;
+		ret = launch_job(job, shell, forground);
+		printf("-<ret de job |%d|>\n", ret);
 	}
 	//clean_jobs(&free_jobs);
 	shell_clean_data(cmd, shell, 1);

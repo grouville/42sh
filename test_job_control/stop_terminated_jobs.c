@@ -78,6 +78,12 @@ void update_status (void)
 }
 
 
+/* Format information about job status for the user to look at.  */
+
+void format_job_info (t_job *j, const char *status)
+{
+	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
+}
 /* Check for processes that have status information available,
    blocking until all processes in the given job have reported.  */
 
@@ -91,14 +97,6 @@ void wait_for_job (t_job *j)
 	while (!mark_process_status (pid, status)
 		   && !job_is_stopped (j)
 		   && !job_is_completed (j));
-}
-
-
-/* Format information about job status for the user to look at.  */
-
-void format_job_info (t_job *j, const char *status)
-{
-	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
 
 

@@ -67,7 +67,7 @@ void launch_process (t_process *p, pid_t pgid,
 void launch_job (t_job *j, int foreground)
 {
 	t_process *p;
-	pid_t pid;
+	pid_t	pid;
 	int mypipe[2], infile, outfile;
 
 	printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
@@ -93,8 +93,6 @@ void launch_job (t_job *j, int foreground)
 		if (pid == 0)
 		{
 			printf("-<launch |%s|>\n", p->argv[0]);
-			//if (strcmp("cat", p->argv[0]) == 0)
-			//	foreground = 0;
 			/* This is the child process.  */
 			launch_process(p, j->pgid, infile, outfile, j->stderr, foreground);
 		}

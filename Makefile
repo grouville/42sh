@@ -54,6 +54,9 @@ SRCS =  shell/main.c \
         shell/process/shell_process_plomberie.c \
         shell/process/shell_process_pipe.c \
         shell/jobs/shell_init_jobs.c \
+        shell/jobs/wait_job.c \
+        shell/jobs/job_is.c \
+        shell/jobs/put_job.c \
 		builtins/builtin_cd.c \
 		builtins/builtin_cd_tools.c \
         builtins/builtin_allenv.c \

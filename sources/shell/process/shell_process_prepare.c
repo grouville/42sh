@@ -77,26 +77,30 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 
 t_job	*shell_prepare_jobs(t_cmd *cmd)
 {
-	t_job	*jobs;
-	t_job	*job_nxt;
+	t_job	*jobs_ret;
+	t_job	*job;
 	t_cmd	*elem;
 	int 	i;
 
-	jobs = (t_job *)malloc(sizeof(t_job));
-	job_nxt = jobs;
+	jobs_ret = (t_job *)malloc(sizeof(t_job));
+	job = jobs_ret;
 	elem = cmd;
 	while ((elem = elem->next_cmd))
 	{
-		job_nxt->next = (t_job *)malloc(sizeof(t_job));
-		job_nxt = job_nxt->next;
-		job_nxt->cmds = elem;
+		job->next = (t_job *)malloc(sizeof(t_job));
+		job = job->next;
+		ft_bzero(job, sizeof(t_job));
+		job->cmds = elem;
 		while (elem->sep && elem->sep != PTN_VRGL && elem->sep != SPL_SPRLU)
 			elem = elem->next_cmd;
-		job_nxt->sep = elem->sep;
-		elem->sep = 0;
+		job->sep = elem->sep;
+		job->command = "test";
+		job->stdin = 0;
+		job->stdout = 1;
+		job->stderr = 2;
 	}
-	job_nxt->next = NULL;
-	return (jobs);
+	job->next = NULL;
+	return (jobs_ret);
 }
 
 /*
