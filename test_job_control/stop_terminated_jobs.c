@@ -43,7 +43,10 @@ int mark_process_status (pid_t pid, int status)
 							fprintf(stderr, "%d: Terminated by signal %d.\n",
 									(int) pid, WTERMSIG (p->status));
 					}
-					return 0;
+					{
+						printf("-<|return 0|>\n");
+						return 0;
+					}
 				}
 				fprintf(stderr, "process %d et %d\n", pid, p->pid);
 			}

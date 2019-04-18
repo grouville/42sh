@@ -208,7 +208,7 @@ t_cmd				*get_args(char **line, char **envp, t_prompt *prompt);
 int					shell_envpsub(char **arg, char **envp, char **envl);
 int					shell_argsub_env(char **arg, int i, char **envp,
 										char **envl);
-int					shell_process(t_cmd **cmd, t_shell *shell);
+int					shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell);
 t_output			*shell_std_out(char **arg, t_output **first_redi,
 										char quote);
 void				shell_std_in(char **arg, char quote, t_cmd *cmd);
@@ -241,9 +241,7 @@ BOOL				iscomplet(char *str, t_prompt *prompt);
 **┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 */
 
-int					shell_command_execution(t_shell *shell, t_cmd **cmd,
-					t_shortcut ret, t_prompt *prompt);
-t_job				*shell_prepare(t_cmd *cmd);
+void				shell_prepare(t_job *jobs, t_cmd *cmd);
 char				*shell_getpathexec(char *exec, char **envp);
 void				shell_clean_emptyargs(t_cmd *link);
 int					complete_stdout_path(t_output *std_out, t_shell *shell);
@@ -291,7 +289,7 @@ void				shl_quotesub(char *arg);
 void				*shl_mlc(char *type, int n, ...);
 int					shell_exit(t_cmd **cmd, t_shell **shell);
 void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
-						char **env);
+						char **env, t_job **job);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
 char 				*ft_strcutword(char **str, int i, int len_word);
@@ -323,7 +321,6 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 ** - shell_init_jobs.c
 */
 
-void				init_shell_job(t_shell *shell);
 void				put_job_in_background (t_job *j, int cont);
 void				put_job_in_foreground (t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
@@ -344,7 +341,7 @@ int					job_is_stopped (t_job *j);
 
 /* Return true if all processes in the job have completed.  */
 int					job_is_completed (t_job *j);
-void				process_init_shell_job(void);
+void				process_init_shell_for_job(void);
 
 
 /*

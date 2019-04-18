@@ -93,7 +93,7 @@ int     main(int ac, char **av)
 {
     init_shell();
 
-	t_process *process = create_process("cat");
+	t_process *process = create_process("vim");
     t_job *job = malloc(sizeof(t_job));
     bzero(job, sizeof(t_job));
     job->command = "test1";

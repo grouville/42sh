@@ -62,7 +62,8 @@ void 	launch_process(t_cmd *elem, pid_t pgid,
 		   This has to be done both by the shell and in the individual
 		   child processes because of potential race conditions.  */
 		pid = getpid ();
-		if (pgid == 0) pgid = pid;
+		if (pgid == 0)
+			pgid = pid;
 		setpgid (pid, pgid);
 		if (foreground)
 			tcsetpgrp (shell_terminal, pgid);
@@ -104,7 +105,6 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 	t_cmd	*elem;
 	pid_t	pid;
 	//t_job	*free_jobs;
-	int 	ret;
 	int 	mypipe[2];
 	int		infile;
 	int		outfile;
@@ -116,15 +116,25 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 	{
 		if (elem->next_cmd)
 		{
-			pipe(mypipe);
+			if (pipe (mypipe) < 0)
+			{
+				perror ("pipe");
+				exit (1);
+			}
 			outfile = mypipe[1];
 		}
 		else
 			outfile = job->stdout;
 
-
-		if ((pid = fork ()) == 0)
+		pid = fork ();
+		if (pid == 0)
 			launch_process(elem, job->pgid, infile, outfile, job->stderr, foreground);
+		else if (pid < 0)
+		{
+			/* The fork failed. */
+			perror ("fork");
+			exit (1);
+		}
 		else
 		{
 			/* This is the parent process. */
@@ -156,7 +166,7 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 		elem = elem->next_cmd;
 	}
 
-	ft_dprintf(2, "%ld (launched): %s", (long)job->pgid, job->command);
+	ft_dprintf(2, "%ld (launched): %s\n", (long)job->pgid, job->cmds->args[0]);
 
 	if (!shell_is_interactive)
 		wait_for_job (job);
@@ -168,23 +178,29 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 }
 
 
-int		shell_process(t_cmd **cmd, t_shell *shell)
+int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 {
 
-	t_job	*job;
 	int 	ret;
 	int 	forground;
+	t_job	*job;
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
-	process_init_shell_job();
-	job = shell_prepare(*cmd);
+	process_init_shell_for_job();
+	shell_prepare(jobs, *cmd);
 	//free_jobs = jobs;
+	job = jobs;
 	while ((job = job->next))
 	{
-		forground = (job->sep) == SPL_SPRLU ? 0 : 1;
-		ret = launch_job(job, shell, forground);
-		printf("-<ret de job |%d|>\n", ret);
+		printf("-<state|%d|>\n", job->state);
+		if (job->state != -1) //on lance que les new jobs pas en background
+		{
+			forground = (job->sep) == SPL_SPRLU ? 0 : 1;
+			ret = launch_job(job, shell, forground);
+			job->state = (job->sep) == SPL_SPRLU ? -1 : 1;
+			printf("-<ret de job |%d|>\n", ret);
+		}
 	}
 	//clean_jobs(&free_jobs);
 	shell_clean_data(cmd, shell, 1);

@@ -75,15 +75,15 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 	return (1);
 }
 
-t_job	*shell_prepare_jobs(t_cmd *cmd)
+void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
 {
-	t_job	*jobs_ret;
 	t_job	*job;
 	t_cmd	*elem;
 	int 	i;
 
-	jobs_ret = (t_job *)malloc(sizeof(t_job));
-	job = jobs_ret;
+	job = jobs;
+	while ((job->next))
+		job = job->next;
 	elem = cmd;
 	while ((elem = elem->next_cmd))
 	{
@@ -94,13 +94,15 @@ t_job	*shell_prepare_jobs(t_cmd *cmd)
 		while (elem->sep && elem->sep != PTN_VRGL && elem->sep != SPL_SPRLU)
 			elem = elem->next_cmd;
 		job->sep = elem->sep;
-		job->command = "test";
+		job->command = "jobs->command";
 		job->stdin = 0;
 		job->stdout = 1;
 		job->stderr = 2;
 	}
-	job->next = NULL;
-	return (jobs_ret);
+	if (job)
+		job->next = NULL;
+	else
+		printf("-<|DAMN condition could be false, we save seg|>\n");
 }
 
 /*
@@ -108,10 +110,9 @@ t_job	*shell_prepare_jobs(t_cmd *cmd)
 ** elem->process.stdin_send à NULL est une protection d'un seg
 */
 
-t_job	*shell_prepare(t_cmd *cmd)
+void	shell_prepare(t_job *jobs, t_cmd *cmd)
 {
 	t_cmd	*elem;
-	t_job	*jobs;
 
 	elem = cmd;
 	while ((elem = elem->next_cmd))
@@ -121,6 +122,5 @@ t_job	*shell_prepare(t_cmd *cmd)
 			(int)elem->process.stdin_send == -2)
 			elem->process.stdin_send = NULL;
 	}
-	jobs = shell_prepare_jobs(cmd);
-	return (jobs);
+	shell_prepare_jobs(jobs, cmd);
 }

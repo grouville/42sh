@@ -43,13 +43,15 @@ int			init_terminal_data(void)
 }
 
 void		shell_init(t_shell **shell, t_prompt *prompt,
-		t_cmd **cmd, char **env)
+		t_cmd **cmd, char **env, t_job **jobs)
 {
 	if (init_terminal_data())
 		exit(EXIT_FAILURE);
 	*shell = init_shell(env);
 	*prompt = PROMPT;
 	*cmd = NULL;
+	*jobs = malloc(sizeof(t_job));
+	ft_bzero(*jobs, sizeof(t_job));
 }
 
 int			shell_exit(t_cmd **cmd, t_shell **shell)
@@ -74,7 +76,6 @@ t_shell		*init_shell(char **envp)
 	if (!(shell = malloc(sizeof(t_shell))))
 		exit(EXIT_FAILURE);
 	ft_bzero(shell, sizeof(t_shell));
-	//init_shell_job(shell);
 	if (!(shell->envp = init_env(ft_arrdup(envp))))
 	{
 		free(shell);

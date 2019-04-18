@@ -51,7 +51,7 @@ void	shell_save_histo(t_shell *shl)
 */
 
 int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
-									t_prompt *prmt)
+									t_prompt *prmt, t_job *jobs)
 {
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
@@ -68,7 +68,7 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 		shell_save_histo(shl);
 		if (check_syntax_err(*cmd))
 			shell_clean_data(cmd, shl, 0);
-		else if (shell_process(cmd, shl) == -1)
+		else if (shell_process(jobs, cmd, shl) == -1)
 			return (-1);
 	}
 	return (0);
@@ -81,12 +81,13 @@ int		main(void)
 	t_prompt	prmt;
 	t_cmd		*cmd;
 	t_shortcut	ret;
+	t_job		*jobs;
 
-	shell_init(&shl, &prmt, &cmd, environ);
+	shell_init(&shl, &prmt, &cmd, environ, &jobs);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		if ((ret = shell_command_execution(shl, &cmd, ret, &prmt)) == 1)
+		if ((ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs)) == 1)
 			continue ;
 		else if (ret == -1)
 			break ;
