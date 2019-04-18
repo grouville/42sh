@@ -31,13 +31,10 @@ void put_job_in_foreground (t_job *j, int cont)
 			perror ("kill (SIGCONT)");
 	}
 
-
 	/* Wait for it to report.  */
 	wait_for_job (j);
-
 	/* Put the shell back in the foreground.  */
 	tcsetpgrp (shell_terminal, shell_pgid);
-
 	/* Restore the shell’s terminal modes.  */
 	tcgetattr (shell_terminal, &j->tmodes);
 	tcsetattr (shell_terminal, TCSADRAIN, &shell_tmodes);

@@ -342,6 +342,7 @@ int					job_is_stopped (t_job *j);
 /* Return true if all processes in the job have completed.  */
 int					job_is_completed (t_job *j);
 void				process_init_shell_for_job(void);
+void				do_job_notification (void);
 
 
 /*

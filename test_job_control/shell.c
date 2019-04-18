@@ -69,6 +69,28 @@ int mygetch ( void )
 	return ch;
 }
 
+t_process	*create_process2(char *process_name)
+{
+	t_process *ret;
+	t_process *process = malloc(sizeof(t_process));
+	ret = process;
+	bzero(process, sizeof(t_process));
+	process->argv = malloc(sizeof(char *) * 4);
+	process->argv[0] = strdup(process_name);
+	process->argv[1] = strdup("-R");
+	process->argv[2] = strdup("/");
+	process->argv[3] = NULL;/*
+	t_process *process2 = malloc(sizeof(t_process));
+	process->next = process2;
+	bzero(process2, sizeof(t_process));
+	process2->argv = malloc(sizeof(char *) * 3);
+	process2->argv[0] = strdup("vim");
+	process2->argv[1] = strdup("ok2");
+	process2->argv[1] = NULL;*/
+
+	return (ret);
+}
+
 t_process	*create_process(char *process_name)
 {
 	t_process *ret;
@@ -93,7 +115,7 @@ int     main(int ac, char **av)
 {
     init_shell();
 
-	t_process *process = create_process("vim");
+	t_process *process = create_process2("ls");
     t_job *job = malloc(sizeof(t_job));
     bzero(job, sizeof(t_job));
     job->command = "test1";
@@ -110,7 +132,7 @@ int     main(int ac, char **av)
     launch_job(job, 0);
 	//printf("-<|press touch|>\n");
 	mygetch();
-	launch_job(job2, 0);
+	launch_job(job2, 1);
 	do_job_notification();
 	mygetch();
 	//put_job_in_foreground(job, 1);

@@ -21,6 +21,7 @@ int mark_process_status (pid_t pid, int status)
 	t_job *job;
 	t_cmd *elem;
 
+	printf("-<|on veut status du pid=%d|>\n", pid);
 	int i = 0;
 	if (pid > 0)
 	{
@@ -28,12 +29,12 @@ int mark_process_status (pid_t pid, int status)
 		job = first_job;
 		while ((job = job->next))
 		{
-		//for (job = first_job; job; job = job->next)
-		//{
-			for (elem = job->cmds; elem; elem = elem->next_cmd)
+			elem = job->cmds;
+			while (elem)
 			{
 				if (elem->pid == pid)
 				{
+					printf("-<|on check le status de %d|>\n", elem->pid);
 					elem->status = status;
 					if (WIFSTOPPED (status))
 						elem->stopped = 1;
@@ -50,8 +51,8 @@ int mark_process_status (pid_t pid, int status)
 					}
 				}
 				fprintf(stderr, "process %d et %d\n", pid, elem->pid);
+				elem = elem->next_cmd;
 			}
-			printf("-<|boucle %d|>\n", i++);
 		}
 		fprintf (stderr, "No child process %d et %d\n", pid, elem->pid);
 		return -1;
@@ -65,7 +66,6 @@ int mark_process_status (pid_t pid, int status)
 	}
 	else {
 		/* Other weird errors.  */
-		printf("-<|werid error|>\n");
 		perror ("waitpid");
 		return -1;
 	}
@@ -76,10 +76,31 @@ void wait_for_job (t_job *j)
 {
 	int status;
 	pid_t pid;
+	id_t id;
+	siginfo_t t;
 
-	do
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-	while (!mark_process_status (pid, status)
-		   && !job_is_stopped (j)
-		   && !job_is_completed (j));
+	printf("-<|wait for job dont %s PID=%d est process[1] et pgid est %d|>\n", j->cmds->args[0], j->cmds->pid, j->pgid);
+	while (1)
+	{
+		printf("-<|loop|>\n");
+		pid = waitpid (j->cmds->pid, &status, WUNTRACED);
+		printf("-<|fin wait pid %d|>\n", pid);
+		if (mark_process_status (pid, status))
+			break ;
+		printf("-<|mark procss staus ok|>\n");
+		if (job_is_stopped (j))
+			break ;
+		printf("-<|job is stopped ok|>\n");
+		if (job_is_completed (j))
+			break ;
+		printf("-<|job is completed ok|>\n");
+
+	}
+
+//	do
+//		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
+//	while (!mark_process_status (pid, status)
+//		   && !job_is_stopped (j)
+//		   && !job_is_completed (j));
+	printf("-<|fin wait for job|>\n");
 }

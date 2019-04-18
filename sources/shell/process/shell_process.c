@@ -77,23 +77,6 @@ void 	launch_process(t_cmd *elem, pid_t pgid,
 		signal (SIGCHLD, SIG_DFL);
 	}
 
-	/* Set the standard input/output channels of the new process.  *//*
-	if (infile != STDIN_FILENO)
-	{
-		dup2 (infile, STDIN_FILENO);
-		close (infile);
-	}
-	if (outfile != STDOUT_FILENO)
-	{
-		dup2 (outfile, STDOUT_FILENO);
-		close (outfile);
-	}
-	if (errfile != STDERR_FILENO)
-	{
-		dup2 (errfile, STDERR_FILENO);
-		close (errfile);
-	}
-*/
 	/* Exec the new process.  Make sure we exit.  */
 	execvp (elem->args[0], elem->args);
 	perror ("execvp");
@@ -148,12 +131,12 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 		}
 
 		/* Clean up after pipes. */
-		if (infile != job->stdin)
+		/*if (infile != job->stdin)
 			close (infile);
 		if (outfile != job->stdout)
 			close (outfile);
 		infile = mypipe[0];
-
+*/
 		/*
 		ret = shell_process_cmd(&elem, shell);
 		if (ret == 0)
@@ -167,7 +150,6 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 	}
 
 	ft_dprintf(2, "%ld (launched): %s\n", (long)job->pgid, job->cmds->args[0]);
-
 	if (!shell_is_interactive)
 		wait_for_job (job);
 	else if (foreground)
@@ -187,7 +169,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
-	process_init_shell_for_job();
+	do_job_notification();
 	shell_prepare(jobs, *cmd);
 	//free_jobs = jobs;
 	job = jobs;
@@ -199,10 +181,9 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 			forground = (job->sep) == SPL_SPRLU ? 0 : 1;
 			ret = launch_job(job, shell, forground);
 			job->state = (job->sep) == SPL_SPRLU ? -1 : 1;
-			printf("-<ret de job |%d|>\n", ret);
+			do_job_notification();
 		}
 	}
-	//clean_jobs(&free_jobs);
 	//shell_clean_data(cmd, shell, 1);
 	return (1);
 }

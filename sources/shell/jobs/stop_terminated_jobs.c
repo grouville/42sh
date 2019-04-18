@@ -5,66 +5,13 @@
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/04/15 19:32:34 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/15 19:32:34 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Created: 2019/04/18 18:25:51 by ythollet     #+#   ##    ##    #+#       */
+/*   Updated: 2019/04/18 18:25:51 by ythollet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 # include "shell.h"
-
-/* Store the status of the process pid that was returned by waitpid.
-   Return 0 if all went well, nonzero otherwise.  */
-
-int mark_process_status (pid_t pid, int status)
-{
-	t_job *j;
-	t_process *p;
-
-
-	printf("-<|mark process status du pid=%d|>\n", pid);
-	int i = 0;
-	if (pid > 0)
-	{
-		/* Update the record for the process.  */
-		for (j = first_job; j; j = j->next)
-		{
-			for (p = j->first_process; p; p = p->next)
-			{
-				if (p->pid == pid)
-				{
-					p->status = status;
-					if (WIFSTOPPED (status))
-						p->stopped = 1;
-					else
-					{
-						p->completed = 1;
-						if (WIFSIGNALED (status))
-							fprintf(stderr, "%d: Terminated by signal %d.\n",
-									(int) pid, WTERMSIG (p->status));
-					}
-					{
-						printf("-<|return 0|>\n");
-						return 0;
-					}
-				}
-				fprintf(stderr, "process %d et %d\n", pid, p->pid);
-			}
-			printf("-<|boucle %d|>\n", i++);
-		}
-		fprintf (stderr, "No child process %d et %d\n", pid, p->pid);
-		return -1;
-	}
-
-	else if (pid == 0 || errno == ECHILD)
-		/* No processes ready to report.  */
-		return -1;
-	else {
-		/* Other weird errors.  */
-		perror ("waitpid");
-		return -1;
-	}
-}
 
 
 /* Check for processes that have status information available,
@@ -87,36 +34,6 @@ void format_job_info (t_job *j, const char *status)
 {
 	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
-/* Check for processes that have status information available,
-   blocking until all processes in the given job have reported.  */
-
-void wait_for_job (t_job *j)
-{
-	int status;
-	pid_t pid;
-
-
-	do_job_notification ();
-	while (1)
-	{
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-		if (mark_process_status (pid, status))
-			break ;
-		printf("-<|mark procss staus ok|>\n");
-		if (job_is_stopped (j))
-			break ;
-		printf("-<|job is stopped ok|>\n");
-		if (job_is_completed (j))
-			break ;
-		printf("-<|job is completed ok|>\n");
-	}
-
-//	do
-//		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-//	while (!mark_process_status (pid, status)
-//		   && !job_is_stopped (j)
-//		   && !job_is_completed (j));
-}
 
 
 /* Notify the user about stopped or terminated jobs.
@@ -125,13 +42,14 @@ void wait_for_job (t_job *j)
 void do_job_notification (void)
 {
 	t_job *j, *jlast, *jnext;
-	t_process *p;
+	t_cmd *p;
 
 	/* Update status information for child processes.  */
 	update_status ();
 
 	jlast = NULL;
-	for (j = first_job; j; j = jnext)
+	j = first_job;
+	while ((j = j->next))
 	{
 		jnext = j->next;
 

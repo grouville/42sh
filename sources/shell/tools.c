@@ -52,6 +52,8 @@ void		shell_init(t_shell **shell, t_prompt *prompt,
 	*cmd = NULL;
 	*jobs = malloc(sizeof(t_job));
 	ft_bzero(*jobs, sizeof(t_job));
+	first_job = *jobs;
+	process_init_shell_for_job();
 }
 
 int			shell_exit(t_cmd **cmd, t_shell **shell)
