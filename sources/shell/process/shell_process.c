@@ -203,7 +203,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 		}
 	}
 	//clean_jobs(&free_jobs);
-	shell_clean_data(cmd, shell, 1);
+	//shell_clean_data(cmd, shell, 1);
 	return (1);
 }
 

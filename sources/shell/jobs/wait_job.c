@@ -25,8 +25,11 @@ int mark_process_status (pid_t pid, int status)
 	if (pid > 0)
 	{
 		/* Update the record for the process.  */
-		for (job = first_job; job; job = job->next)
+		job = first_job;
+		while ((job = job->next))
 		{
+		//for (job = first_job; job; job = job->next)
+		//{
 			for (elem = job->cmds; elem; elem = elem->next_cmd)
 			{
 				if (elem->pid == pid)
@@ -62,6 +65,7 @@ int mark_process_status (pid_t pid, int status)
 	}
 	else {
 		/* Other weird errors.  */
+		printf("-<|werid error|>\n");
 		perror ("waitpid");
 		return -1;
 	}
