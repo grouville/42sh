@@ -75,17 +75,19 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 	return (1);
 }
 
+// To be normed
 void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
 {
 	t_job	*job;
 	t_cmd	*elem;
+	t_cmd	*cpy_elem;
 	int 	i;
 
 	job = jobs;
 	while ((job->next))
 		job = job->next;
-	elem = cmd;
-	while ((elem = elem->next_cmd))
+	elem = cmd->next_cmd;
+	while (elem)
 	{
 		job->next = (t_job *)malloc(sizeof(t_job));
 		job = job->next;
@@ -98,6 +100,15 @@ void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
 		job->stdin = 0;
 		job->stdout = 1;
 		job->stderr = 2;
+		if (elem->next_cmd)
+		{
+			cpy_elem = elem;
+			elem = elem->next_cmd;
+			cpy_elem->next_cmd = NULL;
+		}
+		else
+			elem = elem->next_cmd;
+		
 	}
 	if (job)
 		job->next = NULL;

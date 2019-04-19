@@ -18,7 +18,7 @@ char	**ft_arrdup(char **arr)
 	int		i;
 	char	**ret;
 
-	ret = (char **)malloc(sizeof(char *) * ft_arrlen(arr) + sizeof(char *));
+	ret = (char **)malloc(sizeof(char *) * (ft_arrlen(arr) + sizeof(char *)));
 	i = 0;
 	while (arr[i] != NULL)
 	{

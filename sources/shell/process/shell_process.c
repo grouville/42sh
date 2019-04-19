@@ -169,7 +169,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
-	do_job_notification();
+	// do_job_notification();
 	shell_prepare(jobs, *cmd);
 	//free_jobs = jobs;
 	job = jobs;
@@ -180,8 +180,8 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 		{
 			forground = (job->sep) == SPL_SPRLU ? 0 : 1;
 			ret = launch_job(job, shell, forground);
-			job->state = (job->sep) == SPL_SPRLU ? -1 : 1;
-			do_job_notification();
+			job->state = -1;
+			// do_job_notification();
 		}
 	}
 	//shell_clean_data(cmd, shell, 1);
