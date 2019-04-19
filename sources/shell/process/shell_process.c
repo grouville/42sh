@@ -180,7 +180,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 		{
 			forground = (job->sep) == SPL_SPRLU ? 0 : 1;
 			ret = launch_job(job, shell, forground);
-			job->state = -1;
+			job->state = -1; // mettre à -1 pour qu'ils ne soient plus exécutés par la suite
 			// do_job_notification();
 		}
 	}
