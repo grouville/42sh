@@ -169,8 +169,8 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
-	do_job_notification();
 	shell_prepare(jobs, *cmd);
+	do_job_notification();
 	//free_jobs = jobs;
 	job = jobs;
 	while ((job = job->next))

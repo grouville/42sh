@@ -108,12 +108,7 @@ void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
 		}
 		else
 			elem = elem->next_cmd;
-		
 	}
-	if (job)
-		job->next = NULL;
-	else
-		printf("-<|DAMN condition could be false, we save seg|>\n");
 }
 
 /*

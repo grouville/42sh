@@ -32,7 +32,15 @@ void update_status (void)
 
 void format_job_info (t_job *j, const char *status)
 {
-	fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
+	int i;
+
+	i = -1;
+	ft_dprintf(2, "[%d]+  Done                    ", 1);//change 1 to a number
+	ft_dprintf(2, "(debug-PID: %ld)", (long)j->pgid);//change 1 to a number
+	while (j->cmds->args_raw[++i])
+		ft_dprintf(2, "%s ", j->cmds->args_raw[i]);
+	ft_dprintf(2, "\n");
+	// fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
 
 
@@ -41,14 +49,15 @@ void format_job_info (t_job *j, const char *status)
 
 void do_job_notification (void)
 {
-	t_job *j, *jlast, *jnext;
+	t_job *j, *jnext, *jprev;
 	t_cmd *p;
 
 	/* Update status information for child processes.  */
 	update_status ();
 
-	jlast = NULL;
+	// jlast = NULL;
 	j = first_job;
+	jprev = first_job;
 	while ((j = j->next))
 	{
 		jnext = j->next;
@@ -58,21 +67,21 @@ void do_job_notification (void)
 		if (job_is_completed (j))
 		{
 			format_job_info (j, "completed");
-			if (jlast)
-				jlast->next = jnext;
-			else
-				first_job = jnext;
-			//free_job (j);
+			if (&j == &first_job)
+				first_job = first_job->next;
+			// free_job (j);
 		}
 			/* Notify the user about stopped jobs,
 			   marking them so that we won’t do this more than once.  */
-		else if (job_is_stopped (j) && !j->notified) {
+		else if (job_is_stopped (j) && !j->notified)
+		{
 			format_job_info (j, "stopped");
 			j->notified = 1;
-			jlast = j;
 		}
 			/* Don’t say anything about jobs that are still running.  */
 		else
-			jlast = j;
+			// jlast = j;
+			;
+		jprev = jprev->next;
 	}
 }
