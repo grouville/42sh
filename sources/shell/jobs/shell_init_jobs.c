@@ -13,6 +13,11 @@
 
 #include "shell.h"
 
+void handle(int sig)
+{
+	(void)sig;
+}
+
 /* Make sure the shell is running interactively as the foreground job
    before proceeding. */
 
@@ -35,7 +40,7 @@ void process_init_shell_for_job(void)
 		signal (SIGTSTP, SIG_IGN);
 		signal (SIGTTIN, SIG_IGN);
 		signal (SIGTTOU, SIG_IGN);
-		signal (SIGCHLD, SIG_IGN);
+		signal (SIGCHLD, handle);
 
 		/* Put ourselves in our own process group.  */
 		shell_pgid = getpid ();

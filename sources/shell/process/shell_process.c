@@ -92,7 +92,7 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 	int		infile;
 	int		outfile;
 
-	printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
+	// printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
 	infile = job->stdin;
 	elem = job->cmds;
 	while (elem)
@@ -169,13 +169,13 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
-	// do_job_notification();
+	do_job_notification();
 	shell_prepare(jobs, *cmd);
 	//free_jobs = jobs;
 	job = jobs;
 	while ((job = job->next))
 	{
-		printf("-<state|%d|>\n", job->state);
+		// printf("-<state|%d|>\n", job->state);
 		if (job->state != -1) //on lance que les new jobs pas en background
 		{
 			forground = (job->sep) == SPL_SPRLU ? 0 : 1;

@@ -21,7 +21,7 @@ int mark_process_status (pid_t pid, int status)
 	t_job *job;
 	t_cmd *elem;
 
-	printf("-<|on veut status du pid=%d|>\n", pid);
+	dprintf(3, "-<|on veut status du pid=%d|>\n", pid);
 	int i = 0;
 	if (pid > 0)
 	{
@@ -34,7 +34,7 @@ int mark_process_status (pid_t pid, int status)
 			{
 				if (elem->pid == pid)
 				{
-					printf("-<|on check le status de %d|>\n", elem->pid);
+					dprintf(3, "-<|on check le status de %d|>\n", elem->pid);
 					elem->status = status;
 					if (WIFSTOPPED (status))
 						elem->stopped = 1;
@@ -45,16 +45,14 @@ int mark_process_status (pid_t pid, int status)
 							fprintf(stderr, "%d: Terminated by signal %d.\n",
 									(int) pid, WTERMSIG (elem->status));
 					}
-					{
-						printf("-<|return 0|>\n");
-						return 0;
-					}
+					dprintf(3, "-<|return 0|>\n");
+					return 0;
 				}
-				fprintf(stderr, "process %d et %d\n", pid, elem->pid);
 				elem = elem->next_cmd;
 			}
+				// fprintf(stderr, "process %d et %d\n", pid, elem->pid);
 		}
-		fprintf (stderr, "No child process %d et %d\n", pid, elem->pid);
+		fprintf (stderr, "No child process %d et %d\n", pid, elem->pid);//debug, a supprimer apres
 		return -1;
 	}
 
@@ -64,7 +62,8 @@ int mark_process_status (pid_t pid, int status)
 		printf("-<|pid == 0 OU possibilité de errno == ECHILD|>\n");
 		return -1;
 	}
-	else {
+	else
+	{
 		/* Other weird errors.  */
 		perror ("waitpid");
 		return -1;
@@ -79,21 +78,21 @@ void wait_for_job (t_job *j)
 	id_t id;
 	siginfo_t t;
 
-	printf("-<|wait for job dont %s PID=%d est process[1] et pgid est %d|>\n", j->cmds->args[0], j->cmds->pid, j->pgid);
+	dprintf(3, "-<|wait for job dont %s PID=%d est process[1] et pgid est %d|>\n", j->cmds->args[0], j->cmds->pid, j->pgid);
 	while (1)
 	{
-		printf("-<|loop|>\n");
+		// printf("-<|loop|>\n");
 		pid = waitpid (j->cmds->pid, &status, WUNTRACED);
-		printf("-<|fin wait pid %d|>\n", pid);
+		// printf("-<|fin wait pid %d|>\n", pid);
 		if (mark_process_status (pid, status))
 			break ;
-		printf("-<|mark procss staus ok|>\n");
+		// printf("-<|mark procss staus ok|>\n");
 		if (job_is_stopped (j))
 			break ;
-		printf("-<|job is stopped ok|>\n");
+		// printf("-<|job is stopped ok|>\n");
 		if (job_is_completed (j))
 			break ;
-		printf("-<|job is completed ok|>\n");
+		// printf("-<|job is completed ok|>\n");
 
 	}
 
@@ -102,5 +101,5 @@ void wait_for_job (t_job *j)
 //	while (!mark_process_status (pid, status)
 //		   && !job_is_stopped (j)
 //		   && !job_is_completed (j));
-	printf("-<|fin wait for job|>\n");
+	// printf("-<|fin wait for job|>\n");
 }

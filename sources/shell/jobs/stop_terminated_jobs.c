@@ -55,7 +55,8 @@ void do_job_notification (void)
 
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
-		if (job_is_completed (j)) {
+		if (job_is_completed (j))
+		{
 			format_job_info (j, "completed");
 			if (jlast)
 				jlast->next = jnext;
@@ -63,7 +64,6 @@ void do_job_notification (void)
 				first_job = jnext;
 			//free_job (j);
 		}
-
 			/* Notify the user about stopped jobs,
 			   marking them so that we won’t do this more than once.  */
 		else if (job_is_stopped (j) && !j->notified) {
@@ -71,7 +71,6 @@ void do_job_notification (void)
 			j->notified = 1;
 			jlast = j;
 		}
-
 			/* Don’t say anything about jobs that are still running.  */
 		else
 			jlast = j;
