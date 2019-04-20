@@ -184,6 +184,8 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 			// do_job_notification();
 		}
 	}
+	ft_strdel(&shell->str);
+	ft_strdel(&shell->hrdc_tmp);
 	//shell_clean_data(cmd, shell, 1);
 	return (1);
 }

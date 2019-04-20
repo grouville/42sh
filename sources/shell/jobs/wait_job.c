@@ -65,7 +65,7 @@ int mark_process_status (pid_t pid, int status)
 	else
 	{
 		/* Other weird errors.  */
-		perror ("waitpid");
+		// perror ("waitpid");// POUR DEBUG
 		return -1;
 	}
 }
