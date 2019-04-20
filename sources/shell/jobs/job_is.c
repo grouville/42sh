@@ -13,7 +13,7 @@
 
 # include "shell.h"
 
-t_job *find_job (pid_t pgid)
+t_job *find_job(pid_t pgid)
 {
 	t_job *j;
 
@@ -23,26 +23,38 @@ t_job *find_job (pid_t pgid)
 	return NULL;
 }
 
+/*
+** Return true if all processes in the job have stopped or completed.
+*/
 
-/* Return true if all processes in the job have stopped or completed.  */
-int job_is_stopped (t_job *j)
+int job_is_stopped(t_job *j)
 {
 	t_cmd *p;
 
-	for (p = j->cmds; p; p = p->next_cmd)
-		if (!p->completed && !p->stopped)
-			return 0;
-	return 1;
+	p = j->cmds;
+	while (p)
+	{
+		if (!p->stopped)
+			return (0);
+		p = p->next_cmd;
+	}
+	return (1);
 }
 
+/*
+** Return true if all processes in the job have completed.
+*/
 
-/* Return true if all processes in the job have completed.  */
-int job_is_completed (t_job *j)
+int job_is_completed(t_job *j)
 {
 	t_cmd *p;
 
-	for (p = j->cmds; p; p = p->next_cmd)
+	p = j->cmds;
+	while (p)
+	{
 		if (!p->completed)
-			return 0;
-	return 1;
+			return (0);
+		p = p->next_cmd;
+	}
+	return (1);
 }

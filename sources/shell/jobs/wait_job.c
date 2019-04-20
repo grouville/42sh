@@ -58,14 +58,11 @@ int mark_process_status (pid_t pid, int status)
 
 	else if (pid == 0)
 		/* No processes ready to report.  */
-	{
-		printf("-<|pid == 0 OU possibilité de errno == ECHILD|>\n");
 		return -1;
-	}
 	else
 	{
 		/* Other weird errors.  */
-		// perror ("waitpid");// POUR DEBUG
+		//perror ("waitpid");// POUR DEBUG
 		return -1;
 	}
 }

@@ -24,7 +24,7 @@ int		get_sep(char **str)
 	sep = (*str)[0] == '&' ? SPL_SPRLU : sep;
 	sep = (*str)[0] == '|' && (*str)[1] == '|' ? DBL_PIPE : sep;
 	sep = (*str)[0] == '&' && (*str)[1] == '&' ? DBL_SPRLU : sep;
-	if (sep >= 1 && sep <= 2)
+	if ((sep >= 1 && sep <= 2) || sep == 5)
 		*str = *str + 1;
 	else if (sep >= 3)
 		*str = *str + 2;

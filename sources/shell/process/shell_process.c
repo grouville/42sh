@@ -130,13 +130,6 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 			}
 		}
 
-		/* Clean up after pipes. */
-		/*if (infile != job->stdin)
-			close (infile);
-		if (outfile != job->stdout)
-			close (outfile);
-		infile = mypipe[0];
-*/
 		/*
 		ret = shell_process_cmd(&elem, shell);
 		if (ret == 0)
@@ -149,7 +142,6 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 		elem = elem->next_cmd;
 	}
 
-	ft_dprintf(2, "%ld (launched): %s\n", (long)job->pgid, job->cmds->args[0]);
 	if (!shell_is_interactive)
 		wait_for_job (job);
 	else if (foreground)

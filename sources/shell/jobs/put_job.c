@@ -45,6 +45,7 @@ void put_job_in_foreground (t_job *j, int cont)
 
 void put_job_in_background (t_job *j, int cont)
 {
+	ft_dprintf(1, "[%d] %d\n", count_job_bg() + 1, j->pgid);
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 		if (kill (-j->pgid, SIGCONT) < 0)

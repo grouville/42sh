@@ -30,58 +30,88 @@ void update_status (void)
 
 /* Format information about job status for the user to look at.  */
 
-void format_job_info (t_job *j, const char *status)
+void format_job_info(t_job *j, const char *status, int nb_bgjob)
 {
 	int i;
+	int job_pos;
+
+
 
 	i = -1;
-	ft_dprintf(2, "[%d]+  Done                    ", 1);//change 1 to a number
-	ft_dprintf(2, "(debug-PID: %ld)", (long)j->pgid);//change 1 to a number
+	ft_dprintf(1, "[%d]+ %-10s", nb_bgjob, status);//change 1 to a number
 	while (j->cmds->args_raw[++i])
-		ft_dprintf(2, "%s ", j->cmds->args_raw[i]);
-	ft_dprintf(2, "\n");
+		ft_dprintf(1, "%s ", j->cmds->args_raw[i]);
+	ft_dprintf(1, "\n");
 	// fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
+
+int		count_job_bg(void)
+{
+	t_job	*j;
+	int 	nb_jobbg;
+
+	nb_jobbg = 0;
+	j = first_job;
+	while ((j = j->next))
+	{
+		if (j->sep == SPL_SPRLU && j->state == -1)
+			nb_jobbg += 1;
+	}
+	return (nb_jobbg);
+}
+
+void	free_job(t_job *j)
+
+{
+	clean_cmd(&((j)->cmds));
+	free(j);
+}
+
 
 
 /* Notify the user about stopped or terminated jobs.
    Delete terminated jobs from the active job list.  */
 
-void do_job_notification (void)
+void do_job_notification(void)
 {
-	t_job *j, *jnext, *jprev;
+	t_job *j;
+	t_job *jnext;
+	t_job *jprev;
 	t_cmd *p;
+	int nb_bgjob;
 
 	/* Update status information for child processes.  */
-	update_status ();
-
-	// jlast = NULL;
-	j = first_job;
+	update_status();
+	nb_bgjob = 0;
 	jprev = first_job;
+	j = first_job;
 	while ((j = j->next))
 	{
+		if (j->pgid == 0 && (jprev = j))
+			continue ;
+		if (j->sep == SPL_SPRLU && j->state == -1)
+			nb_bgjob += 1;
 		jnext = j->next;
-
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
-		if (job_is_completed (j))
+		if (j->sep == SPL_SPRLU && job_is_completed(j))
 		{
-			format_job_info (j, "completed");
-			if (&j == &first_job)
+			format_job_info(j, "Done", nb_bgjob);
+			if (j == first_job)
 				first_job = first_job->next;
-			// free_job (j);
+			jprev->next = jnext;
+			free_job (j);
+			j = jprev;
+			continue ;
 		}
-			/* Notify the user about stopped jobs,
-			   marking them so that we won’t do this more than once.  */
-		else if (job_is_stopped (j) && !j->notified)
+		/* Notify the user about stopped jobs,
+		 * marking them so that we won’t do this more than once.  */
+		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified)
 		{
-			format_job_info (j, "stopped");
+			format_job_info(j, "Stopped", nb_bgjob);
 			j->notified = 1;
 		}
-			/* Don’t say anything about jobs that are still running.  */
-		else
-			// jlast = j;
-			;
+		/* Don’t say anything about jobs that are still running.  */
 		jprev = jprev->next;
 	}
 }

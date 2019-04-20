@@ -82,9 +82,9 @@ typedef struct		s_job
 	t_cmd			*cmds;
 	int 			sep;
 
-	pid_t			pgid;                 /* process group ID */
+	pid_t			pgid;        /* process group ID */
 	int 			state;
-	char			notified;              /* true if user told about stopped job */
+	char			notified;    /* true if user told about stopped job */
 	struct termios	tmodes;      /* saved terminal modes */
 	int 			stdin;
 	int 			stdout;
@@ -326,7 +326,6 @@ void				put_job_in_foreground (t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
 void 				update_status (void);
 void				wait_for_job (t_job *j);
-void				format_job_info (t_job *j, const char *status);
 void				do_job_notification (void);
 void				mark_job_as_running (t_job *j);
 void				continue_job (t_job *j, int foreground);
@@ -343,6 +342,7 @@ int					job_is_stopped (t_job *j);
 int					job_is_completed (t_job *j);
 void				process_init_shell_for_job(void);
 void				do_job_notification (void);
+int					count_job_bg(void);
 
 
 /*
