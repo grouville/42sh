@@ -13,6 +13,11 @@
 
 # include "shell.h"
 
+/*
+*** - Aim of the function : retrieve the pointer of the struct to avoid using
+*** - a global
+*/
+
 t_js    *getter_job(void)
 {
     static t_js job = {0, 0, 0, 0, 0};

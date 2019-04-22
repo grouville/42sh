@@ -80,7 +80,6 @@ int			shell_exit(t_cmd **cmd, t_shell **shell)
 {
 	int		ret;
 
-	clean_cmd(cmd);
 	if ((*shell)->hist)
 		fill_hist_file((*shell)->hist, (*shell)->hist_path);
 	ft_strdel(&(*shell)->hist_path);

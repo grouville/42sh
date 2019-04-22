@@ -93,6 +93,7 @@ typedef struct		s_job
 	struct s_job	*next;
 }					t_job;
 
+/* The active jobs are linked into a list.  This is its head.   */
 typedef struct		job_signal
 {
 	t_job			*first_job;
@@ -101,11 +102,6 @@ typedef struct		job_signal
 	int				shell_terminal;
 	int				shell_is_interactive;
 }					t_js;
-
-// t_js		g_jsig;
-
-/* The active jobs are linked into a list.  This is its head.   */
-
 
 typedef struct		s_type
 {

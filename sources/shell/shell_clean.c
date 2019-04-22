@@ -88,7 +88,8 @@ void	clean_cmd(t_cmd **cmd)
 			free(prev);
 			prev = *cmd;
 		}
-		free(prev);
+		if (prev)
+			free(prev);
 		*cmd = NULL;
 	}
 }
