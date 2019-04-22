@@ -52,8 +52,23 @@ void		shell_init(t_shell **shell, t_prompt *prompt,
 	*cmd = NULL;
 	*jobs = malloc(sizeof(t_job));
 	ft_bzero(*jobs, sizeof(t_job));
-	first_job = *jobs;
+	g_jsig.first_job = *jobs;
 	process_init_shell_for_job();
+}
+
+void		clean_jobs_all(void)
+{
+	t_job	*curr;
+	t_job	*prev;
+
+	curr = g_jsig.first_job;
+	prev = g_jsig.first_job;
+	while (curr)
+	{
+		prev = curr->next;
+		free_job(curr);
+		curr = prev;
+	}
 }
 
 int			shell_exit(t_cmd **cmd, t_shell **shell)
@@ -68,6 +83,7 @@ int			shell_exit(t_cmd **cmd, t_shell **shell)
 		ft_arrdel(&(*shell)->alias);
 	ret = (*shell)->ret;
 	clean_shell(shell);
+	clean_jobs_all();
 	return (ret);
 }
 

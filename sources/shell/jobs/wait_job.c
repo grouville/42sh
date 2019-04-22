@@ -26,7 +26,7 @@ int mark_process_status (pid_t pid, int status)
 	if (pid > 0)
 	{
 		/* Update the record for the process.  */
-		job = first_job;
+		job = g_jsig.first_job;
 		while ((job = job->next))
 		{
 			elem = job->cmds;

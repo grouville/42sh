@@ -51,7 +51,7 @@ int		count_job_bg(void)
 	int 	nb_jobbg;
 
 	nb_jobbg = 0;
-	j = first_job;
+	j = g_jsig.first_job;
 	while ((j = j->next))
 	{
 		if (j->sep == SPL_SPRLU && j->state == -1)
@@ -83,8 +83,8 @@ void do_job_notification(void)
 	/* Update status information for child processes.  */
 	update_status();
 	nb_bgjob = 0;
-	jprev = first_job;
-	j = first_job;
+	jprev = g_jsig.first_job;
+	j = g_jsig.first_job;
 	while ((j = j->next))
 	{
 		if (j->pgid == 0 && (jprev = j))
@@ -97,8 +97,8 @@ void do_job_notification(void)
 		if (j->sep == SPL_SPRLU && job_is_completed(j))
 		{
 			format_job_info(j, "Done", nb_bgjob);
-			if (j == first_job)
-				first_job = first_job->next;
+			if (j == g_jsig.first_job)
+				g_jsig.first_job = g_jsig.first_job->next;
 			jprev->next = jnext;
 			free_job (j);
 			j = jprev;

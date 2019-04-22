@@ -55,7 +55,7 @@ void 	launch_process(t_cmd *elem, pid_t pgid,
 {
 	pid_t pid;
 
-	if (shell_is_interactive)
+	if (g_jsig.shell_is_interactive)
 	{
 		/* Put the process into the process group and give the process group
 		   the terminal, if appropriate.
@@ -66,7 +66,7 @@ void 	launch_process(t_cmd *elem, pid_t pgid,
 			pgid = pid;
 		setpgid (pid, pgid);
 		if (foreground)
-			tcsetpgrp (shell_terminal, pgid);
+			tcsetpgrp (g_jsig.shell_terminal, pgid);
 
 		/* Set the handling for job control signals back to the default.  */
 		signal (SIGINT, SIG_DFL);
@@ -92,7 +92,7 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 	int		infile;
 	int		outfile;
 
-	// printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", shell_is_interactive, foreground);
+	// printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", g_jsig.shell_is_interactive, foreground);
 	infile = job->stdin;
 	elem = job->cmds;
 	while (elem)
@@ -122,7 +122,7 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 		{
 			/* This is the parent process. */
 			elem->pid = pid;
-			if (shell_is_interactive)
+			if (g_jsig.shell_is_interactive)
 			{
 				if (!job->pgid)
 					job->pgid = pid;
@@ -142,7 +142,7 @@ int		launch_job(t_job *job, t_shell *shell, int foreground)
 		elem = elem->next_cmd;
 	}
 
-	if (!shell_is_interactive)
+	if (!g_jsig.shell_is_interactive)
 		wait_for_job (job);
 	else if (foreground)
 		put_job_in_foreground (job, 0);

@@ -93,12 +93,19 @@ typedef struct		s_job
 	struct s_job	*next;
 }					t_job;
 
+typedef struct		job_signal
+{
+	t_job			*first_job;
+	pid_t			shell_pgid;
+	struct termios	shell_tmodes;
+	int				shell_terminal;
+	int				shell_is_interactive;
+}					t_job_signal;
+
+t_job_signal		g_jsig;
+
 /* The active jobs are linked into a list.  This is its head.   */
-t_job *first_job;
-pid_t shell_pgid;
-struct termios shell_tmodes;
-int shell_terminal;
-int shell_is_interactive;
+
 
 typedef struct		s_type
 {
@@ -343,7 +350,7 @@ int					job_is_completed (t_job *j);
 void				process_init_shell_for_job(void);
 void				do_job_notification (void);
 int					count_job_bg(void);
-
+void				free_job(t_job *j);
 
 /*
 ** Hard test
