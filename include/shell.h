@@ -100,9 +100,9 @@ typedef struct		job_signal
 	struct termios	shell_tmodes;
 	int				shell_terminal;
 	int				shell_is_interactive;
-}					t_job_signal;
+}					t_js;
 
-t_job_signal		g_jsig;
+// t_js		g_jsig;
 
 /* The active jobs are linked into a list.  This is its head.   */
 
@@ -351,6 +351,7 @@ void				process_init_shell_for_job(void);
 void				do_job_notification (void);
 int					count_job_bg(void);
 void				free_job(t_job *j);
+t_js				*getter_job(void);
 
 /*
 ** Hard test

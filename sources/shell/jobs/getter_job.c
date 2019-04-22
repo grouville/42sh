@@ -13,50 +13,8 @@
 
 # include "shell.h"
 
-t_job *find_job(pid_t pgid)
+t_js    *getter_job(void)
 {
-	t_job	*j;
-	t_js	*jsig;
-
-	jsig = getter_job();
-	for (j = jsig->first_job; j; j = j->next)
-		if (j->pgid == pgid)
-			return j;
-	return NULL;
-}
-
-/*
-** Return true if all processes in the job have stopped or completed.
-*/
-
-int job_is_stopped(t_job *j)
-{
-	t_cmd *p;
-
-	p = j->cmds;
-	while (p)
-	{
-		if (!p->stopped)
-			return (0);
-		p = p->next_cmd;
-	}
-	return (1);
-}
-
-/*
-** Return true if all processes in the job have completed.
-*/
-
-int job_is_completed(t_job *j)
-{
-	t_cmd *p;
-
-	p = j->cmds;
-	while (p)
-	{
-		if (!p->completed)
-			return (0);
-		p = p->next_cmd;
-	}
-	return (1);
+    static t_js job = {0, 0, 0, 0, 0};
+    return (&job);
 }

@@ -23,16 +23,18 @@ void handle(int sig)
 
 void process_init_shell_for_job(void)
 {
+	t_js	*jsig;
 
+	jsig = getter_job();
 	/* See if we are running interactively.  */
-	g_jsig.shell_terminal = STDIN_FILENO;
-	g_jsig.shell_is_interactive = isatty (g_jsig.shell_terminal);
+	jsig->shell_terminal = STDIN_FILENO;
+	jsig->shell_is_interactive = isatty (jsig->shell_terminal);
 
-	if (g_jsig.shell_is_interactive)
+	if (jsig->shell_is_interactive)
 	{
 		/* Loop until we are in the foreground.  */
-		while (tcgetpgrp (g_jsig.shell_terminal) != (g_jsig.shell_pgid = getpgrp ()))
-			kill (- g_jsig.shell_pgid, SIGTTIN);
+		while (tcgetpgrp (jsig->shell_terminal) != (jsig->shell_pgid = getpgrp ()))
+			kill (- jsig->shell_pgid, SIGTTIN);
 
 		/* Ignore interactive and job-control signals.  */
 		signal (SIGINT, SIG_IGN);
@@ -43,17 +45,17 @@ void process_init_shell_for_job(void)
 		signal (SIGCHLD, handle);
 
 		/* Put ourselves in our own process group.  */
-		g_jsig.shell_pgid = getpid ();
-		if (setpgid (g_jsig.shell_pgid, g_jsig.shell_pgid) < 0)
+		jsig->shell_pgid = getpid ();
+		if (setpgid (jsig->shell_pgid, jsig->shell_pgid) < 0)
 		{
 			ft_dprintf(2, "Couldn't put the shell in its own process group");
 			exit (1);
 		}
 
 		/* Grab control of the terminal.  */
-		tcsetpgrp (g_jsig.shell_terminal, g_jsig.shell_pgid);
+		tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);
 
 		/* Save default terminal attributes for shell.  */
-		tcgetattr (g_jsig.shell_terminal, &(g_jsig.shell_tmodes));
+		tcgetattr (jsig->shell_terminal, &(jsig->shell_tmodes));
 	}
 }

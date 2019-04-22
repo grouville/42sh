@@ -20,13 +20,15 @@ int mark_process_status (pid_t pid, int status)
 {
 	t_job *job;
 	t_cmd *elem;
+	t_js	*jsig;
 
 	dprintf(3, "-<|on veut status du pid=%d|>\n", pid);
 	int i = 0;
+	jsig = getter_job();
 	if (pid > 0)
 	{
 		/* Update the record for the process.  */
-		job = g_jsig.first_job;
+		job = jsig->first_job;
 		while ((job = job->next))
 		{
 			elem = job->cmds;

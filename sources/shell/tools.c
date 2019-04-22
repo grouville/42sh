@@ -45,6 +45,9 @@ int			init_terminal_data(void)
 void		shell_init(t_shell **shell, t_prompt *prompt,
 		t_cmd **cmd, char **env, t_job **jobs)
 {
+	t_js	*jsig;
+
+	jsig = getter_job();
 	if (init_terminal_data())
 		exit(EXIT_FAILURE);
 	*shell = init_shell(env);
@@ -52,7 +55,7 @@ void		shell_init(t_shell **shell, t_prompt *prompt,
 	*cmd = NULL;
 	*jobs = malloc(sizeof(t_job));
 	ft_bzero(*jobs, sizeof(t_job));
-	g_jsig.first_job = *jobs;
+	jsig->first_job = *jobs;
 	process_init_shell_for_job();
 }
 
@@ -60,9 +63,11 @@ void		clean_jobs_all(void)
 {
 	t_job	*curr;
 	t_job	*prev;
+	t_js	*jsig;
 
-	curr = g_jsig.first_job;
-	prev = g_jsig.first_job;
+	jsig = getter_job();
+	curr = jsig->first_job;
+	prev = jsig->first_job;
 	while (curr)
 	{
 		prev = curr->next;
