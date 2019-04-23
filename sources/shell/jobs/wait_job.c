@@ -22,7 +22,6 @@ int mark_process_status (pid_t pid, int status)
 	t_cmd *elem;
 	t_js	*jsig;
 
-	dprintf(3, "-<|on veut status du pid=%d|>\n", pid);
 	int i = 0;
 	jsig = getter_job();
 	if (pid > 0)
@@ -36,7 +35,7 @@ int mark_process_status (pid_t pid, int status)
 			{
 				if (elem->pid == pid)
 				{
-					dprintf(3, "-<|on check le status de %d|>\n", elem->pid);
+					dprintf(1, "-<|on check le status de %d|>\n", elem->pid);
 					elem->status = status;
 					if (WIFSTOPPED (status))
 						elem->stopped = 1;
@@ -77,7 +76,6 @@ void wait_for_job (t_job *j)
 	id_t id;
 	siginfo_t t;
 
-	dprintf(3, "-<|wait for job dont %s PID=%d est process[1] et pgid est %d|>\n", j->cmds->args[0], j->cmds->pid, j->pgid);
 	while (1)
 	{
 		// printf("-<|loop|>\n");

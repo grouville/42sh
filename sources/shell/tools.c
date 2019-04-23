@@ -87,7 +87,7 @@ int			shell_exit(t_cmd **cmd, t_shell **shell)
 		ft_arrdel(&(*shell)->alias);
 	ret = (*shell)->ret;
 	clean_shell(shell);
-	clean_jobs_all();
+	//clean_jobs_all();
 	return (ret);
 }
 

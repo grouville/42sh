@@ -30,22 +30,22 @@
 
 typedef struct		s_process
 {
-	char	*fd_stdin;
-	char	*stdin_send;
-	char	*fd_stdout;
-	int		fd_fileout;
-	char	*fd_stderr;
-	int		fd_fileerr;
-	int 	last_redi;
+	char			*fd_stdin;
+	char			*stdin_send;
+	char			*fd_stdout;
+	int				fd_fileout;
+	char			*fd_stderr;
+	int				fd_fileerr;
+	int 			last_redi;
 }					t_process;
 
 typedef struct		s_stdout
 {
-	BOOL				append;
-	int					from;
-	char				*to;
-	struct s_stdout		*next;
-	struct s_stdout		*start;
+	BOOL			append;
+	int				from;
+	char			*to;
+	struct s_stdout	*next;
+	struct s_stdout	*start;
 }					t_output;
 
 /*
@@ -251,8 +251,8 @@ int					complete_stdout_path(t_output *std_out, t_shell *shell);
 int					shell_error_prepare(char *msg, char *elem);
 int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
-void				shell_execve(t_cmd *elem, t_shell *shell);
-int					shell_exec(t_cmd *elem, t_shell *shell);
+void				shell_execve(t_cmd *elem, t_shell *shell, t_job *job);
+int					shell_exec(t_cmd *elem, t_shell *shell, t_job *job);
 BOOL				shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
 void				shell_reinit_fd(int *fd);
@@ -264,7 +264,7 @@ int					path_to_output_recheable(char *output);
 void				shell_plomberie(t_process process);
 
 int					get_stdin(t_shell *shell, t_prompt *prompt);
-int					shell_exec_pipes(t_cmd **elem, t_shell *shell);
+int					shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job);
 void				shell_set_fd_null(t_output *output, t_cmd *elem);
 
 int					get_nbarg(char *str, t_prompt *prompt);
@@ -344,7 +344,6 @@ int					job_is_stopped (t_job *j);
 /* Return true if all processes in the job have completed.  */
 int					job_is_completed (t_job *j);
 void				process_init_shell_for_job(void);
-void				do_job_notification (void);
 int					count_job_bg(void);
 void				free_job(t_job *j);
 t_js				*getter_job(void);

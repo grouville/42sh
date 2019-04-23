@@ -76,11 +76,11 @@ void	free_job(t_job *j)
 
 void do_job_notification(void)
 {
-	t_job *j;
-	t_job *jnext;
-	t_job *jprev;
-	t_cmd *p;
-	int nb_bgjob;
+	t_job	*j;
+	t_job	*jnext;
+	t_job	*jprev;
+	t_cmd	*p;
+	int		nb_bgjob;
 	t_js	*jsig;
 
 	jsig = getter_job();

@@ -17,7 +17,7 @@
 ** shell exec peut retourner 0=RAS ou -1=quite mais pas dans un pipe
 */
 
-void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2])
+void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2], t_job *job)
 {
 	int		exec;
 	char 	*tmp;
@@ -30,7 +30,7 @@ void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2])
 		elem->process.fd_stdout = ft_strjoin("&", tmp);
 		ft_strdel(&tmp);
 	}
-	exec = shell_exec(elem, shell);
+	exec = shell_exec(elem, shell, job);
 	if (exec == 1)
 		exit(EXIT_FAILURE);
 	else
@@ -59,7 +59,7 @@ void	shell_father_pipe(t_cmd *elem, int fd_pipe[2])
 ** On fait un waitpid pour save status qu'on return
 */
 
-int		shell_exec_pipes(t_cmd **elem, t_shell *shell)
+int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 {
 	int		fd_pipe[2];
 	int		child;
@@ -73,7 +73,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell)
 			elem_no_pipe = 1;
 		pipe(fd_pipe);
 		if ((child = fork()) == 0)
-			shell_child_pipe(*elem, shell, fd_pipe);
+			shell_child_pipe(*elem, shell, fd_pipe, job);
 		else
 			shell_father_pipe(*elem, fd_pipe);
 		if (elem_no_pipe == 0)

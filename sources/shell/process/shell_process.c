@@ -23,19 +23,19 @@
 ** return -1 dans le cas d'un exit confirmé
 */
 
-int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
+int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 {
 	int exec;
 	int fd[3];
 
 	if (!shell_prepare_args(*elem, shell))
 		return (0);
-	read_lexing(*elem);
+//	read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
-		exec = shell_exec_pipes(elem, shell);
+		exec = shell_exec_pipes(elem, shell, job);
 	else
-		exec = shell_exec(*elem, shell);
+		exec = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
 	shell_ret(*elem, shell);
 	if (exec == -1)
@@ -49,106 +49,23 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell)
 	return (1);
 }
 
-void 	launch_process(t_cmd *elem, pid_t pgid,
-					   int infile, int outfile, int errfile,
-					   int foreground)
-{
-	pid_t	pid;
-	t_js	*jsig;
-
-	jsig = getter_job();
-	if (jsig->shell_is_interactive)
-	{
-		/* Put the process into the process group and give the process group
-		   the terminal, if appropriate.
-		   This has to be done both by the shell and in the individual
-		   child processes because of potential race conditions.  */
-		pid = getpid ();
-		if (pgid == 0)
-			pgid = pid;
-		setpgid (pid, pgid);
-		if (foreground)
-			tcsetpgrp (jsig->shell_terminal, pgid);
-
-		/* Set the handling for job control signals back to the default.  */
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
-	}
-
-	/* Exec the new process.  Make sure we exit.  */
-	execvp (elem->args[0], elem->args);
-	perror ("execvp");
-	exit (1);
-}
-
-int		launch_job(t_job *job, t_shell *shell, int foreground)
+int		launch_job(t_job *job, t_shell *shell)
 {
 	t_cmd	*elem;
-	pid_t	pid;
-	//t_job	*free_jobs;
-	int 	mypipe[2];
-	int		infile;
-	int		outfile;
 	t_js	*jsig;
 
 	jsig = getter_job();
-	// printf("-<lunch job shell interactive:|%d| avant_plan:|%d|>\n", jsig->shell_is_interactive, foreground);
-	infile = job->stdin;
 	elem = job->cmds;
 	while (elem)
 	{
-		if (elem->next_cmd)
-		{
-			if (pipe (mypipe) < 0)
-			{
-				perror ("pipe");
-				exit (1);
-			}
-			outfile = mypipe[1];
-		}
-		else
-			outfile = job->stdout;
-
-		pid = fork ();
-		if (pid == 0)
-			launch_process(elem, job->pgid, infile, outfile, job->stderr, foreground);
-		else if (pid < 0)
-		{
-			/* The fork failed. */
-			perror ("fork");
-			exit (1);
-		}
-		else
-		{
-			/* This is the parent process. */
-			elem->pid = pid;
-			if (jsig->shell_is_interactive)
-			{
-				if (!job->pgid)
-					job->pgid = pid;
-				setpgid (pid, job->pgid);
-			}
-		}
-
-		/*
-		ret = shell_process_cmd(&elem, shell);
-		if (ret == 0)
-			break;
-		else if (ret == -1)
-		{
-			//return (clean_jobs(&free_jobs));
-			return (1);
-		}*/
+		if (shell_process_cmd(&elem, shell, job) == -1)
+			return (-1);
 		elem = elem->next_cmd;
 	}
 
 	if (!jsig->shell_is_interactive)
 		wait_for_job (job);
-	else if (foreground)
+	else if (job->sep != SPL_SPRLU)
 		put_job_in_foreground (job, 0);
 	else
 		put_job_in_background (job, 0);
@@ -160,24 +77,21 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 {
 
 	int 	ret;
-	int 	forground;
 	t_job	*job;
 
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
 	shell_prepare(jobs, *cmd);
 	do_job_notification();
-	//free_jobs = jobs;
 	job = jobs;
 	while ((job = job->next))
 	{
-		// printf("-<state|%d|>\n", job->state);
 		if (job->state != -1) //on lance que les new jobs pas en background
 		{
-			forground = (job->sep) == SPL_SPRLU ? 0 : 1;
-			ret = launch_job(job, shell, forground);
+			ret = launch_job(job, shell);
 			job->state = -1; // mettre à -1 pour qu'ils ne soient plus exécutés par la suite
-			// do_job_notification();
+			if (ret == -1)
+				return (-1);
 		}
 	}
 	ft_strdel(&shell->str);

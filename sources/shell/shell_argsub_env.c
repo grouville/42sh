@@ -20,7 +20,7 @@ size_t 		shell_argsub_len_var(char *argi)
 
 	accolade = (argi[1] == '{') ? 1 : 0;
 	len = 1 + accolade;
-	while (argi[len] && (ft_isalnum(argi[len]) || argi[len] == '_'))
+	while (argi[len] && (ft_isalnum(argi[len]) || ft_strchr("_?", argi[len])))
 	{
 		len++;
 		if (argi[len] == '}' && accolade == 1)
@@ -79,9 +79,9 @@ int			shell_argsub_env(char **arg, int i, char **envp, char **envl)
 	size_t	len;
 
 	tmp = *arg + i;
-	len = shell_argsub_len_var(tmp);
-	if (len == 1)
+	if ((len = shell_argsub_len_var(tmp)) == 1)
 		return (i);
+
 	tmp[0] = '\0';
 	tmp = shell_argsub_delaccolade(ft_strsub(tmp, 1, len - 1));
 	value = get_envp(envp, tmp) ? get_envp(envp, tmp) : get_envp(envl, tmp);

@@ -33,7 +33,7 @@ void process_init_shell_for_job(void)
 	if (jsig->shell_is_interactive)
 	{
 		/* Loop until we are in the foreground.  */
-		while (tcgetpgrp (jsig->shell_terminal) != (jsig->shell_pgid = getpgrp ()))
+		while (tcgetpgrp (jsig->shell_terminal) != (jsig->shell_pgid = getpgrp()))
 			kill (- jsig->shell_pgid, SIGTTIN);
 
 		/* Ignore interactive and job-control signals.  */
