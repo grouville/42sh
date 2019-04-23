@@ -33,16 +33,16 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 //	read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
-		exec = shell_exec_pipes(elem, shell, job);
+		shell->ret = shell_exec_pipes(elem, shell, job);
 	else
-		exec = shell_exec(*elem, shell, job);
+		shell->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
 	shell_ret(*elem, shell);
-	if (exec == -1)
+	if (shell->ret == -1)
 		return (-1);
-	else if (exec == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
+	else if (shell->ret == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
 		*elem = shell_process_skip_cmd(*elem, DBL_PIPE);
-	else if (exec > 0 && (*elem)->sep == DBL_SPRLU)
+	else if (shell->ret > 0 && (*elem)->sep == DBL_SPRLU)
 		*elem = shell_process_skip_cmd(*elem, DBL_SPRLU);
 	else if ((*elem)->sep == 0)
 		return (0);
@@ -62,13 +62,14 @@ int		launch_job(t_job *job, t_shell *shell)
 			return (-1);
 		elem = elem->next_cmd;
 	}
-
+	if (shell->ret == 4735) //4735 ret status d'un Ctrl-Z
+		job->sep = SPL_SPRLU; //pour ne pas wait le job dans put_forground
 	if (!jsig->shell_is_interactive)
 		wait_for_job (job);
 	else if (job->sep != SPL_SPRLU)
-		put_job_in_foreground (job, 0);
-	else
-		put_job_in_background (job, 0);
+		put_job_in_foreground(job, 0);
+	else if (shell->ret)
+		put_job_in_background(job, 0);
 	return (1);
 }
 

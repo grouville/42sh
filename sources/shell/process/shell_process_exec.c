@@ -46,9 +46,12 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 
 int		shell_father(int pid_child, t_job *job)
 {
+	int status;
+
+	status = 0;
 	if (job->sep != SPL_SPRLU)
-		wait(&pid_child);
-	return (WEXITSTATUS(pid_child));
+		waitpid(pid_child, &status, WUNTRACED);
+	return (status);
 }
 
 /*

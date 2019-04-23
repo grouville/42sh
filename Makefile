@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -g3 #-Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 
 NAME = 42sh
 
@@ -140,7 +140,7 @@ lib:
 
 $(NAME): $(OBJS)
 	@make -C $(DIR_LIB)
-	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap -fsanitize=address
+	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)
