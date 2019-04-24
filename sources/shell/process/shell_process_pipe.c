@@ -65,6 +65,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	int		child;
 	BOOL	elem_no_pipe;
 	int		status;
+	int 	status2;
 
 	elem_no_pipe = 0;
 	while (elem_no_pipe == 0)
@@ -82,7 +83,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 			return (0);
 	}
 	waitpid(child, &status, 0);
-	while (wait(NULL) > 0)
+	while (waitpid(0, &status2, WUNTRACED) > 0)
 		;
 	return (status);
 }
