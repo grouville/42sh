@@ -63,3 +63,23 @@ int job_is_completed(t_job *j)
 	}
 	return (1);
 }
+
+/*
+*** - Aim of the function :
+** - If one of the process in the job has been killed by a signal
+*** - returns the corresponding signal
+*/
+
+int	job_is_signaled(t_job *j)
+{
+	t_cmd *p;
+
+	p = j->cmds;
+	while (p)
+	{
+		if (p->signal)
+			return (p->signal);
+		p = p->next_cmd;
+	}
+	return (0);
+}

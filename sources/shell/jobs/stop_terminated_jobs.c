@@ -67,7 +67,17 @@ void	free_job(t_job *j)
 	free(j);
 }
 
+void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
+{
+	int i;
+	int job_pos;
 
+	i = -1;
+	ft_dprintf(1, "[%d]+ %-2s %-4d", nb_bgjob, status, job_is_signaled(j));
+	while (j->cmds->args_raw[++i])
+		ft_dprintf(1, "%s ", j->cmds->args_raw[i]);
+	ft_dprintf(1, "\n");
+}
 
 /* Notify the user about stopped or terminated jobs.
    Delete terminated jobs from the active job list.  */
@@ -94,11 +104,15 @@ void do_job_notification(void)
 		if (j->sep == SPL_SPRLU && j->state == -1)
 			nb_bgjob += 1;
 		jnext = j->next;
+		dprintf(1, "job is completed|%d|\n", job_is_completed(j));
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
 		if (j->sep == SPL_SPRLU && job_is_completed(j))
 		{
-			format_job_info(j, "Done", nb_bgjob);
+			if (job_is_signaled(j))
+				format_job_info_signal(j, "Killed:", nb_bgjob);
+			else
+				format_job_info(j, "Done", nb_bgjob);
 			if (j == jsig->first_job)
 				jsig->first_job = jsig->first_job->next;
 			jprev->next = jnext;

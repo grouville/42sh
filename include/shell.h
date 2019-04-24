@@ -72,6 +72,7 @@ typedef struct		s_cmd
 	pid_t			pid;          /* process ID */
 	BOOL			completed;    /* true if process has completed */
 	BOOL			stopped;      /* true if process has stopped */
+	BOOL			signal;		/* contains the signal used to kill process */
 	int				status;       /* reported status value */
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
