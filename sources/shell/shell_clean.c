@@ -90,6 +90,7 @@ void	clean_cmd(t_cmd **cmd)
 		}
 		if (prev)
 			free(prev);
+		// prev = NULL;
 		*cmd = NULL;
 	}
 }

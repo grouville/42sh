@@ -86,15 +86,11 @@ int		main(void)
 	shell_init(&shl, &prmt, &cmd, environ, &jobs);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
-		printf("ret|%d|\n", ret);
 		shl->count += 1;
 		if ((ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs)) == 1)
 			continue ;
-		else if (ret == -1)
-		{
-			// printf("ret2|%d|\n", ret);
-			break ;
-		}
+		else if (ret == -1 && !check_jobs_on_exit())
+				break ;
 	}
 	return (shell_exit(&cmd, &shl));
 }

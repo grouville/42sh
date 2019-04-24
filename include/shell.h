@@ -349,6 +349,8 @@ int					count_job_bg(void);
 void				free_job(t_job *j);
 t_js				*getter_job(void);
 void				put_job_suspended(t_job *j);
+int     			check_jobs_on_exit(void);
+int					job_is_signaled(t_job *j);
 
 /*
 ** Hard test
