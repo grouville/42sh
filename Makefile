@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS = -g3 #-Wall -Wextra -Werror
 
 NAME = 42sh
 
@@ -78,6 +78,8 @@ SRCS =  shell/main.c \
 		builtins/builtin_fc_search_occurence.c \
 		builtins/builtin_fc_execute_command.c \
 		builtins/builtin_localvar.c \
+		builtins/fg.c \
+		builtins/bg.c \
         editor/get_stdin.c \
 		editor/prompt.c \
 		editor/cursor_position.c \
@@ -141,7 +143,7 @@ lib:
 
 $(NAME): $(OBJS)
 	@make -C $(DIR_LIB)
-	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address
+	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap -fsanitize=address
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)

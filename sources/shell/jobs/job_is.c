@@ -19,10 +19,17 @@ t_job *find_job(pid_t pgid)
 	t_js	*jsig;
 
 	jsig = getter_job();
-	for (j = jsig->first_job; j; j = j->next)
+	j = jsig->first_job;
+	while (j)
+	{
 		if (j->pgid == pgid)
-			return j;
-	return NULL;
+			return (j);
+		j = j->next;
+	}
+	// for (j = jsig->first_job; j; j = j->next)
+	// 	if (j->pgid == pgid)
+	// 		return j;
+	return (NULL);
 }
 
 /*
