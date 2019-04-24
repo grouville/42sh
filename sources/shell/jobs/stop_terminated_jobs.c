@@ -35,10 +35,8 @@ void format_job_info(t_job *j, const char *status, int nb_bgjob)
 	int i;
 	int job_pos;
 
-
-
 	i = -1;
-	ft_dprintf(1, "[%d]+ %-10s", nb_bgjob, status);//change 1 to a number
+	ft_dprintf(1, "[%d]+ %-10s", nb_bgjob, status);
 	while (j->cmds->args_raw[++i])
 		ft_dprintf(1, "%s ", j->cmds->args_raw[i]);
 	ft_dprintf(1, "\n");

@@ -67,6 +67,8 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		shell_child(elem, shell, job);
 	else
 		elem->ret = shell_father(child, job);
+	if (elem->ret == 4735)
+		elem->stopped = 1;
 	jsig = getter_job();
 	elem->pid = child;
 	if (jsig->shell_is_interactive)

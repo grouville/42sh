@@ -37,7 +37,10 @@ int job_is_stopped(t_job *j)
 	while (p)
 	{
 		if (!p->stopped)
+		{
+			printf("-<|job is not stopped|>\n");
 			return (0);
+		}
 		p = p->next_cmd;
 	}
 	return (1);
@@ -52,16 +55,11 @@ int job_is_completed(t_job *j)
 	t_cmd *p;
 
 	p = j->cmds;
-	printf("-<|%d is complete ?|>\n", j->pgid);
 	while (p)
 	{
 		if (!p->completed)
-		{
-			printf("-<|0|>\n");
 			return (0);
-		}
 		p = p->next_cmd;
 	}
-	printf("-<|1|>\n");
 	return (1);
 }

@@ -70,8 +70,8 @@ typedef struct		s_cmd
 	int				sep; //separateur
 	int				ret; //valeur de retour
 	pid_t			pid;          /* process ID */
-	char			completed;    /* true if process has completed */
-	char			stopped;      /* true if process has stopped */
+	BOOL			completed;    /* true if process has completed */
+	BOOL			stopped;      /* true if process has stopped */
 	int				status;       /* reported status value */
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
@@ -324,29 +324,30 @@ int                 ft_builtin_hash(char **cmd, t_shell *env);
 ** - shell_init_jobs.c
 */
 
-void				put_job_in_background (t_job *j, int cont);
-void				put_job_in_foreground (t_job *j, int cont);
+void				put_job_in_background(t_job *j, int cont);
+void				put_job_in_foreground(t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
-void 				update_status (void);
-void				wait_for_job (t_job *j);
-void				do_job_notification (void);
-void				mark_job_as_running (t_job *j);
-void				continue_job (t_job *j, int foreground);
+void 				update_status(void);
+void				wait_for_job(t_job *j);
+void				do_job_notification(void);
+void				mark_job_as_running(t_job *j);
+void				continue_job(t_job *j, int foreground);
 
 /* Find the active job with the indicated pgid.  */
-t_job				*find_job (pid_t pgid);
+t_job				*find_job(pid_t pgid);
 
 
 /* Return true if all processes in the job have stopped or completed.  */
-int					job_is_stopped (t_job *j);
+int					job_is_stopped(t_job *j);
 
 
 /* Return true if all processes in the job have completed.  */
-int					job_is_completed (t_job *j);
+int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
 int					count_job_bg(void);
 void				free_job(t_job *j);
 t_js				*getter_job(void);
+void				put_job_suspended(t_job *j);
 
 /*
 ** Hard test
@@ -378,7 +379,7 @@ t_js				*getter_job(void);
 ** {cat missing 2>&1 1>/dev/ttys001} --> les redis sont save
 ** cat << EOF {ENTER} word1 {ENTER} word2 EOF {ENTER} EOF {ENTER}
 ** cat << EOF existing_file {ENTER} word1 {ENTER} EOF {ENTER}
-** echo test >'&2'
+** echo test >'&2' --> fichier &2
 ** echo file > '&'
 ** {export tty=/dev/ttys001} {echo test > $tty} et car ttys001 recoit
 ** {echo test > "/dev/ttys001\\"} --> error avec {/dev/ttys001\\}
