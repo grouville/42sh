@@ -35,7 +35,6 @@ int mark_process_status (pid_t pid, int status)
 			{
 				if (elem->pid == pid)
 				{
-					dprintf(1, "-<|on check le status de %d|>\n", elem->pid);
 					elem->status = status;
 					if (WIFSTOPPED (status))
 						elem->stopped = 1;

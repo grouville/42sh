@@ -36,6 +36,9 @@ void	shell_ret(t_cmd *elem, t_shell *shell)
 t_cmd	*shell_process_skip_cmd(t_cmd *elem, t_sep sep)
 {
 	while (elem->sep == sep)
+	{
 		elem = elem->next_cmd;
+		elem->completed = 1;
+	}
 	return (elem);
 }

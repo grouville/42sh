@@ -13,11 +13,11 @@
 
 # include "shell.h"
 
+/*
+** Check for processes that have status information available, without blocking
+*/
 
-/* Check for processes that have status information available,
-   without blocking.  */
-
-void update_status (void)
+void	update_status (void)
 {
 	int status;
 	pid_t pid;
@@ -28,19 +28,45 @@ void update_status (void)
 }
 
 
-/* Format information about job status for the user to look at.  */
-
-void format_job_info(t_job *j, const char *status, int nb_bgjob)
+void	print_sep(int fd, t_sep sep)
 {
-	int i;
-	int job_pos;
+	if (sep == 1)
+		ft_dprintf(fd, "|");
+	else if (sep == 2)
+		ft_dprintf(fd, ";");
+	else if (sep == 3)
+		ft_dprintf(fd, "||");
+	else if (sep == 4)
+		ft_dprintf(fd, "&&");
+	else if (sep == 5)
+		ft_dprintf(fd, "&");
+}
+/*
+** Format information about job status for the user to look at.
+*/
 
-	i = -1;
+void	format_job_info(t_job *j, const char *status, int nb_bgjob)
+{
+	int		i;
+	int		job_pos;
+	t_cmd	*elem;
+	char 	**args;
+
 	ft_dprintf(1, "[%d]+ %-10s", nb_bgjob, status);
-	while (j->cmds->args_raw[++i])
-		ft_dprintf(1, "%s ", j->cmds->args_raw[i]);
+	elem = j->cmds;
+	while (elem)
+	{
+		i = 0;
+		while (elem->args_raw[i])
+			ft_dprintf(1, "%s ", elem->args_raw[i++]);
+		if (elem->next_cmd)
+		{
+			print_sep(1, elem->sep);
+			ft_dprintf(1, " ");
+		}
+		elem = elem->next_cmd;
+	}
 	ft_dprintf(1, "\n");
-	// fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
 }
 
 int		count_job_bg(void)
