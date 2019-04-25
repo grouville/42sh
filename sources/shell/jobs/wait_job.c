@@ -40,7 +40,7 @@ int mark_process_status (pid_t pid, int status)
 						elem->stopped = 1;
 					else
 					{
-						elem->completed = 1;
+						elem->done = 1;
 						if (WIFSIGNALED (status))
 							elem->signal = WTERMSIG (elem->status);
 					}

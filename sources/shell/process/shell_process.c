@@ -37,6 +37,7 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	else
 		shell->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
+	(*elem)->done = 1;
 	shell_ret(*elem, shell);
 	if (shell->ret == -1)
 		return (-1);

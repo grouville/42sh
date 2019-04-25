@@ -61,9 +61,11 @@ void put_job_in_background (t_job *j, int cont)
 void put_job_suspended(t_job *j)
 {
 	t_js	*jsig;
+	t_cmd	*elem;
 
 //	ft_dprintf(1, "[%d]  + %d suspended")
 	j->sep = SPL_SPRLU;
+	elem = j->
 	do_job_notification();
 	jsig = getter_job();
 	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);

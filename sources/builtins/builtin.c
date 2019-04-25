@@ -62,6 +62,7 @@ BOOL	shell_is_builtin(t_cmd *elem, t_shell *shell)
 	!ft_strcmp("export", elem->args[0]) || !ft_strcmp("type", elem->args[0]) ||
 	!ft_strcmp("alias", elem->args[0]) || !ft_strcmp("fc", elem->args[0]) ||
 	!ft_strcmp("unalias", elem->args[0])|| !ft_strcmp("test", elem->args[0]) ||
+	!ft_strcmp("fg", elem->args[0])|| !ft_strcmp("bg", elem->args[0]) ||
 	!ft_strcmp("exit", elem->args[0])))
 		return (1);
 	else

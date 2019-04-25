@@ -77,6 +77,7 @@ int         job_percentage_number_exists_or_not(char *cmd, int nb,
     {
         ft_dprintf(2, nb == 0 ? "bash: fg: current: no such job\n"
             : "bash: fg: %s: no such job\n", cmd);
+        *job = NULL;
         return (1);
     }
     return (0);

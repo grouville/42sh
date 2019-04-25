@@ -31,7 +31,7 @@ int     check_any_stopped_job_left(void)
         elem = job->cmds;
         while (elem)
         {
-            if (elem->stopped && !elem->completed)
+            if (elem->stopped && !elem->done)
                 return (1);
             elem = elem->next_cmd;
         }
@@ -53,7 +53,7 @@ void    kill_all_processes(void)
         elem = job->cmds;
         while (elem)
         {
-            if (elem->stopped && !elem->completed)
+            if (elem->stopped && !elem->done)
                 kill(elem->pid, SIGKILL);
             elem = elem->next_cmd;
         }

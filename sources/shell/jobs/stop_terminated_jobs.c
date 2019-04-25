@@ -17,13 +17,13 @@
 ** Check for processes that have status information available, without blocking
 */
 
-void	update_status (void)
+void	update_status(void)
 {
 	int status;
 	pid_t pid;
 
 	do
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED|WNOHANG);
+		pid = waitpid(WAIT_ANY, &status, WUNTRACED|WNOHANG);
 	while (!mark_process_status (pid, status));
 }
 
@@ -106,8 +106,10 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 	ft_dprintf(1, "\n");
 }
 
-/* Notify the user about stopped or terminated jobs.
-   Delete terminated jobs from the active job list.  */
+/*
+** Notify the user about stopped or terminated jobs.
+** Delete terminated jobs from the active job list.
+*/
 
 void do_job_notification(void)
 {

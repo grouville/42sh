@@ -38,7 +38,7 @@ t_cmd	*shell_process_skip_cmd(t_cmd *elem, t_sep sep)
 	while (elem->sep == sep)
 	{
 		elem = elem->next_cmd;
-		elem->completed = 1;
+		elem->done = 1;
 	}
 	return (elem);
 }

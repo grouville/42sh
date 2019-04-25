@@ -26,9 +26,6 @@ t_job *find_job(pid_t pgid)
 			return (j);
 		j = j->next;
 	}
-	// for (j = jsig->first_job; j; j = j->next)
-	// 	if (j->pgid == pgid)
-	// 		return j;
 	return (NULL);
 }
 
@@ -44,10 +41,7 @@ int job_is_stopped(t_job *j)
 	while (p)
 	{
 		if (!p->stopped)
-		{
-			printf("-<|job is not stopped|>\n");
 			return (0);
-		}
 		p = p->next_cmd;
 	}
 	return (1);
@@ -64,7 +58,7 @@ int job_is_completed(t_job *j)
 	p = j->cmds;
 	while (p)
 	{
-		if (!p->completed)
+		if (!p->done)
 			return (0);
 		p = p->next_cmd;
 	}
@@ -72,9 +66,9 @@ int job_is_completed(t_job *j)
 }
 
 /*
-*** - Aim of the function :
+** - Aim of the function :
 ** - If one of the process in the job has been killed by a signal
-*** - returns the corresponding signal
+** - returns the corresponding signal
 */
 
 int	job_is_signaled(t_job *j)

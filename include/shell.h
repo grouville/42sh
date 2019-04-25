@@ -70,7 +70,7 @@ typedef struct		s_cmd
 	int				sep; //separateur
 	int				ret; //valeur de retour
 	pid_t			pid;          /* process ID */
-	BOOL			completed;    /* true if process has completed */
+	BOOL			done;    /* true if process has completed */
 	BOOL			stopped;      /* true if process has stopped */
 	BOOL			signal;		/* contains the signal used to kill process */
 	int				status;       /* reported status value */
@@ -446,6 +446,7 @@ int					job_is_signaled(t_job *j);
 ** 1=pasok mais a1=ok
 ** a={test
 ** alias ls="echo noprint" && \ls --> ls est exec
+** ls && cat || ls
 */
 
 /*

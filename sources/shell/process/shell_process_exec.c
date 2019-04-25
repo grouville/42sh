@@ -26,8 +26,6 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		   This has to be done both by the shell and in the individual
 		   child processes because of potential race conditions.  */
 		pid = getpid ();
-		//if (job->pgid == 0)
-		//	pgid = pid;
 		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
 			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
@@ -49,8 +47,7 @@ int		shell_father(int pid_child, t_job *job)
 	int status;
 
 	status = 0;
-	if (job->sep != SPL_SPRLU)
-		waitpid(pid_child, &status, WUNTRACED);
+	waitpid(pid_child, &status, WUNTRACED);
 	return (status);
 }
 
@@ -67,7 +64,6 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		shell_child(elem, shell, job);
 	else
 		elem->ret = shell_father(child, job);
-//	sleep(1);
 	if (elem->ret == 4735)
 		elem->stopped = 1;
 	jsig = getter_job();
@@ -119,6 +115,7 @@ int		shell_exec_error(int is_builtin, t_cmd *elem)
 int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	int	is_builtin;
+
 
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);

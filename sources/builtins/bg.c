@@ -33,13 +33,14 @@ int			    ft_builtin_bg(char **cmd)
         if (job_percentage_number_exists_or_not(*cmd,
             job_number, &j))
             ret = 1;
-        put_job_in_background(j, job_is_stopped(j) ? 1 : 0);
+        if (j)
+        	put_job_in_background(j, job_is_stopped(j) ? 1 : 0);
     }
     else
     {
         while (cmd[i])
         {
-            printf("i: %d\n", i);
+//            printf("i: %d\n", i);
             if (check_usage(cmd[i]) && (i++) && (ret = 2))
                 continue ;
             if (check_if_job_exists(cmd[i], &j) && (i++) && (ret = 1))
