@@ -202,6 +202,11 @@ BOOL				is_var(char *arg);
 int					builtin_localvar(char ***ptn_args, char **args_raw);
 int			    	ft_builtin_fg(char **cmd);
 int			    	ft_builtin_bg(char **cmd);
+int         		find_last_job_put_in_background(void);
+int             	check_if_job_exists(char *cmd, t_job **j);
+int         		job_percentage_number_exists_or_not(char *cmd, int nb,
+                		t_job **job);
+int             	check_usage(char *cmd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

@@ -50,27 +50,33 @@ int             is_number(char *cmd)
     return (0);
 }
 
+/*
+*** - Aim of the function :
+*** - Retrieve the corresponding job, or print error if doesn't exist
+*/
+
 int         job_percentage_number_exists_or_not(char *cmd, int nb,
                 t_job **job)
 {
     t_job   *j;
     int		nb_bgjob;
 
-    nb_bgjob = 0;
+    nb_bgjob = 1;
     j = getter_job()->first_job;
     while (j)
     {
-        if (nb_bgjob == nb)
+        if (nb_bgjob == nb && j->sep == SPL_SPRLU && j->state == -1)
             break ;
         if (j->sep == SPL_SPRLU && j->state == -1)
 			nb_bgjob += 1;
         j = j->next;
     }
-    if (j)
+    if (j && nb != 0)
         *job = j;
     else
     {
-        ft_dprintf(2, "bash: fg: *s: no such job\n", cmd);
+        ft_dprintf(2, nb == 0 ? "bash: fg: current: no such job\n"
+            : "bash: fg: %s: no such job\n", cmd);
         return (1);
     }
     return (0);
@@ -85,58 +91,68 @@ int         job_percentage_number_exists_or_not(char *cmd, int nb,
 */
 
 int             check_if_job_exists(char *cmd, t_job **j)
-{   
+{
     if (!is_number(cmd))
-    {
-        *j = find_job(ft_atoi(cmd));
-        if (!*j)
-        {
-            ft_dprintf(2, "bash: fg: %s: no such job\n", cmd);
-            return (1);
-        }
-        else
-            *j = find_job(ft_atoi(cmd));
-    }
+        return (job_percentage_number_exists_or_not(cmd,
+            ft_atoi(cmd), j));
+    else if (*cmd == '%' && !is_number(cmd + 1))
+        return (job_percentage_number_exists_or_not(cmd,
+            ft_atoi(cmd + 1), j));
     else
     {
-        if (*cmd == '%')
-        {
-            if (!is_number(cmd + 1))
-            {
-                printf("merde\n");
-                return (job_percentage_number_exists_or_not(cmd,
-                    ft_atoi(cmd + 1), j));
-            }
-            else
-            {
-                printf("ecnore plus\n");
-                ft_dprintf(2, "bash: fg: %s: no such job\n", cmd);
-                return (1);
-            }   
-        }
-        else
-        {
-            printf("d'autant plus\n");
-            ft_dprintf(2, "bash: fg: %s: no such job\n", cmd);
-            return (1);
-        }
+        ft_dprintf(2, "bash: fg: %s: no such job\n", cmd);
+        return (1);
     }
     return (0);
 }
 
-// No job == return 1
-// Usage error == return 2
+/*
+*** - Aim of the function :
+*** - Retrieve the number of the last job put in bg
+*/
+
+int         find_last_job_put_in_background(void)
+{
+    t_job   *j;
+    t_js    *jsig;
+    int		nb_bgjob;
+
+    nb_bgjob = 0;
+    jsig = getter_job();
+    j = jsig->first_job;
+    while (j)
+    {
+        if (j->sep == SPL_SPRLU && j->state == -1)
+			nb_bgjob += 1;
+        j = j->next;
+    }
+    return (nb_bgjob);
+}
+
+/*
+*** - Aim of the function :
+*** - Manage the fg builtin
+*/
 
 int			    ft_builtin_fg(char **cmd)
 {
-    t_job *j;
+    t_job   *j;
+    int     job_number;
 
-    if (check_usage(cmd[1]))
-        return (2);
-    if (check_if_job_exists(cmd[1], &j))
-        return (1);
-    // if job is stopped, continue, otherwise, let it
+    if (ft_arrlen(cmd) == 1)
+    {
+        job_number = find_last_job_put_in_background();
+        if (job_percentage_number_exists_or_not(*cmd,
+            job_number, &j))
+            return (1);
+    }
+    else
+    {
+        if (check_usage(cmd[1]))
+            return (2);
+        if (check_if_job_exists(cmd[1], &j))
+            return (1);
+    }
     put_job_in_foreground(j, job_is_stopped(j) ? 1 : 0);
-    // dprintf(1, "%s\n", *cmd);
     return (0);
 }
