@@ -83,7 +83,7 @@ int		count_job_bg(void)
 		if (j->sep == SPL_SPRLU && j->state == -1)
 			nb_jobbg += 1;
 	}
-	return (nb_jobbg);
+	return (nb_jobbg + 1);
 }
 
 void	free_job(t_job *j)

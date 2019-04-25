@@ -26,6 +26,7 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		   This has to be done both by the shell and in the individual
 		   child processes because of potential race conditions.  */
 		pid = getpid ();
+//		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
 			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
@@ -42,14 +43,15 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 	exit(EXIT_SUCCESS);
 }
 
-int		shell_father(int pid_child, t_job *jobm, t_cmd *elem)
+int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 {
 	int status;
 
-	status = 0;
+	status = -2;
+
 	if (elem->sep != SPL_SPRLU)
-		waitpid(pid_child, &status, WUNTRACED);
-	printf("-<|Ctrl Z|>\n");
+		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
+//	printf("-<|staut %d|>\n", status);
 	return (status);
 }
 
@@ -66,6 +68,7 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		shell_child(elem, shell, job);
 	else
 		elem->ret = shell_father(child, job, elem);
+//	printf("-<|%d|%d|%d>\n", elem->ret, EXIT_SUCCESS, EXIT_FAILURE);
 	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
 		elem->stopped = 1;
 	else
@@ -74,10 +77,11 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	elem->pid = child;
 	if (jsig->shell_is_interactive)
 	{
-		if (!job->pgid)
+		if (!job->pgid &&  elem->ret != EXIT_FAILURE && elem->ret != EXIT_SUCCESS)
 			job->pgid = child;
 		setpgid (child, job->pgid);
 	}
+//	printf("-<fin execve job->pgid|%d|>\n", job->pgid);
 }
 
 int		shell_exec_error(int is_builtin, t_cmd *elem)

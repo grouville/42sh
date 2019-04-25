@@ -53,14 +53,16 @@ int		launch_job(t_job *job, t_shell *shell)
 {
 	t_cmd	*elem;
 	t_js	*jsig;
+	BOOL	suspended;
 
+	suspended = 0;
 	jsig = getter_job();
 	elem = job->cmds;
 	while (elem)
 	{
 		if (shell_process_cmd(&elem, shell, job) == -1)
 			return (-1);
-		if (shell->ret == 4735) //4735 ret status d'un Ctrl-Z
+		if (shell->ret == 4735 && (suspended = 1)) //4735 ret status d'un Ctrl-Z
 			put_process_suspended(job, elem);
 		elem = elem->next_cmd;
 	}
@@ -68,7 +70,7 @@ int		launch_job(t_job *job, t_shell *shell)
 		wait_for_job (job);
 	else if (job->sep != SPL_SPRLU)
 		put_job_in_foreground(job, 0);
-	else
+	else if (!suspended)
 		put_job_in_background(job, 0);
 	return (1);
 }

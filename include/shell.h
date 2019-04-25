@@ -447,6 +447,8 @@ int					job_is_signaled(t_job *j);
 ** a={test
 ** alias ls="echo noprint" && \ls --> ls est exec
 ** ls && cat || ls --> Ctrl-Z de cat --> ls s'execute
+** cat &
+** cat + Ctrl-Z puis ls
 */
 
 /*

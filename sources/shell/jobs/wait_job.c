@@ -76,7 +76,7 @@ void wait_for_job (t_job *j)
 	while (1)
 	{
 		// printf("-<|loop|>\n");  j->cmds->pid
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
+		pid = waitpid (WAIT_ANY, &status, WUNTRACED | WNOHANG);
 		// printf("-<|fin wait pid %d|>\n", pid);
 		if (mark_process_status (pid, status))
 			break ;
