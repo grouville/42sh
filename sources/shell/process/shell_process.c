@@ -37,7 +37,6 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	else
 		shell->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
-	(*elem)->done = 1;
 	shell_ret(*elem, shell);
 	if (shell->ret == -1)
 		return (-1);
@@ -61,12 +60,12 @@ int		launch_job(t_job *job, t_shell *shell)
 	{
 		if (shell_process_cmd(&elem, shell, job) == -1)
 			return (-1);
+		if (shell->ret == 4735) //4735 ret status d'un Ctrl-Z
+			put_process_suspended(job, elem);
 		elem = elem->next_cmd;
 	}
 	if (!jsig->shell_is_interactive)
 		wait_for_job (job);
-	else if (shell->ret == 4735) //4735 ret status d'un Ctrl-Z
-		put_job_suspended(job);
 	else if (job->sep != SPL_SPRLU)
 		put_job_in_foreground(job, 0);
 	else

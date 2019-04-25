@@ -44,7 +44,6 @@ int mark_process_status (pid_t pid, int status)
 						if (WIFSIGNALED (status))
 							elem->signal = WTERMSIG (elem->status);
 					}
-					dprintf(3, "-<|return 0|>\n");
 					return 0;
 				}
 				elem = elem->next_cmd;
@@ -76,8 +75,8 @@ void wait_for_job (t_job *j)
 
 	while (1)
 	{
-		// printf("-<|loop|>\n");
-		pid = waitpid (j->cmds->pid, &status, WUNTRACED);
+		// printf("-<|loop|>\n");  j->cmds->pid
+		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
 		// printf("-<|fin wait pid %d|>\n", pid);
 		if (mark_process_status (pid, status))
 			break ;

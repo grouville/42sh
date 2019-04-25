@@ -58,18 +58,18 @@ void put_job_in_background (t_job *j, int cont)
 //		perror ("kill (SIGCONT)");
 }
 
-void put_job_suspended(t_job *j)
+void put_process_suspended(t_job *j, t_cmd *elem)
 {
 	t_js	*jsig;
-	t_cmd	*elem;
 
 //	ft_dprintf(1, "[%d]  + %d suspended")
 	j->sep = SPL_SPRLU;
-	elem = j->
+	elem->stopped = 1;
 	do_job_notification();
 	jsig = getter_job();
 	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);
 	/* Restore the shell’s terminal modes.  */
 	tcgetattr (jsig->shell_terminal, &j->tmodes);
 	tcsetattr (jsig->shell_terminal, TCSADRAIN, &(jsig->shell_tmodes));
+
 }

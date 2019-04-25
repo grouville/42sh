@@ -355,7 +355,7 @@ void				process_init_shell_for_job(void);
 int					count_job_bg(void);
 void				free_job(t_job *j);
 t_js				*getter_job(void);
-void				put_job_suspended(t_job *j);
+void				put_process_suspended(t_job *j, t_cmd *elem);
 int     			check_jobs_on_exit(void);
 int					job_is_signaled(t_job *j);
 
@@ -446,7 +446,7 @@ int					job_is_signaled(t_job *j);
 ** 1=pasok mais a1=ok
 ** a={test
 ** alias ls="echo noprint" && \ls --> ls est exec
-** ls && cat || ls
+** ls && cat || ls --> Ctrl-Z de cat --> ls s'execute
 */
 
 /*

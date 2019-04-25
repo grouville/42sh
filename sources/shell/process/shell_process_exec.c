@@ -42,12 +42,14 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 	exit(EXIT_SUCCESS);
 }
 
-int		shell_father(int pid_child, t_job *job)
+int		shell_father(int pid_child, t_job *jobm, t_cmd *elem)
 {
 	int status;
 
 	status = 0;
-	waitpid(pid_child, &status, WUNTRACED);
+	if (elem->sep != SPL_SPRLU)
+		waitpid(pid_child, &status, WUNTRACED);
+	printf("-<|Ctrl Z|>\n");
 	return (status);
 }
 
@@ -63,9 +65,11 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	if ((child = fork()) == 0)
 		shell_child(elem, shell, job);
 	else
-		elem->ret = shell_father(child, job);
-	if (elem->ret == 4735)
+		elem->ret = shell_father(child, job, elem);
+	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
 		elem->stopped = 1;
+	else
+		elem->done = 1;
 	jsig = getter_job();
 	elem->pid = child;
 	if (jsig->shell_is_interactive)

@@ -99,8 +99,6 @@ int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd)
 
 int		hrdc_fill(t_prompt *prompt, t_cmd **cmd, t_shell *shell, t_shortcut ret)
 {
-	if (ret == CTRLC && *prompt == PROMPT && *cmd)
-		return (shell_clean_data(cmd, shell, 0));
 	if (*prompt == HRDC && ret == CTRLD && !shell->str)
 		return (hrdc_interrupt_ctrd(prompt, cmd));
 	else if (*prompt == HRDC && ret == CTRLC)
