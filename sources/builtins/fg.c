@@ -148,7 +148,6 @@ int			    ft_builtin_fg(char **cmd)
     if (ft_arrlen(cmd) == 1)
     {
         job_number = find_last_job_put_in_background();
-        // printf("job_number: %d\n", job_number);
         if (job_percentage_number_exists_or_not_fg(*cmd,
             job_number, &j))
             return (1);
@@ -161,5 +160,7 @@ int			    ft_builtin_fg(char **cmd)
             return (1);
     }
     put_job_in_foreground(j, job_is_stopped(j) ? 1 : 0);
+    if (ft_strcmp("cat", j->cmds->args[0]) == 0)
+        ft_putchar_fd('\n', 1);
     return (0);
 }
