@@ -28,7 +28,7 @@ int         job_percentage_number_exists_or_not_bg(char *cmd, int nb,
     j = getter_job()->first_job;
     while (j)
     {
-        if (j->num == nb)
+        if (j->num == nb && j->sep == SPL_SPRLU)
             break ;
         j = j->next;
     }

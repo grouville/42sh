@@ -65,7 +65,7 @@ int         job_percentage_number_exists_or_not_fg(char *cmd, int nb,
     j = getter_job()->first_job;
     while (j)
     {
-        if (j->num == nb)
+        if (j->num == nb && j->sep == SPL_SPRLU)
             break ;
         j = j->next;
     }
@@ -115,22 +115,24 @@ int         find_last_job_put_in_background(void)
     t_job   *j;
     t_job   *first_job;
     int		num;
+    BOOL    checker;     
 
     num = 1;
+    checker = 0;
     first_job = getter_job()->first_job;
     j = first_job;
     while ((j = j->next))
     {
-        dprintf(1, "num_loop: %d-%s\n", num, j->cmds->args[0]);
         if (j->num > num && j->sep == SPL_SPRLU)
         {
             num = j->num;
+            checker = 1;
             j = first_job->next;
         }
-        // j = j->next;
+        else if (j->num == num && j->sep == SPL_SPRLU)
+            checker = 1;
     }
-    printf("%d-num\n", num);
-    return (num);
+    return (num == 1 && checker == 0 ? 0 : num);
 }
 
 /*

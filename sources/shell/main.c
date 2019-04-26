@@ -74,6 +74,19 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	return (0);
 }
 
+
+void 	print_jobs(void)
+{
+	t_job	*job;
+
+	job = getter_job()->first_job;
+	printf("jesuispasse\n");
+	while ((job = job->next))
+	{
+		printf("job->df: %s\n", job->cmds->args[0]);
+	}
+}
+
 int		main(void)
 {
 	extern char **environ;
@@ -87,6 +100,7 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
+		print_jobs();
 		do_job_notification();
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 

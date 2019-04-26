@@ -203,7 +203,7 @@ int             	check_if_job_exists(char *cmd, t_job **j);
 int         		job_percentage_number_exists_or_not_fg(char *cmd, int nb,
                 		t_job **job);
 int             	check_usage(char *cmd);
-int      		    is_number(char *cmd);
+int      		     is_number(char *cmd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

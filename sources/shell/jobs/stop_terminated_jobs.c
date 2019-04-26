@@ -126,22 +126,21 @@ void do_job_notification(void)
 	j = jsig->first_job;
 	while ((j = j->next))
 	{
-		if (j->pgid == 0 && (jprev = j))
+		jnext = j->next;
+		if (j->pgid == 0)
 		{
-			// if (job_is_completed(j))
-			// {
-			// 	// printf("jetefree\n");
-			// 	if (j == jsig->first_job)
-			// 		jsig->first_job = jsig->first_job->next;
-			// 	jprev->next = jnext;
-			// 	free_job (j);
-			// 	j = jprev;
-			// 	jprev = j;
-			// 	// continue ;
-			// }
+			if (job_is_completed(j))
+			{
+				jprev->next = jnext;
+				if (j == jsig->first_job)
+					jsig->first_job = jsig->first_job->next;
+				free_job (j);
+				j = jprev;
+			}
+			jprev = j;
 			continue ;
 		}
-		jnext = j->next;
+		// jnext = j->next;
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
 		if (j->sep == SPL_SPRLU && job_is_completed(j))
@@ -150,8 +149,8 @@ void do_job_notification(void)
 				format_job_info_signal(j, "Killed:", j->num);
 			else
 				format_job_info(j, "Done", j->num);
-			if (j == jsig->first_job)
-				jsig->first_job = jsig->first_job->next;
+			// if (j == jsig->first_job)
+			// 	jsig->first_job = jsig->first_job->next;
 			jprev->next = jnext;
 			free_job (j);
 			j = jprev;
