@@ -67,7 +67,6 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		shell_child(elem, shell, job);
 	else
 		elem->ret = shell_father(child, job, elem);
-//	printf("-<|%d|%d|%d>\n", elem->ret, EXIT_SUCCESS, EXIT_FAILURE);
 	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
 		elem->stopped = 1;
 	else
@@ -80,7 +79,6 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 			job->pgid = child;
 		setpgid (child, job->pgid);
 	}
-//	printf("-<fin execve job->pgid|%d|>\n", job->pgid);
 }
 
 int		shell_exec_error(int is_builtin, t_cmd *elem)

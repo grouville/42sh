@@ -84,6 +84,7 @@ int 	shell_prepare_jobs_number(t_job *jobs)
 	job_num = 1;
 	while ((job = job->next))
 	{
+		// printf("job->df: %s\n", job->cmds->args[0]);
 		if (job->num == job_num)
 		{
 			job_num++;

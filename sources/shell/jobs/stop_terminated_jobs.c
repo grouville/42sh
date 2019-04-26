@@ -117,31 +117,39 @@ void do_job_notification(void)
 	t_job	*jnext;
 	t_job	*jprev;
 	t_cmd	*p;
-	int		nb_bgjob;
 	t_js	*jsig;
 
 	jsig = getter_job();
 	/* Update status information for child processes.  */
 	update_status();
-	nb_bgjob = 0;
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))
 	{
 		if (j->pgid == 0 && (jprev = j))
+		{
+			// if (job_is_completed(j))
+			// {
+			// 	// printf("jetefree\n");
+			// 	if (j == jsig->first_job)
+			// 		jsig->first_job = jsig->first_job->next;
+			// 	jprev->next = jnext;
+			// 	free_job (j);
+			// 	j = jprev;
+			// 	jprev = j;
+			// 	// continue ;
+			// }
 			continue ;
-		if (j->sep == SPL_SPRLU && j->state == -1)
-			nb_bgjob += 1;
+		}
 		jnext = j->next;
-		// dprintf(1, "job is completed|%d|\n", job_is_completed(j));
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */
 		if (j->sep == SPL_SPRLU && job_is_completed(j))
 		{
 			if (job_is_signaled(j))
-				format_job_info_signal(j, "Killed:", nb_bgjob);
+				format_job_info_signal(j, "Killed:", j->num);
 			else
-				format_job_info(j, "Done", nb_bgjob);
+				format_job_info(j, "Done", j->num);
 			if (j == jsig->first_job)
 				jsig->first_job = jsig->first_job->next;
 			jprev->next = jnext;
@@ -153,7 +161,7 @@ void do_job_notification(void)
 		 * marking them so that we won’t do this more than once.  */
 		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified)
 		{
-			format_job_info(j, "Stopped", nb_bgjob);
+			format_job_info(j, "Stopped", j->num);
 			j->notified = 1;
 		}
 		/* Don’t say anything about jobs that are still running.  */

@@ -55,7 +55,7 @@ int             is_number(char *cmd)
 *** - Retrieve the corresponding job, or print error if doesn't exist
 */
 
-int         job_percentage_number_exists_or_not(char *cmd, int nb,
+int         job_percentage_number_exists_or_not_fg(char *cmd, int nb,
                 t_job **job)
 {
     t_job   *j;
@@ -65,10 +65,8 @@ int         job_percentage_number_exists_or_not(char *cmd, int nb,
     j = getter_job()->first_job;
     while (j)
     {
-        if (nb_bgjob == nb && j->sep == SPL_SPRLU && j->state == -1)
+        if (j->num == nb)
             break ;
-        if (j->sep == SPL_SPRLU && j->state == -1)
-			nb_bgjob += 1;
         j = j->next;
     }
     if (j && nb != 0)
@@ -94,10 +92,10 @@ int         job_percentage_number_exists_or_not(char *cmd, int nb,
 int             check_if_job_exists(char *cmd, t_job **j)
 {
     if (!is_number(cmd))
-        return (job_percentage_number_exists_or_not(cmd,
+        return (job_percentage_number_exists_or_not_fg(cmd,
             ft_atoi(cmd), j));
     else if (*cmd == '%' && !is_number(cmd + 1))
-        return (job_percentage_number_exists_or_not(cmd,
+        return (job_percentage_number_exists_or_not_fg(cmd,
             ft_atoi(cmd + 1), j));
     else
     {
@@ -115,19 +113,24 @@ int             check_if_job_exists(char *cmd, t_job **j)
 int         find_last_job_put_in_background(void)
 {
     t_job   *j;
-    t_js    *jsig;
-    int		nb_bgjob;
+    t_job   *first_job;
+    int		num;
 
-    nb_bgjob = 0;
-    jsig = getter_job();
-    j = jsig->first_job;
-    while (j)
+    num = 1;
+    first_job = getter_job()->first_job;
+    j = first_job;
+    while ((j = j->next))
     {
-        if (j->sep == SPL_SPRLU && j->state == -1)
-			nb_bgjob += 1;
-        j = j->next;
+        dprintf(1, "num_loop: %d-%s\n", num, j->cmds->args[0]);
+        if (j->num > num && j->sep == SPL_SPRLU)
+        {
+            num = j->num;
+            j = first_job->next;
+        }
+        // j = j->next;
     }
-    return (nb_bgjob);
+    printf("%d-num\n", num);
+    return (num);
 }
 
 /*
@@ -143,7 +146,8 @@ int			    ft_builtin_fg(char **cmd)
     if (ft_arrlen(cmd) == 1)
     {
         job_number = find_last_job_put_in_background();
-        if (job_percentage_number_exists_or_not(*cmd,
+        printf("job_number: %d\n", job_number);
+        if (job_percentage_number_exists_or_not_fg(*cmd,
             job_number, &j))
             return (1);
     }
