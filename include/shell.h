@@ -8,7 +8,7 @@
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
 /*   Updated: 2019/04/04 13:11:13 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
-/*                   v                                     /                   */
+/*                   v                                     /                  */
 /* ************************************************************************** */
 
 #ifndef SHELL_H
@@ -194,6 +194,8 @@ int					check_builtin_export(t_shell *shell, char **cmd);
 int					builtin_fc(char **args, t_shell *shell);
 int					builtin_fc_search_occurence(t_fc *fc, t_data *hist);
 void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
+int					shell_command_execution(t_shell *shl, t_cmd **cmd,
+						t_shortcut ret, t_prompt *prmt, t_job *jobs);
 BOOL				is_var(char *arg);
 int					builtin_localvar(char ***ptn_args, char **args_raw);
 int			    	ft_builtin_fg(char **cmd);

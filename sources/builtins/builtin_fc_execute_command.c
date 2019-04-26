@@ -68,7 +68,7 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		fc->heredoc[1] + 0;
 		if ((shell->str = fc->cmd_list->cmd) && write(1, fc->cmd_list->cmd,
 		ft_strlen(fc->cmd_list->cmd)) && write(1, "\n", 1) &&
-		(fc->ret = shell_command_execution(shell, cmd, 0, p)) == -1)
+		(fc->ret = shell_command_execution(shell, cmd, 0, p, getter_job()->first_job)) == -1)
 			return ;
 		if (*p != PROMPT && (!fc->heredoc[0] || ((*cmd && cmd_addr !=
 		(unsigned long)*cmd) && (cmd_addr = (unsigned long)*cmd))))
@@ -88,7 +88,7 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	p = PROMPT;
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
-		fc->ret = shell_command_execution(shell, &cmd, 0, &p) == -1;
+		fc->ret = shell_command_execution(shell, &cmd, 0, &p, getter_job()->first_job) == -1;
 	builtin_fc_remove_hist_node(shell);
 	shell_clean_data(&cmd, shell, 1);
 	if (fc->ret == -1 || ((ft_atoi(get_envp(shell->envl, "?"))) == 1))
