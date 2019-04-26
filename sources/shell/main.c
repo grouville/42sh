@@ -100,7 +100,7 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		print_jobs();
+		// print_jobs();
 		do_job_notification();
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 
