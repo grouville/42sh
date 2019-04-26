@@ -38,19 +38,30 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 	return (0);
 }
 
-int		is_recheable_output(t_output *output, t_shell *shell)
+/*
+** Dans le cas d'un fifo en background if faut O_RDWR l'open pour ne pas
+** attendre l'envoi de data dans le pipe
+*/
+
+int		is_recheable_output(t_output *output, t_shell *shell, int sep)
 {
 	int		fd_open;
 	char	*msg_err;
 
 	msg_err = ft_strdup(output->to);
 	complete_output_paths(&output->to, shell);
-	if (output->append)
-		fd_open = open(output->to, O_WRONLY | O_CREAT | O_APPEND,
+	if (sep == SPL_SPRLU && output->append)
+		fd_open = open(output->to, O_RDWR | O_CREAT | O_APPEND,
 						S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+	else if (output->append)
+		fd_open = open(output->to, O_WRONLY | O_CREAT | O_APPEND,
+					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+	else if (sep == SPL_SPRLU)
+		fd_open = open(output->to, O_RDWR | O_CREAT | O_TRUNC,
+					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	else
 		fd_open = open(output->to, O_WRONLY | O_CREAT | O_TRUNC,
-						S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	if (fd_open < 0)
 	{
 		if (ft_isdir(output->to))
@@ -129,7 +140,7 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 			ft_strdel(&(elem->process).fd_stderr);
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
-		else if (!is_fd && (fd_file = is_recheable_output(output, shell)))
+		else if (!is_fd && (fd_file = is_recheable_output(output, shell, elem->sep)))
 			shell_set_output_file(output, elem, fd_file);
 		else
 			return (0);

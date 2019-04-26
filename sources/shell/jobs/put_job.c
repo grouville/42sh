@@ -96,10 +96,8 @@ void put_process_suspended(t_job *j, t_cmd *elem)
 //	ft_dprintf(1, "[%d]  + %d suspended")
 	j->sep = SPL_SPRLU;
 	elem->stopped = 1;
-	printf("-<|1|>\n");
 	ft_dprintf(1, "[%d]+  %-10s%s\n", count_job_bg(), "Stopped", elem->args[0]);
 //	do_job_notification();
-	printf("-<|2|>\n");
 	jsig = getter_job();
 	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);
 	/* Restore the shell’s terminal modes.  */

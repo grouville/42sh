@@ -78,6 +78,8 @@ int		check_input_file(char **std_in, t_shell *shell)
 ** ne correspond pas à un HRDC
 */
 
+
+
 int		shell_read_input(t_cmd *elem, t_shell *shell)
 {
 	int		i;

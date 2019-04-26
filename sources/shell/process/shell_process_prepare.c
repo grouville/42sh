@@ -75,15 +75,33 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 	return (1);
 }
 
+int 	shell_prepare_jobs_number(t_job *jobs)
+{
+	t_job	*job;
+	int 	job_num;
+
+	job = getter_job()->first_job;
+	job_num = 1;
+	while ((job = job->next))
+	{
+		if (job->num == job_num)
+		{
+			job_num++;
+			job = jobs;
+		}
+	}
+	return (job_num);
+}
+
 // To be normed
-void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
+void	shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd)
 {
 	t_job	*job;
 	t_cmd	*elem;
 	t_cmd	*cpy_elem;
 	int 	i;
 
-	job = jobs;
+	job = first_jobs;
 	while ((job->next))
 		job = job->next;
 	elem = cmd->next_cmd;
@@ -96,10 +114,7 @@ void	shell_prepare_jobs(t_job *jobs, t_cmd *cmd)
 		while (elem->sep && elem->sep != PTN_VRGL && elem->sep != SPL_SPRLU)
 			elem = elem->next_cmd;
 		job->sep = elem->sep;
-		job->command = "jobs->command";
-		job->stdin = 0;
-		job->stdout = 1;
-		job->stderr = 2;
+		job->num = shell_prepare_jobs_number(first_jobs);
 		if (elem->next_cmd)
 		{
 			cpy_elem = elem;

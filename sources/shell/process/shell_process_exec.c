@@ -48,7 +48,6 @@ int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 	int status;
 
 	status = -2;
-
 	if (elem->sep != SPL_SPRLU)
 		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
 //	printf("-<|staut %d|>\n", status);
@@ -124,7 +123,6 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	int	is_builtin;
 
-
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
 	shell_plomberie(elem->process);
@@ -135,9 +133,9 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 		return (-1);
 	if (elem->process.fd_stdin[1] != '0')
 		close(ft_atoi(elem->process.fd_stdin + 1));
-	if (elem->process.fd_stdout[1] != '1')
-		close(ft_atoi(elem->process.fd_stdout + 1));
-	if (elem->process.fd_stderr[1] != '2')
-		close(ft_atoi(elem->process.fd_stderr + 1));
+	if (elem->process.fd_fileout != 1)
+		close(elem->process.fd_fileout);
+	if (elem->process.fd_fileerr != 2)
+		close(elem->process.fd_fileerr);
 	return (elem->ret);
 }

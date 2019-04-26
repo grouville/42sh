@@ -70,8 +70,8 @@ int     check_jobs_on_exit(void)
 {
     static int  boul = 0;
     int         is_stopped;
-    
-    do_job_notification();
+
+	do_job_notification();
     is_stopped = check_any_stopped_job_left();
     if (is_stopped && !boul)
     {

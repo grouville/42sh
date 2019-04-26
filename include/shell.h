@@ -82,15 +82,11 @@ typedef struct		s_job
 {
 	t_cmd			*cmds;
 	int 			sep;
-
+	int 			num;
 	pid_t			pgid;        /* process group ID */
 	int 			state;
 	char			notified;    /* true if user told about stopped job */
 	struct termios	tmodes;      /* saved terminal modes */
-	int 			stdin;
-	int 			stdout;
-	int 			stderr;  /* standard i/o channels */
-	char			*command;              /* command line, used for messages */
 	struct s_job	*next;
 }					t_job;
 
@@ -449,6 +445,10 @@ int					job_is_signaled(t_job *j);
 ** ls && cat || ls --> Ctrl-Z de cat --> ls s'execute
 ** cat &
 ** cat + Ctrl-Z puis ls
+** mkfifo fifo && cat < fifo et avec autre shell : ls > fifo
+** mkfifo fifo && ls >> fifo et lire fifo
+** lorsque fifo est déjà en lecture ou ecriture avec un autre shell --> print error msg
+**
 */
 
 /*

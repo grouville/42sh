@@ -87,9 +87,10 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		if ((ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs)) == 1)
-			continue ;
-		else if (ret == -1 && !check_jobs_on_exit())
+		do_job_notification();
+		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
+
+		if (ret == -1 && !check_jobs_on_exit())
 				break ;
 	}
 	return (shell_exit(&cmd, &shl));
