@@ -54,6 +54,7 @@ t_editor	*line_editor_init(char **line, t_prompt prompt, int prompt_size,
 	if (!(ed = (t_editor *)malloc(sizeof(t_editor))))
 		return (NULL);
 	ft_bzero(ed, sizeof(*ed));
+	sleep(1);//tant que job écrit dans fd = shell [Attention l'input de l'user pas save]
 	ed->cur_col = get_cursor_position(0);
 	ed->cur_row = get_cursor_position(1);
 	ed->first_row = ed->cur_row;

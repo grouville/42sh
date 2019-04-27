@@ -201,11 +201,13 @@ int					builtin_localvar(char ***ptn_args, char **args_raw);
 int			    	ft_builtin_fg(char **cmd);
 int			    	ft_builtin_bg(char **cmd);
 int         		find_last_job_put_in_background(void);
-int             	check_if_job_exists(char *cmd, t_job **j);
-int         		job_percentage_number_exists_or_not_fg(char *cmd, int nb,
+int					check_if_job_exists(char *cmd, t_job **j);
+int					job_percentage_number_exists_or_not_fg(char *cmd, int nb,
                 		t_job **job);
-int             	check_usage(char *cmd);
-int      		     is_number(char *cmd);
+int					check_usage(char *cmd);
+int					is_number(char *cmd);
+BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
+
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -451,7 +453,8 @@ int					job_is_signaled(t_job *j);
 ** mkfifo fifo && cat < fifo et avec autre shell : ls > fifo
 ** mkfifo fifo && ls >> fifo et lire fifo
 ** lorsque fifo est déjà en lecture ou ecriture avec un autre shell --> print error msg
-**
+** ls && exit &
+** pwd && exit && ls & --> pwd mais pas d'exit ni ls
 */
 
 /*
