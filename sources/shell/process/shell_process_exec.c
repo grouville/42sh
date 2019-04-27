@@ -47,7 +47,7 @@ int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 {
 	int status;
 
-	status = -2;
+	status = -4735;
 	if (elem->sep != SPL_SPRLU)
 		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
 //	printf("-<|staut %d|>\n", status);
@@ -56,6 +56,7 @@ int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 
 /*
 ** On retourne 0 si EXIT_SUCCESS ou 1 si EXIT_FAILED
+** elem->ret == -/+ 4735 lorsque le process est en BG
 */
 
 void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
@@ -68,14 +69,15 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	else
 		elem->ret = shell_father(child, job, elem);
 	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
+	{
 		elem->stopped = 1;
-	else
-		elem->done = 1;
+		elem->done = 0;
+	}
 	jsig = getter_job();
 	elem->pid = child;
 	if (jsig->shell_is_interactive)
 	{
-		if (!job->pgid &&  elem->ret != EXIT_FAILURE && elem->ret != EXIT_SUCCESS)
+		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
 			job->pgid = child;
 		setpgid (child, job->pgid);
 	}

@@ -80,7 +80,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 		if (elem_no_pipe == 0)
 			*elem = (*elem)->next_cmd;
 		if (!shell_prepare_args(*elem, shell))
-			return (0);
+			return(0);
 	}
 	waitpid(child, &status, 0);
 	while (waitpid(0, &status2, WUNTRACED) > 0)

@@ -28,6 +28,7 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	int exec;
 	int fd[3];
 
+	(*elem)->done = 1;
 	if (!shell_prepare_args(*elem, shell))
 		return (0);
 //	read_lexing(*elem);
@@ -85,7 +86,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 	//Toujours nécessaire d'intercepter Ctrl-C ?
 	//signal(SIGINT, shell_prcs_sigint);
 	shell_prepare(jobs, *cmd);
-	do_job_notification();
+	//do_job_notification();
 	job = jobs;
 	while ((job = job->next))
 	{

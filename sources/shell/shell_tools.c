@@ -53,10 +53,10 @@ void	clean_shell(t_shell **shell)
 {
 	ft_arrdel(&(*shell)->envp);
 	ft_arrdel(&(*shell)->envl);
-	if ((*shell)->str)
-		ft_strdel(&(*shell)->str);
-	if ((*shell)->hrdc_tmp)
-		ft_strdel(&(*shell)->hrdc_tmp);
+	ft_arrdel(&(*shell)->alias);
+	ft_strdel(&(*shell)->str);
+	ft_strdel(&(*shell)->hrdc_tmp);
+	ft_strdel(&(*shell)->hist_path);
 	free(*shell);
 	*shell = NULL;
 }

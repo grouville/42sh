@@ -66,12 +66,12 @@ void    kill_all_processes(void)
 *** - Check jobs on exit. If one is stopped, returns 1
 */
 
-int     check_jobs_on_exit(void)
+int     check_jobs_on_exit(t_cmd **cmd)
 {
     static int  boul = 0;
     int         is_stopped;
 
-	do_job_notification();
+	do_job_notification(cmd);
     is_stopped = check_any_stopped_job_left();
     if (is_stopped && !boul)
     {

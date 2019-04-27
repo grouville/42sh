@@ -46,6 +46,8 @@ void	shell_save_histo(t_shell *shl)
 		shl->hist = hist_add(shl->hist);
 }
 
+
+
 /*
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
@@ -74,19 +76,6 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	return (0);
 }
 
-
-void 	print_jobs(void)
-{
-	t_job	*job;
-
-	job = getter_job()->first_job;
-	printf("jesuispasse\n");
-	while ((job = job->next))
-	{
-		printf("job->df: %s\n", job->cmds->args[0]);
-	}
-}
-
 int		main(void)
 {
 	extern char **environ;
@@ -101,10 +90,10 @@ int		main(void)
 	{
 		shl->count += 1;
 		// print_jobs();
-		do_job_notification();
+		do_job_notification(&cmd);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
-
-		if (ret == -1 && !check_jobs_on_exit())
+		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);
+		if (ret == -1 && !check_jobs_on_exit(&cmd))
 				break ;
 	}
 	return (shell_exit(&cmd, &shl));

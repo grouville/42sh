@@ -61,7 +61,7 @@ BOOL		check_env_substitution(char *arg)
 	i = 0;
 	while (arg && arg[i] && arg[i] != '}')
 	{
-		if (!ft_isalnum(arg[i]) && arg[i] != '_')
+		if (!ft_isalnum(arg[i]) && arg[i] != '_' && arg[i] != '?')
 		{
 			ft_dprintf(2, "42sh: %s: bad substitution\n", arg);
 			return (0);

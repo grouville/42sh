@@ -71,7 +71,7 @@ void		clean_jobs_all(void)
 	while (curr)
 	{
 		prev = curr->next;
-		free_job(curr);
+		free_job(curr, NULL);
 		curr = prev;
 	}
 }

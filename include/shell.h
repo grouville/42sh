@@ -336,7 +336,7 @@ void				put_job_in_foreground(t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
 void 				update_status(void);
 void				wait_for_job(t_job *j);
-void				do_job_notification(void);
+void				do_job_notification(t_cmd **cmd);
 void				mark_job_as_running(t_job *j);
 void				continue_job(t_job *j, int foreground);
 
@@ -352,10 +352,10 @@ int					job_is_stopped(t_job *j);
 int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
 int					count_job_bg(void);
-void				free_job(t_job *j);
+void				free_job(t_job *j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
-int     			check_jobs_on_exit(void);
+int     			check_jobs_on_exit(t_cmd **cmd);
 int					job_is_signaled(t_job *j);
 
 /*

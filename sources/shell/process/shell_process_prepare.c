@@ -52,6 +52,7 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 	int i;
 
 	i = 0;
+	shell_clean_emptyargs(elem);
 	while (elem->args && elem->args[i])
 	{
 		if (!shell_envpsub(&elem->args[i], shell->envp, shell->envl))
