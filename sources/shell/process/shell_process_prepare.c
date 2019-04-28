@@ -47,7 +47,7 @@ void	check_hash_then_path(t_cmd *elem, t_shell *shell)
 }
 
 
-BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
+void	shell_prepare_args(t_cmd *elem, t_shell *shell)
 {
 	int i;
 
@@ -55,8 +55,9 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 	shell_clean_emptyargs(elem);
 	while (elem->args && elem->args[i])
 	{
-		if (!shell_envpsub(&elem->args[i], shell->envp, shell->envl))
-			return (0);
+		if (!shell_envpsub(&elem->args[i], shell->envp, shell->envl) &&
+				(elem->bad_substitution = 1))
+			return ;
 		shl_quotesub(elem->args[i]);
 		if (i == 0)
 		{
@@ -73,7 +74,6 @@ BOOL	shell_prepare_args(t_cmd *elem, t_shell *shell)
 		i++;
 	}
 	shell_clean_emptyargs(elem);
-	return (1);
 }
 
 int 	shell_prepare_jobs_number(t_job *jobs)
@@ -94,12 +94,16 @@ int 	shell_prepare_jobs_number(t_job *jobs)
 	return (job_num);
 }
 
-// To be normed
+/*
+** cmd est découpé dans les jobs
+*/
+
 void	shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd)
 {
 	t_job	*job;
 	t_cmd	*elem;
 	t_cmd	*cpy_elem;
+	t_cmd	*start;
 	int 	i;
 
 	job = first_jobs;
@@ -125,6 +129,7 @@ void	shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd)
 		else
 			elem = elem->next_cmd;
 	}
+	free(cmd->start);
 }
 
 /*

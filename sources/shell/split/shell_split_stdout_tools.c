@@ -35,10 +35,11 @@ int			len_stdout_to(char *str)
 			break ;
 		if (str[i] == quote && (quote == ' ' || ft_strchr("\0 ", str[i + 1])))
 			break ;
-		if (quote == ' ' && str[i] == '-' && i++)
+		if (quote == ' ' && str[i] == '-' && str[i + 1] == '\0' && i++)
 			break ;
 		i += (str[i]) ? 1 : 0;
 	}
+	printf("-<str=|%s|len=%d>\n", str, i);
 	return (i);
 }
 

@@ -29,9 +29,8 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	int fd[3];
 
 	(*elem)->done = 1;
-	if (!shell_prepare_args(*elem, shell))
-		return (0);
-//	read_lexing(*elem);
+	shell_prepare_args(*elem, shell);
+	//read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
 		shell->ret = shell_exec_pipes(elem, shell, job);
@@ -39,6 +38,8 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 		shell->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
 	shell_ret(*elem, shell);
+	if ((*elem)->bad_substitution)
+		return (-2);
 	if (shell->ret == -1)
 		return (-1);
 	else if (shell->ret == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
@@ -55,14 +56,18 @@ int		launch_job(t_job *job, t_shell *shell)
 	t_cmd	*elem;
 	t_js	*jsig;
 	BOOL	suspended;
+	int 	ret;
 
 	suspended = 0;
 	jsig = getter_job();
 	elem = job->cmds;
 	while (elem)
 	{
-		if (shell_process_cmd(&elem, shell, job) == -1)
+		ret = shell_process_cmd(&elem, shell, job);
+		if (ret == -1)
 			return (-1);
+		else if (ret == -2)
+			break ;
 		if (shell->ret == 4735 && (suspended = 1)) //4735 ret status d'un Ctrl-Z
 			put_process_suspended(job, elem); 
 		elem = elem->next_cmd;
@@ -79,12 +84,9 @@ int		launch_job(t_job *job, t_shell *shell)
 
 int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 {
-
 	int 	ret;
 	t_job	*job;
 
-	//Toujours nécessaire d'intercepter Ctrl-C ?
-	//signal(SIGINT, shell_prcs_sigint);
 	shell_prepare(jobs, *cmd);
 	//do_job_notification();
 	job = jobs;

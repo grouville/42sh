@@ -26,10 +26,10 @@ int		check_fd_input(char *input, t_shell *shell)
 		while (ft_isdigit(input[i]))
 			i++;
 		if (input[i] != '\0')
-			return (shell_error_prepare("ambiguous", input) - 1);
+			return (shell_error_prepare("ambiguous", ft_strdup(input)) - 1);
 		fd = ft_atoi(input + 1);
 		if (fd < 0 || fd > 2)
-			return (shell_error_prepare("bad fd", input) - 1);
+			return (shell_error_prepare("bad fd", ft_strdup(input)) - 1);
 		else
 			return (1);
 	}

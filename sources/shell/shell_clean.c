@@ -64,13 +64,11 @@ int 	clean_jobs(t_job **jobs)
 
 void	clean_cmd(t_cmd **cmd)
 {
-	t_cmd	*prev;
+	t_cmd	*tmp;
 
 	if (*cmd)
 	{
-		*cmd = (*cmd)->start;
-		prev = *cmd;
-		while ((*cmd = (*cmd)->next_cmd))
+		while ((*cmd))
 		{
 			ft_arrdel(&(*cmd)->args);
 			ft_arrdel(&(*cmd)->args_raw);
@@ -85,12 +83,11 @@ void	clean_cmd(t_cmd **cmd)
 			ft_strdel(&(*cmd)->exec);
 			if ((*cmd)->output)
 				clean_redi(&((*cmd)->output));
-			free(prev);
-			prev = *cmd;
+			tmp = (*cmd)->next_cmd;
+			free(*cmd);
+			*cmd = tmp;
+
 		}
-		if (prev)
-			free(prev);
-		// prev = NULL;
 		*cmd = NULL;
 	}
 }

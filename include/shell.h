@@ -74,6 +74,7 @@ typedef struct		s_cmd
 	BOOL			stopped;      /* true if process has stopped */
 	BOOL			signal;		/* contains the signal used to kill process */
 	int				status;       /* reported status value */
+	BOOL			bad_substitution;
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
 }					t_cmd;
@@ -168,7 +169,7 @@ char				*cd_rmv_last_path(char *cur_dir);
 void				builtin_setenv(char ***envp, char *key, char *value);
 char				**rmv_key_env(char **envp, char *key);
 void				builtin_export_print(char **envp, char *key);
-int					builtin_echo(char **cmd);
+int					builtin_echo(char **cmd, t_output *output);
 int					builtin_env_add(char ***envp, char ***envl, char *arg);
 int					builtin_exit(t_cmd *elem, t_shell *shell);
 char				*get_value(char *arg);
@@ -262,7 +263,7 @@ int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
 void				shell_execve(t_cmd *elem, t_shell *shell, t_job *job);
 int					shell_exec(t_cmd *elem, t_shell *shell, t_job *job);
-BOOL				shell_prepare_args(t_cmd *elem, t_shell *shell);
+void				shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
 void				shell_reinit_fd(int *fd);
 void				shell_prcs_sigint(int signum);
@@ -354,7 +355,7 @@ int					job_is_stopped(t_job *j);
 int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
 int					count_job_bg(void);
-void				free_job(t_job *j, t_cmd **cmd);
+void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
 int     			check_jobs_on_exit(t_cmd **cmd);
@@ -403,7 +404,7 @@ int					job_is_signaled(t_job *j);
 ** ; puis ;; (pas le meme msg d'erreur)
 ** {t &&} --> prompt
 ** >>>
-** <!<
+** <!< { } - $?
 ** ls\ --> saut de ligne puis ls exec --> pas de saut de ligne dans l'histo
 ** mkdir ~/folder && cd ~/folder && chmod 111 ~/folder && ~/21sh/./21sh && echo file_not_found > file
 ** << EOF cat nofile ;; --> les EOF puis ;; puis erreur de cat
@@ -455,6 +456,11 @@ int					job_is_signaled(t_job *j);
 ** lorsque fifo est déjà en lecture ou ecriture avec un autre shell --> print error msg
 ** ls && exit &
 ** pwd && exit && ls & --> pwd mais pas d'exit ni ls
+** echo ${} | wc --> les 2 sont exec
+** echo ${} || echo ok ; echo ok
+** echo ${} && wc --> fail pas de wc
+** echo ${} || wc --> fail pwd de wc
+** ls | echo ${} | wc &
 */
 
 /*

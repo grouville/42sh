@@ -68,12 +68,13 @@ void		clean_jobs_all(void)
 	jsig = getter_job();
 	curr = jsig->first_job;
 	prev = jsig->first_job;
-	while (curr)
+	while ((curr = curr->next))
 	{
 		prev = curr->next;
-		free_job(curr, NULL);
+		free_job(&curr, NULL);
 		curr = prev;
 	}
+	free(jsig->first_job);
 }
 
 int			shell_exit(t_cmd **cmd, t_shell **shell)

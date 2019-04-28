@@ -68,7 +68,8 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		signal (SIGTTOU, SIG_DFL);
 		signal (SIGCHLD, SIG_DFL);
 	}
-
+	if (elem->bad_substitution)
+		exit(EXIT_FAILURE);
 	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
 	exit(EXIT_SUCCESS);
@@ -103,6 +104,7 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		elem->stopped = 1;
 		elem->done = 0;
+		elem->ret = 0;
 	}
 	jsig = getter_job();
 	elem->pid = child;

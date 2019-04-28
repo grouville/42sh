@@ -69,7 +69,7 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 			return (1);
 		shell_save_histo(shl);
 		if (check_syntax_err(*cmd))
-			shell_clean_data(cmd, shl, 0);
+			return(shell_clean_data(cmd, shl, 0));
 		else if (shell_process(jobs, cmd, shl) == -1)
 			return (-1);
 	}
@@ -89,7 +89,7 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		// print_jobs();
+		//print_jobs();
 		do_job_notification(&cmd);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);

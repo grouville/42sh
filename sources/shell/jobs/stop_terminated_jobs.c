@@ -86,13 +86,13 @@ int		count_job_bg(void)
 	return (nb_jobbg + 1);
 }
 
-void	free_job(t_job *j, t_cmd **cmd)
+void	free_job(t_job **j, t_cmd **cmd)
 {
-	clean_cmd(&((j)->cmds));
 	if (cmd)
 		*cmd = NULL;
-	free(j);
-	j = NULL;
+	clean_cmd(&(*j)->cmds);
+	free(*j);
+	*j = NULL;
 }
 
 void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
@@ -129,7 +129,7 @@ void do_job_notification(t_cmd **cmd)
 	while ((j = j->next))
 	{
 		jnext = j->next;
-		//printf("-<do job notif %s|%d|>pgid = %d\n", j->cmds->args[0], j->cmds->done, j->pgid);
+//		printf("-<do job notif %s|%d|>pgid = %d\n", j->cmds->args[0], j->cmds->done, j->pgid);
 		if (j->pgid == 0)
 		{
 			if (job_is_completed(j))
@@ -137,7 +137,7 @@ void do_job_notification(t_cmd **cmd)
 				jprev->next = jnext;
 				if (j == jsig->first_job)
 					jsig->first_job = jsig->first_job->next;
-				free_job (j, cmd);
+				free_job (&j, cmd);
 				j = jprev;
 			}
 			jprev = j;
@@ -155,7 +155,7 @@ void do_job_notification(t_cmd **cmd)
 			// if (j == jsig->first_job)
 			// 	jsig->first_job = jsig->first_job->next;
 			jprev->next = jnext;
-			free_job (j, cmd);
+			free_job (&j, cmd);
 			j = jprev;
 			continue ;
 		}

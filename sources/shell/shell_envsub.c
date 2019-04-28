@@ -58,12 +58,17 @@ BOOL		check_env_substitution(char *arg)
 	int		i;
 	char 	quote;
 
+	if (arg[0] == '}')
+	{
+		ft_dprintf(2, "42sh: ${}: bad substitution\n");
+		return (0);
+	}
 	i = 0;
 	while (arg && arg[i] && arg[i] != '}')
 	{
 		if (!ft_isalnum(arg[i]) && arg[i] != '_' && arg[i] != '?')
 		{
-			ft_dprintf(2, "42sh: %s: bad substitution\n", arg);
+			ft_dprintf(2, "42sh: ${%s: bad substitution\n", arg);
 			return (0);
 		}
 		i++;
@@ -74,7 +79,7 @@ BOOL		check_env_substitution(char *arg)
 /*
 ** Remplace le tilde si existant
 ** Remplace les var d'environnements
-** Retourne une erreur si la var n'est pas correct != (A-Za-z0-9_)
+** Retourne 2=bad sub si la var n'est pas correct != (A-Za-z0-9_) ou == ${}
 */
 
 int			shell_envpsub(char **arg, char **envp, char **envl)

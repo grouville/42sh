@@ -33,14 +33,46 @@ int		check_builtin_unset(t_shell *shell, char **args)
 	return (0);
 }
 
-int		check_builtin_set(t_shell *shell, char **args)
+void 	builtin_set_check_duplicate(t_shell *shell, char *envl_var)
 {
-	int i;
+	int		n;
+	char	*var_envl;
+	char 	*var_envp;
+	BOOL	var_is_in_envp;
 
-	i = 0;
+	var_is_in_envp = 0;
+	var_envl = get_var(envl_var);
+	n = 0;
+	while (shell->envp[n])
+	{
+		var_envp = get_var(shell->envp[n]);
+		if (ft_strcmp(var_envl, var_envp) == 0)
+		{
+			var_is_in_envp = 1;
+			ft_strdel(&var_envp);
+			break ;
+		}
+		ft_strdel(&var_envp);
+		n++;
+	}
+	ft_strdel(&var_envl);
+	if (var_is_in_envp == 0)
+		ft_dprintf(1, "%s\n", envl_var);
+}
+
+int		builtin_set(t_shell *shell, char **args)
+{
+	int		i;
+
 	if (args[1] == NULL)
-		while (shell->envl[i])
-			ft_dprintf(1, "%s\n", shell->envl[i++]);
+	{
+		i = 0;
+		while (shell->envp && shell->envp[i])
+			ft_dprintf(1, "%s\n", shell->envp[i++]);
+		i = 0;
+		while (shell->envl && shell->envl[i])
+			builtin_set_check_duplicate(shell, shell->envl[i++]);
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -99,11 +131,11 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 	if (elem->args && elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
 		elem->ret = ft_builtin_hash(elem->args, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)
-		elem->ret = builtin_echo(elem->args);
+		elem->ret = builtin_echo(elem->args, elem->output);
 	if (elem->args && elem->args[0] && ft_strcmp("cd", elem->args[0]) == 0)
 		elem->ret = builtin_cd(elem->args, &shell->envp);
 	if (elem->args && elem->args[0] && ft_strcmp("set", elem->args[0]) == 0)
-		elem->ret = check_builtin_set(shell, elem->args);
+		elem->ret = builtin_set(shell, elem->args);
 	if (elem->args && elem->args[0] && ft_strcmp("unset", elem->args[0]) == 0)
 		elem->ret = check_builtin_unset(shell, elem->args);
 	if (elem->args && elem->args[0] && ft_strcmp("export", elem->args[0]) == 0)

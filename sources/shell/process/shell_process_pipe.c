@@ -31,6 +31,7 @@ void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2], t_job *job)
 		ft_strdel(&tmp);
 	}
 	exec = shell_exec(elem, shell, job);
+	//printf("-<exec de %s|%d|>\n", elem->args[0], exec);
 	if (exec == 1)
 		exit(EXIT_FAILURE);
 	else
@@ -70,6 +71,8 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	elem_no_pipe = 0;
 	while (elem_no_pipe == 0)
 	{
+		//printf("-<|exec%s|>\n", (*elem)->args[0]);
+		(*elem)->done = 1;
 		if ((*elem)->sep != SPL_PIPE)
 			elem_no_pipe = 1;
 		pipe(fd_pipe);
@@ -79,8 +82,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 			shell_father_pipe(*elem, fd_pipe);
 		if (elem_no_pipe == 0)
 			*elem = (*elem)->next_cmd;
-		if (!shell_prepare_args(*elem, shell))
-			return(0);
+		shell_prepare_args(*elem, shell);
 	}
 	waitpid(child, &status, 0);
 	while (waitpid(0, &status2, WUNTRACED) > 0)
