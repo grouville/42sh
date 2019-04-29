@@ -88,10 +88,7 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	p = PROMPT;
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
-	{
 		fc->ret = shell_command_execution(shell, &cmd, 0, &p, getter_job()->first_job) == -1;
-		printf("-<|ici|>\n");
-	}
 	builtin_fc_remove_hist_node(shell);
 	shell_clean_data(&cmd, shell, 1);
 	if (fc->ret == -1 || ((ft_atoi(get_envp(shell->envl, "?"))) == 1))

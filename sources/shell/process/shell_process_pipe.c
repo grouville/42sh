@@ -38,9 +38,9 @@ void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2], t_job *job)
 		exit(EXIT_SUCCESS);
 }
 
-void	shell_father_pipe(t_cmd *elem, int fd_pipe[2])
+void	shell_father_pipe(t_cmd *elem, int fd_pipe[2], t_job *job, int child)
 {
-	char *tmp;
+	char	*tmp;
 
 	close(fd_pipe[1]);
 	if (ft_atoi(elem->process.fd_stdin + 1) != 0)
@@ -54,6 +54,15 @@ void	shell_father_pipe(t_cmd *elem, int fd_pipe[2])
 	}
 	else
 		close(fd_pipe[0]);
+	elem->pid = child;
+	if (getter_job()->shell_is_interactive)
+	{
+//		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
+		if ((job->sep == SPL_SPRLU || elem->ret == 4735) &&
+				elem->next_cmd == NULL && !job->pgid)
+			job->pgid = child;
+		setpgid (child, job->pgid);
+	}
 }
 
 /*
@@ -71,7 +80,6 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	elem_no_pipe = 0;
 	while (elem_no_pipe == 0)
 	{
-		//printf("-<|exec%s|>\n", (*elem)->args[0]);
 		(*elem)->done = 1;
 		if ((*elem)->sep != SPL_PIPE)
 			elem_no_pipe = 1;
@@ -79,7 +87,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 		if ((child = fork()) == 0)
 			shell_child_pipe(*elem, shell, fd_pipe, job);
 		else
-			shell_father_pipe(*elem, fd_pipe);
+			shell_father_pipe(*elem, fd_pipe, job, child);
 		if (elem_no_pipe == 0)
 			*elem = (*elem)->next_cmd;
 		shell_prepare_args(*elem, shell);
@@ -87,5 +95,6 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	waitpid(child, &status, 0);
 	while (waitpid(0, &status2, WUNTRACED) > 0)
 		;
+	printf("-<fin de |%s| pgid=%d>\n", (*elem)->args[0], job->pgid);
 	return (status);
 }

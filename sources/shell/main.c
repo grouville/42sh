@@ -46,8 +46,6 @@ void	shell_save_histo(t_shell *shl)
 		shl->hist = hist_add(shl->hist);
 }
 
-
-
 /*
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */

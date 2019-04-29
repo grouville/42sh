@@ -112,7 +112,9 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 //		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
+		{
 			job->pgid = child;
+		}
 		setpgid (child, job->pgid);
 	}
 }
