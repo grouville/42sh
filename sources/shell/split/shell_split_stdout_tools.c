@@ -39,7 +39,6 @@ int			len_stdout_to(char *str)
 			break ;
 		i += (str[i]) ? 1 : 0;
 	}
-	printf("-<str=|%s|len=%d>\n", str, i);
 	return (i);
 }
 

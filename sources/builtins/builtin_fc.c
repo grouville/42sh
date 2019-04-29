@@ -93,10 +93,35 @@ static void		builtin_fc_search_first_and_last(char **args, t_fc *fc)
 		fc->first = ft_strdup("-1");
 }
 
+void			builtin_fc_set_state_fc(void)
+{
+	t_job	*job;
+	t_cmd	*elem;
+
+	job = getter_job()->first_job;
+	while ((job = job->next))
+	{
+		if (job->state != -1)
+		{
+			elem = job->cmds;
+			while (elem)
+			{
+				if (!ft_strcmp(elem->args[0], "fc"))
+				{
+					job->state = -1;
+					return ;
+				}
+				elem = elem->next_cmd;
+			}
+		}
+	}
+}
+
 int				builtin_fc(char **args, t_shell *shell)
 {
 	t_fc	*fc;
 
+	builtin_fc_set_state_fc();
 	if (!builtin_fc_init(&fc, shell, args))
 	{
 		builtin_fc_search_first_and_last(args, fc);
