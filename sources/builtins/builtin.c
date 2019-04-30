@@ -94,7 +94,8 @@ BOOL	shell_is_builtin(t_cmd *elem, t_shell *shell)
 	!ft_strcmp("export", elem->args[0]) || !ft_strcmp("type", elem->args[0]) ||
 	!ft_strcmp("alias", elem->args[0]) || !ft_strcmp("fc", elem->args[0]) ||
 	!ft_strcmp("unalias", elem->args[0])|| !ft_strcmp("test", elem->args[0]) ||
-	!ft_strcmp("fg", elem->args[0])|| !ft_strcmp("bg", elem->args[0]) ||
+	!ft_strcmp("fg", elem->args[0]) || !ft_strcmp("bg", elem->args[0]) ||
+	!ft_strcmp("jobs", elem->args[0]) || 
 	!ft_strcmp("exit", elem->args[0])) && (elem->done = 1))
 		return (1);
 	else
@@ -113,6 +114,8 @@ void 	shell_builtin2(t_cmd *elem, t_shell *shell)
 		elem->ret = ft_builtin_fg(elem->args);
 	if (elem->args && elem->args[0] && ft_strcmp("bg", elem->args[0]) == 0)
 		elem->ret = ft_builtin_bg(elem->args);
+	if (elem->args && elem->args[0] && ft_strcmp("jobs", elem->args[0]) == 0)
+		elem->ret = ft_builtin_jobs(elem->args);
 }
 
 /*

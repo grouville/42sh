@@ -54,27 +54,22 @@ int		check_path(char **path_env, char **path, char **str)
 int		ft_usage_is_good(char *limitor, char *str)
 {
 	int		i;
-	int		j;
+	int		n;
+	BOOL	limitor_ok;
 
-	i = 0;
-	j = -1;
-	if (ft_strlen(str) > 1)
+	i = 1;
+	while (str[i])
 	{
-		if (str[0] == '-' && (i = i + 1))
+		limitor_ok = 0;
+		n = 0;
+		while (limitor[n])
 		{
-			while (limitor[++j])
-			{
-				while (str[i])
-				{
-					if (limitor[j] == str[i])
-						i++;
-					else
-						break ;
-				}
-			}
+			if (str[i] == limitor[n++])
+				limitor_ok = 1;
 		}
-		if (str[i])
+		if (limitor_ok == 0)
 			return (1);
+		i++;
 	}
 	return (0);
 }

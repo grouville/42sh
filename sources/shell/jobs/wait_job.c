@@ -48,21 +48,13 @@ int mark_process_status (pid_t pid, int status)
 				}
 				elem = elem->next_cmd;
 			}
-				// fprintf(stderr, "process %d et %d\n", pid, elem->pid);
 		}
-		fprintf (stderr, "No child process %d et %d\n", pid, elem->pid);//debug, a supprimer apres
 		return -1;
 	}
-
 	else if (pid == 0)
-		/* No processes ready to report.  */
 		return -1;
 	else
-	{
-		/* Other weird errors.  */
-		//perror ("waitpid");// POUR DEBUG
 		return -1;
-	}
 }
 
 

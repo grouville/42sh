@@ -208,7 +208,7 @@ int					job_percentage_number_exists_or_not_fg(char *cmd, int nb,
 int					check_usage(char *cmd);
 int					is_number(char *cmd);
 BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
-
+int			    	ft_builtin_jobs(char **cmd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -321,6 +321,7 @@ char 				*ft_remplace_char_by_str(char *word, char c, char *str);
 
 void                ft_print_hash(t_shell *env);
 int                 ft_builtin_hash(char **cmd, t_shell *env);
+int					ft_usage_is_good(char *limitor, char *str);
 
 
 /*

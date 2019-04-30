@@ -78,6 +78,7 @@ SRCS =  shell/main.c \
 		builtins/builtin_fc_search_occurence.c \
 		builtins/builtin_fc_execute_command.c \
 		builtins/builtin_localvar.c \
+		builtins/builtin_jobs.c \
 		builtins/fg.c \
 		builtins/bg.c \
         editor/get_stdin.c \
