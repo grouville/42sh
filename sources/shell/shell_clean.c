@@ -66,7 +66,7 @@ void	clean_cmd(t_cmd **cmd)
 {
 	t_cmd	*tmp;
 
-	if (*cmd)
+	if (cmd && *cmd)
 	{
 		while ((*cmd))
 		{

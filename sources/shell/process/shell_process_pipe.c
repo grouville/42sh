@@ -95,6 +95,5 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	waitpid(child, &status, 0);
 	while (waitpid(0, &status2, WUNTRACED) > 0)
 		;
-	printf("-<fin de |%s| pgid=%d>\n", (*elem)->args[0], job->pgid);
 	return (status);
 }

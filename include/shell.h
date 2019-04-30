@@ -113,17 +113,17 @@ typedef struct		s_type
 
 typedef struct		s_shell
 {
-	char		**envp;
-	char		**envl;
-	char		**alias;
-	char		*str;
-	char		*hrdc_tmp;
-	char		*hist_path;
-	int			ret;
-	t_data		*hist;
-	t_htable	*t;
-	int 		count;
-	int			is_interactive;
+	char			**envp;
+	char			**envl;
+	char			**alias;
+	char			*str;
+	char			*hrdc_tmp;
+	char			*hist_path;
+	int				ret;
+	t_data			*hist;
+	t_htable		*t;
+	int 			count;
+	int				is_interactive;
 }					t_shell;
 
 typedef	struct		s_fc
@@ -255,13 +255,12 @@ BOOL				iscomplet(char *str, t_prompt *prompt);
 */
 
 void				shell_prepare(t_job *jobs, t_cmd *cmd);
-char				*shell_getpathexec(char *exec, char **envp);
+char				*shell_getpathexec(char *exec, char **all_env);
 void				shell_clean_emptyargs(t_cmd *link);
 int					complete_stdout_path(t_output *std_out, t_shell *shell);
 int					shell_error_prepare(char *msg, char *elem);
 int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
-void				shell_execve(t_cmd *elem, t_shell *shell, t_job *job);
 int					shell_exec(t_cmd *elem, t_shell *shell, t_job *job);
 void				shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
@@ -461,6 +460,7 @@ int					job_is_signaled(t_job *j);
 ** echo ${} && wc --> fail pas de wc
 ** echo ${} || wc --> fail pwd de wc
 ** ls | echo ${} | wc &
+** voir les valeurs de retour selon http://www.tldp.org/LDP/abs/html/exitcodes.html
 */
 
 /*

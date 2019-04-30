@@ -13,6 +13,19 @@
 
 #include "shell.h"
 
+void	shell_exec_print_error(t_cmd *elem)
+{
+	if (ft_strcmp("not found", elem->exec) == 0)
+		ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
+	else if (ft_strcmp("directory", elem->exec) == 0)
+		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
+	else if (ft_strcmp("file or directory", elem->exec) == 0)
+		ft_dprintf(2, "42sh: %s: No such file or directory\n",
+				   elem->args[0]);
+	else if (ft_strcmp("no allowed", elem->exec) == 0)
+		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
+}
+
 int		shell_exec_error(t_cmd *elem)
 {
 	int ret;
@@ -20,23 +33,15 @@ int		shell_exec_error(t_cmd *elem)
 	ret = 1;
 	if (elem->exec)
 	{
-		if (ft_strcmp("not found", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
-		else if (ft_strcmp("directory", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
-		else if (ft_strcmp("file or directory", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: No such file or directory\n",
-					   elem->args[0]);
-		else if (ft_strcmp("no allowed", elem->exec) == 0)
-			ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
-		else
-			ret = 0;
+		shell_exec_print_error(elem);
 		if (ft_strcmp("no allowed", elem->exec) == 0 ||
 			ft_strcmp("directory", elem->exec) == 0)
-			elem->ret = 126;
+			exit(126);
 		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
 				 ft_strcmp("not found", elem->exec) == 0)
-			elem->ret = 127;
+			exit(127);
+		else
+			ret = 0;
 	}
 	return (ret);
 }
@@ -82,7 +87,6 @@ int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 	status = -4735;
 	if (elem->sep != SPL_SPRLU)
 		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
-//	printf("-<|staut %d|>\n", status);
 	return (status);
 }
 
@@ -91,7 +95,7 @@ int		shell_father(int pid_child, t_job *j, t_cmd *elem)
 ** elem->ret == -/+ 4735 lorsque le process est en background
 */
 
-void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
+int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	int		child;
 	t_js	*jsig;
@@ -106,17 +110,18 @@ void	shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		elem->done = 0;
 		elem->ret = 0;
 	}
+	if (elem->ret == 3)
+		ft_dprintf(2, "Quit : 3\n");
 	jsig = getter_job();
 	elem->pid = child;
 	if (jsig->shell_is_interactive)
 	{
 //		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
-		{
 			job->pgid = child;
-		}
 		setpgid (child, job->pgid);
 	}
+	return (elem->ret);
 }
 
 /*
@@ -134,12 +139,12 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
 	shell_plomberie(elem->process);
-	if (job->sep != SPL_SPRLU)
+	if (job->sep != SPL_SPRLU && !elem->bad_substitution)
 		is_builtin = shell_builtin(elem, shell);
 	else
 		is_builtin = 0;
-	if (!is_builtin && elem->exec)
-		shell_execve(elem, shell, job);
+	if (!is_builtin && elem->exec && !elem->bad_substitution)
+		elem->ret = shell_execve(elem, shell, job);
 	else if (is_builtin == -1)
 		return (-1);
 	if (elem->process.fd_stdin[1] != '0')

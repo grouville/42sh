@@ -33,17 +33,40 @@ void	shell_clean_emptyargs(t_cmd *elem)
 	elem->args = args2;
 }
 
+char 	**ft_arrjoin(char **arr1, char **arr2)
+{
+	int 	cursor_arrs;
+	int 	cursor_all_env;
+	char 	**all_env;
+	int 	i;
+
+	cursor_arrs = 0;
+	cursor_all_env = 0;
+	all_env = malloc(sizeof(char *) * (ft_arrlen(arr1) + ft_arrlen(arr2) + 1));
+	while (arr1[cursor_arrs])
+		all_env[cursor_all_env++] = ft_strdup(arr1[cursor_arrs++]);
+	cursor_arrs = 0;
+	while (arr2[cursor_arrs])
+		all_env[cursor_all_env++] = ft_strdup(arr2[cursor_arrs++]);
+	all_env[cursor_all_env] = NULL;
+
+	return (all_env);
+}
+
 void	check_hash_then_path(t_cmd *elem, t_shell *shell)
 {
-	char *tmp;
+	char	*tmp;
+	char	**all_env;
 
 	tmp = NULL;
 	if (shell->t)
 		tmp = search_element(shell->t, elem->args[0]);
 	if (tmp)
 		elem->exec = ft_strdup(tmp);
+	all_env = ft_arrjoin(shell->envl, shell->envp);
 	if (!elem->exec)
-		elem->exec = shell_getpathexec(elem->args[0], shell->envp);
+		elem->exec = shell_getpathexec(elem->args[0], all_env);
+	ft_arrdel(&all_env);
 }
 
 

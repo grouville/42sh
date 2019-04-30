@@ -36,6 +36,7 @@ static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
 				t_cmd **cmd, t_shell *shell)
 {
 	t_cmd	*tmp;
+	t_cmd	*tmp1;
 	int		i;
 
 	tmp = *cmd;
@@ -44,13 +45,13 @@ static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
 		{
 			i = -1;
 			while (tmp->hrdc[++i])
-				dprintf(2, "42sh: warning: here-document at line %d delimited "
+				ft_dprintf(2, "42sh: warning: here-document at line %d delimited "
 				"by end-of-file (wanted `%s')\n", (unsigned long)tmp ==
 				(unsigned long)*cmd && tmp->next_cmd ? fc->heredoc[0] :
 				fc->heredoc[1], tmp->hrdc[i]);
 			tmp = tmp->next_cmd;
 		}
-	shell_clean_data(cmd, shell, 1);
+	clean_cmd(cmd);
 }
 
 static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
@@ -59,6 +60,7 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 	t_data			*tmp;
 	unsigned long	cmd_addr;
 
+	cmd_addr = 0;
 	fc->cmd_list = init_hist("/tmp/.42sh-fc_cmd_list");
 	while (fc->cmd_list && fc->cmd_list->prev)
 		fc->cmd_list = fc->cmd_list->prev;
@@ -69,12 +71,19 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		if ((shell->str = fc->cmd_list->cmd) && write(1, fc->cmd_list->cmd,
 		ft_strlen(fc->cmd_list->cmd)) && write(1, "\n", 1) &&
 		(fc->ret = shell_command_execution(shell, cmd, 0, p, getter_job()->first_job)) == -1)
+		{
+			while (fc->cmd_list)
+			{
+				tmp = fc->cmd_list->next;
+				free(fc->cmd_list->cmd);
+				free(fc->cmd_list);
+				fc->cmd_list = tmp;
+			}
 			return ;
+		}
 		if (*p != PROMPT && (!fc->heredoc[0] || ((*cmd && cmd_addr !=
 		(unsigned long)*cmd) && (cmd_addr = (unsigned long)*cmd))))
 			fc->heredoc[0] = fc->heredoc[1];
-		if (*cmd && *p == PROMPT)
-			shell_clean_data(cmd, shell, 1);
 		free(fc->cmd_list);
 		fc->cmd_list = tmp;
 	}
@@ -90,8 +99,8 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
 		fc->ret = shell_command_execution(shell, &cmd, 0, &p, getter_job()->first_job) == -1;
 	builtin_fc_remove_hist_node(shell);
-	shell_clean_data(&cmd, shell, 1);
-	if (fc->ret == -1 || ((ft_atoi(get_envp(shell->envl, "?"))) == 1))
+	shell_clean_data(NULL, shell, 1);
+	if (fc->ret == -1 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
 		return ;
 	builtin_fc_execute_commands_list(fc, &p, &cmd, shell);
 	if (p != PROMPT)

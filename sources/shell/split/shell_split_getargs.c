@@ -36,8 +36,8 @@ size_t	len_arg(char *str, char quote)
 			quote = ' ';
 			i++;
 		}
-		else if ((quote == ' ' && (ft_strchr(";|&", str[i])
-				&& i > 0 && !ft_strchr("<>", str[i - 1])))
+		else if ((quote == ' ' && (ft_strchr(";|&", str[i]) && (i == 0 ||
+				!ft_strchr("<>", str[i - 1]))))
 					|| (str[i] == quote &&
 					(quote == ' ' || ft_strchr("\0 ", str[i + 1]))))
 			break ;

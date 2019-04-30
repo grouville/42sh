@@ -53,6 +53,7 @@ void	shell_save_histo(t_shell *shl)
 int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 									t_prompt *prmt, t_job *jobs)
 {
+	printf("-<shell command exec |%s|>\n", shl->str);
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
 		ft_strdel(&shl->str);

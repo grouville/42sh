@@ -72,7 +72,7 @@ char	*check_path_cmd(char *exec_path, char *exec)
 ** /!\ Si un PATH n'a pas les droits mauvais message d'erreur
 */
 
-char	*shell_getpathexec(char *exec, char **envp)
+char	*shell_getpathexec(char *exec, char **all_env)
 {
 	char		*exec_path;
 	char		**all_path;
@@ -80,10 +80,10 @@ char	*shell_getpathexec(char *exec, char **envp)
 
 	if (exec == NULL || !ft_strcmp(".", exec) || !ft_strcmp("..", exec))
 		return (NULL);
-	all_path = ft_strsplit(get_envp(envp, "PATH"), ':');
+	all_path = ft_strsplit(get_envp(all_env, "PATH"), ':');
 	exec_path = NULL;
 	i = 0;
-	while (get_envp(envp, "PATH") && all_path[i] != NULL &&
+	while (get_envp(all_env, "PATH") && all_path[i] != NULL &&
 				!ft_strchr(exec, '/'))
 	{
 		exec_path = ft_strjoin_mltp(3, all_path[i++], "/", exec);

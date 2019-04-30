@@ -33,16 +33,16 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	//read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
-		shell->ret = shell_exec_pipes(elem, shell, job);
-	else
-		shell->ret = shell_exec(*elem, shell, job);
+		(*elem)->ret = shell_exec_pipes(elem, shell, job);
+	else if (!(*elem)->bad_substitution)
+		(*elem)->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
 	shell_ret(*elem, shell);
 	if ((*elem)->bad_substitution)
 		return (-2);
-	if (shell->ret == -1)
+	if ((*elem)->ret == -1)
 		return (-1);
-	else if (shell->ret == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
+	else if ((*elem)->ret == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
 		*elem = shell_process_skip_cmd(*elem, DBL_PIPE);
 	else if (shell->ret > 0 && (*elem)->sep == DBL_SPRLU)
 		*elem = shell_process_skip_cmd(*elem, DBL_SPRLU);
@@ -95,7 +95,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 		if (job->state != -1) //on lance que les new jobs pas en background
 		{
 			ret = launch_job(job, shell);
-			job->state = -1; // mettre à -1 pour qu'ils ne soient plus exécutés par la suite
+			job->state = -1;
 			if (ret == -1)
 				return (-1);
 		}
