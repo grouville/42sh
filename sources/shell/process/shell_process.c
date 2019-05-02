@@ -30,7 +30,7 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 
 	(*elem)->done = 1;
 	shell_prepare_args(*elem, shell);
-	read_lexing(*elem);
+	//read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
 		(*elem)->ret = shell_exec_pipes(elem, shell, job);

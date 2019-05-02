@@ -390,15 +390,15 @@ int					job_is_signaled(t_job *j);
 ** echo "text" > file ; < file cat
 ** {echo test 1>/dev/ttys001 1>&2} --> la derniere redi est prit en compte et print test
 ** cat << EOF existing_file {ENTER} word1 {ENTER} EOF {ENTER}
-** echo test >'&2' --> fichier &2
+** echo test >'&2' && cat "&2" --> fichier &2
 ** echo file > '&'
 ** {export tty=/dev/ttys001} {echo test > $tty} et car ttys001 recoit
 ** {echo test > "/dev/ttys001\\"} --> error avec {/dev/ttys001\\}
 ** echo test > file > /dev/ttys001 (le dernier est prit en compte mais file est créé)
 ** echo test > glob"{\n}file"
-** echo test > file1>file2
-** echo test > file1\>file2
-** echo test > file1\\>file2
+** echo test>file1>file2
+** echo test>file1\>file2
+** echo test>file1\\>file2
 ** echo test && {ENTER} \ {ENTER} \\ {ENTER} puis flèche du haut et histo == {echo test && \\}
 ** ; puis ;; (pas le meme msg d'erreur)
 ** {t &&} --> prompt

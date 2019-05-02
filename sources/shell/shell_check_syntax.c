@@ -41,6 +41,10 @@ int		check_syntax_redi_stdout(t_output *redis)
 	return (1);
 }
 
+/*
+** Par securité on doucle check les redis out
+*/
+
 int		check_synthax_stdout_to(t_output *redis)
 {
 	t_output *read;
@@ -48,7 +52,8 @@ int		check_synthax_stdout_to(t_output *redis)
 	read = redis;
 	while (read != NULL)
 	{
-		if (!read->to || ft_strcmp(read->to, "&") == 0)
+		if (!read->to || ft_strcmp(read->to, "&") == 0 ||
+			ft_strcmp(read->to, ">") == 0 || ft_strcmp(read->to, ">>") == 0)
 			return (1);
 		if (read->to == NULL)
 			return (0);
