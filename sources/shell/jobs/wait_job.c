@@ -37,7 +37,11 @@ int mark_process_status (pid_t pid, int status)
 				{
 					elem->status = status;
 					if (WIFSTOPPED (status))
+					{
+						if (WSTOPSIG(elem->status))
+            				job->running = WSTOPSIG(elem->status);
 						elem->stopped = 1;
+					}
 					else
 					{
 						elem->done = 1;

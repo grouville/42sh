@@ -88,7 +88,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 	t_job	*job;
 
 	shell_prepare(jobs, *cmd);
-	//do_job_notification();
+	do_job_notification(cmd, shell);
 	job = jobs;
 	while ((job = job->next))
 	{

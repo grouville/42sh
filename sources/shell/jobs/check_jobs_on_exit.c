@@ -71,7 +71,7 @@ int     check_jobs_on_exit(t_cmd **cmd, t_shell	*shl)
     static int  boul = 0;
     int         is_stopped;
 
-	do_job_notification(cmd);
+	do_job_notification(cmd, shl);
     is_stopped = check_any_stopped_job_left();
     if (is_stopped && !boul)
     {

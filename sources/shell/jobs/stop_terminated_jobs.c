@@ -22,9 +22,9 @@ void	update_status(void)
 	int status;
 	pid_t pid;
 
-	do
+	pid = waitpid(WAIT_ANY, &status, WUNTRACED|WNOHANG);
+	while (!mark_process_status (pid, status))
 		pid = waitpid(WAIT_ANY, &status, WUNTRACED|WNOHANG);
-	while (!mark_process_status (pid, status));
 }
 
 
@@ -97,13 +97,25 @@ void	free_job(t_job **j, t_cmd **cmd)
 
 void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 {
-	int i;
-	int job_pos;
+	int 	i;
+	t_cmd	*elem;
+	int		job_pos;
 
 	i = -1;
 	ft_dprintf(1, "[%d]+ %-2s %-4d", nb_bgjob, status, job_is_signaled(j));
-	while (j->cmds->args_raw[++i])
-		ft_dprintf(1, "%s ", j->cmds->args_raw[i]);
+	elem = j->cmds;
+	while (elem)
+	{
+		i = 0;
+		while (elem->args_raw[i])
+			ft_dprintf(1, "%s ", elem->args_raw[i++]);
+		if (elem->next_cmd)
+		{
+			print_sep(1, elem->sep);
+			ft_dprintf(1, " ");
+		}
+		elem = elem->next_cmd;
+	}
 	ft_dprintf(1, "\n");
 }
 
@@ -112,18 +124,26 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 ** Delete terminated jobs from the active job list.
 */
 
-void do_job_notification(t_cmd **cmd)
+void do_job_notification(t_cmd **cmd, t_shell *shl)
 {
-	t_job	*j;
-	t_job	*jnext;
-	t_job	*jprev;
-	t_cmd	*p;
-	t_js	*jsig;
-	static int i = 0;
+	t_job		*j;
+	t_job		*jnext;
+	t_job		*jprev;
+	t_cmd		*p;
+	t_js		*jsig;
+	// static int	i = 0;
 
 	jsig = getter_job();
 	/* Update status information for child processes.  */
 	update_status();
+	// printf("merde-avant\n");
+	// printf("arg[0]: |%s|\n", (*cmd)->args[0]);
+	if (shl->str && !ft_strcmp((*cmd)->next_cmd->args[0], "jobs"))
+	{
+		printf("je ret\n");
+		return ;
+	}
+	// printf("merde\n");
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))
