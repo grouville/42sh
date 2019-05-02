@@ -370,7 +370,8 @@ int					job_is_signaled(t_job *j);
 ** echo tes't $USER te'st
 ** echo tes"t $USER te"st
 ** lancer minishell et <cd -> bash: cd: OLDPWD not set
-** path qui contient un lien et <cd -L -L -P -L .> && <cd -L -P .>
+** path avec lien <cd -L -L -P -L .>  --> pas de redi
+** && <cd -L -P .> --> redi
 ** <mkdir test1> && <chmod 666 test1> && <cd test> --> Fail
 ** <mkdir test2> && <chmod 111 test2> && <cd test2> --> OK
 ** mkdir folder && cd folder && cd .. && rm -rf folder && cd -

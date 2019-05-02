@@ -83,10 +83,13 @@ void	clean_cmd(t_cmd **cmd)
 			ft_strdel(&(*cmd)->exec);
 			if ((*cmd)->output)
 				clean_redi(&((*cmd)->output));
-			tmp = (*cmd)->next_cmd;
+			if (!(tmp = (*cmd)->next_cmd))
+			{
+				free(*cmd);
+				return ;
+			}
 			free(*cmd);
 			*cmd = tmp;
-
 		}
 		*cmd = NULL;
 	}

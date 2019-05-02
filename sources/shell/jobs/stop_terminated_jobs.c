@@ -90,7 +90,6 @@ void	free_job(t_job **j, t_cmd **cmd)
 {
 	if (cmd)
 		*cmd = NULL;
-	printf("-<del du job |%s|>\n", (*j)->cmds->args[0]);
 	clean_cmd(&(*j)->cmds);
 	free(*j);
 	*j = NULL;

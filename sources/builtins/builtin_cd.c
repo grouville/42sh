@@ -72,6 +72,7 @@ BOOL	cd_is_recheable(char **envp, char *path, char *dir)
 int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 {
 	char	*cur_dir;
+	char 	*tmp;
 
 	if (!cd_is_recheable(*envp, path_dest, dir))
 		return (0);
@@ -81,9 +82,12 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	else
 		cur_dir = ft_strdup(path_dest);
 	ft_strdel(&path_dest);
-	builtin_setenv(envp, "OLDPWD", ft_strdup(get_envp(*envp, "PWD")));
+	tmp = ft_strdup(get_envp(*envp, "PWD"));
+	builtin_setenv(envp, "OLDPWD", tmp);
+	ft_strdel(&tmp);
 	cd_clean_path(cur_dir);
 	builtin_setenv(envp, "PWD", cur_dir);
+	ft_strdel(&cur_dir);
 	return (EXIT_SUCCESS);
 }
 
