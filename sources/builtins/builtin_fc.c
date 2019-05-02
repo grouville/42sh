@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 09:24:35 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 09:35:41 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -49,7 +49,6 @@ static int		builtin_fc_exit(t_fc **fc)
 	}
 	free((*fc));
 	unlink("/tmp/.42sh-fc_cmd_list");
-	dprintf(2, "fc exit\n");
 	return (ret);
 }
 
