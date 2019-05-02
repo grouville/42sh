@@ -73,29 +73,57 @@ static int		ft_normalize_av(char ***av, char *c, int *begin,
 
 // -----------------------------------------------------------------------
 
-void            process_jobs_without_options(t_job *job)
+void	free_job_builtin_job(t_job **j)
 {
-    if (job_is_completed(job))
-    {
-        if (job_is_signaled(job))
-            format_job_info_signal(job, "Killed:", job->num);
-        else
-            format_job_info(job, "Done", job->num);
-    }
-    else if (job_is_stopped (job) && job->running != 0)
-    {
-			format_job_info(job, "Stopped", job->num);
-			job->notified = 1;
-	}
-    else
-            format_job_info(job, "Running", job->num);
+	clean_cmd(&(*j)->cmds);
+	free(*j);
+	*j = NULL;
 }
 
-void            process_jobs_option_p(t_job *job)
+void            free_job_after_signal(t_job **job)
 {
-	if (job_is_stopped(job) && job->running != 0)
-		job->notified = 1;
-    ft_dprintf(1, "[%d]\n", job->pgid);
+    t_job   *jprev;
+    t_job   *jnext;
+
+    jprev = getter_job()->first_job;
+    while (jprev->next)
+    {
+        if (jprev->next->pgid == (*job)->pgid)
+            break ;
+        jprev = jprev->next;
+    }
+    jnext = (*job)->next;
+    jprev->next = jnext;
+    free_job_builtin_job(job);
+    *job = jprev;
+}
+
+void            process_jobs_without_options(t_job **job)
+{
+    if (job_is_completed(*job))
+    {
+        if (job_is_signaled(*job))
+            format_job_info_signal(*job, "Killed:", (*job)->num);
+        else
+            format_job_info(*job, "Done", (*job)->num);
+        free_job_after_signal(job);
+    }
+    else if (job_is_stopped(*job) && (*job)->running != 0)
+    {
+			format_job_info(*job, "Stopped", (*job)->num);
+			(*job)->notified = 1;
+	}
+    else
+            format_job_info(*job, "Running", (*job)->num);
+}
+
+void            process_jobs_option_p(t_job **job)
+{
+	if (job_is_stopped(*job) && (*job)->running != 0)
+		(*job)->notified = 1;
+    ft_dprintf(1, "[%d]\n", (*job)->pgid);
+    if (job_is_completed(*job))
+        free_job_after_signal(job);
 }
 
 void		output_sig(int sig, char **signal_output)
@@ -165,22 +193,23 @@ void	format_job_info_l_option(t_job *j, const char *status)
 	ft_dprintf(1, "\n");
 }
 
-void            process_jobs_option_l(t_job *job)
+void            process_jobs_option_l(t_job **job)
 {
-    if (job_is_completed(job))
+    if (job_is_completed(*job))
     {
-        if (job_is_signaled(job))
-            format_job_info_l_option(job, "Killed:");
+        if (job_is_signaled(*job))
+            format_job_info_l_option(*job, "Killed:");
         else
-            format_job_info_l_option(job, "Done");
+            format_job_info_l_option(*job, "Done");
+        free_job_after_signal(job);
     }
-    else if (job_is_stopped (job) && job->running != 0)
+    else if (job_is_stopped(*job) && (*job)->running != 0)
     {
-		format_job_info_signal_l_option(job, "Stopped", job->running);
-		job->notified = 1;
+		format_job_info_signal_l_option(*job, "Stopped", (*job)->running);
+		(*job)->notified = 1;
 	}
     else
-        format_job_info_l_option(job, "Running");
+        format_job_info_l_option(*job, "Running");
 }
 
 void            process_jobs_only_arg(option)
@@ -193,11 +222,11 @@ void            process_jobs_only_arg(option)
         if (job->state == -1 && job->sep == SPL_SPRLU)
         {
             if (option == 0)
-                process_jobs_without_options(job);
+                process_jobs_without_options(&job);
             else if (option == 'p')
-                process_jobs_option_p(job);
+                process_jobs_option_p(&job);
             else if (option == 'l')
-                process_jobs_option_l(job);
+                process_jobs_option_l(&job);
             // printf("job->num: |%d| - notified: |%d|%s\n", job->num, job->state, job->cmds->args[0]);
         }
     }
@@ -206,10 +235,10 @@ void            process_jobs_only_arg(option)
 // une fois passe dans jobs, ne pas afficher le resultat de do_job_modif
 // ==> Si arg[0] == job, pas de job notification, modifier la fonction, ajouter la condition
 
-t_job   *find_jobnum(char *num)
+t_job   *find_jobnum(char *num, t_job **j)
 {
-    t_job  *job;
-	int number;
+    t_job   *job;
+	int     number;
 
 	if (*num == '%')
 		number = ft_atoi(num + 1);	
@@ -221,6 +250,7 @@ t_job   *find_jobnum(char *num)
     while ((job = job->next))
         if (job->num == number && job->sep == SPL_SPRLU)
             break ;
+    *j = job;
     return (job);
 }
 
@@ -230,6 +260,7 @@ int			    ft_builtin_jobs(char **cmd)
     char    option;
     int     len;
     BOOL    other_arg;
+    t_job   **job;
 
     len = ft_len_array_char(cmd);
     if (ft_normalize_av(&cmd, &option, &begin, &other_arg))
@@ -242,12 +273,12 @@ int			    ft_builtin_jobs(char **cmd)
     {
         while (++begin < len)
         {
-            if (option == 0 && find_jobnum(cmd[begin]))
-                process_jobs_without_options(find_jobnum(cmd[begin]));
-            else if (option == 'p' && find_jobnum(cmd[begin]))
-                process_jobs_option_p(find_jobnum(cmd[begin]));
-            else if (option == 'l' && find_jobnum(cmd[begin]))
-                process_jobs_option_l(find_jobnum(cmd[begin]));
+            if (option == 0 && find_jobnum(cmd[begin], job))
+                process_jobs_without_options(job);
+            else if (option == 'p' && find_jobnum(cmd[begin], job))
+                process_jobs_option_p(job);
+            else if (option == 'l' && find_jobnum(cmd[begin], job))
+                process_jobs_option_l(job);
             else
                 ft_dprintf(1, "No such job %s\n", cmd[begin]);
         }

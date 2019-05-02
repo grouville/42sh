@@ -120,6 +120,24 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 }
 
 /*
+*** - Aim of the function :
+*** - Returns true if the job begins with the "jobs" command
+*** - Need to check if it is any command
+*/
+
+int		check_last_command(void)
+{
+	t_job		*j;
+	t_cmd		*elem;
+
+	j = getter_job()->first_job;
+	while (j->next)
+		j = j->next;
+	elem = j->cmds;
+	return (!ft_strcmp(elem->args[0], "jobs") ? 1 : 0);
+}
+
+/*
 ** Notify the user about stopped or terminated jobs.
 ** Delete terminated jobs from the active job list.
 */
@@ -136,14 +154,13 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 	jsig = getter_job();
 	/* Update status information for child processes.  */
 	update_status();
-	// printf("merde-avant\n");
-	// printf("arg[0]: |%s|\n", (*cmd)->args[0]);
-	if (shl->str && !ft_strcmp((*cmd)->next_cmd->args[0], "jobs"))
+	/* Manage the printing of the do_job_notification or not (will be managed by the job builtin) */
+	if (shl->str && check_last_command())
 	{
-		printf("je ret\n");
+		if (cmd)
+			*cmd = NULL;
 		return ;
 	}
-	// printf("merde\n");
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))
