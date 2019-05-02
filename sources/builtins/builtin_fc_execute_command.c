@@ -33,10 +33,9 @@ static void		builtin_fc_remove_hist_node(t_shell *shell)
 }
 
 static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
-				t_cmd **cmd, t_shell *shell)
+					t_cmd **cmd)
 {
 	t_cmd	*tmp;
-	t_cmd	*tmp1;
 	int		i;
 
 	tmp = *cmd;
@@ -101,5 +100,5 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 		return ;
 	builtin_fc_execute_commands_list(fc, &p, &cmd, shell);
 	if (p != PROMPT)
-		builtin_fc_error(fc, p, &cmd, shell);
+		builtin_fc_error(fc, p, &cmd);
 }

@@ -22,7 +22,6 @@ int mark_process_status (pid_t pid, int status)
 	t_cmd *elem;
 	t_js	*jsig;
 
-	int i = 0;
 	jsig = getter_job();
 	if (pid > 0)
 	{
@@ -66,8 +65,6 @@ void wait_for_job (t_job *j)
 {
 	int status;
 	pid_t pid;
-	id_t id;
-	siginfo_t t;
 
 	while (1)
 	{

@@ -48,9 +48,7 @@ void	print_sep(int fd, t_sep sep)
 void	format_job_info(t_job *j, const char *status, int nb_bgjob)
 {
 	int		i;
-	int		job_pos;
 	t_cmd	*elem;
-	char 	**args;
 
 	ft_dprintf(1, "[%d]+ %-10s", nb_bgjob, status);
 	elem = j->cmds;
@@ -99,7 +97,6 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 {
 	int 	i;
 	t_cmd	*elem;
-	int		job_pos;
 
 	i = -1;
 	ft_dprintf(1, "[%d]+ %-2s %-4d", nb_bgjob, status, job_is_signaled(j));
@@ -147,9 +144,7 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 	t_job		*j;
 	t_job		*jnext;
 	t_job		*jprev;
-	t_cmd		*p;
 	t_js		*jsig;
-	// static int	i = 0;
 
 	jsig = getter_job();
 	/* Update status information for child processes.  */

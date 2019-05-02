@@ -94,5 +94,5 @@ int		main(void)
 		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
 				break ;
 	}
-	return (shell_exit(&cmd, &shl));
+	return (shell_exit(&shl));
 }

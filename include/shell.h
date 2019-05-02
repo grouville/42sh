@@ -210,6 +210,12 @@ int					check_usage(char *cmd);
 int					is_number(char *cmd);
 BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
 int			    	ft_builtin_jobs(char **cmd);
+void           		free_job_after_signal(t_job **job);
+int					ft_usage_error(char *cmd, int ret);
+int					ft_len_array_char(char **av);
+t_job				*find_jobnum(char *num, t_job **j);
+void            	process_jobs_option_l(t_job **job);
+t_job				*find_jobnum(char *num, t_job **j);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -300,7 +306,7 @@ int					ft_isdir(char *path);
 char				*get_cur_dir(void);
 void				shl_quotesub(char *arg);
 void				*shl_mlc(char *type, int n, ...);
-int					shell_exit(t_cmd **cmd, t_shell **shell);
+int					shell_exit(t_shell **shell);
 void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						char **env, t_job **job);
 char				*get_next_hrdc(char **hrdc);

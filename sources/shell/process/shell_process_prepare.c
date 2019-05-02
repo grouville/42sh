@@ -38,7 +38,6 @@ char 	**ft_arrjoin(char **arr1, char **arr2)
 	int 	cursor_arrs;
 	int 	cursor_all_env;
 	char 	**all_env;
-	int 	i;
 
 	cursor_arrs = 0;
 	cursor_all_env = 0;
@@ -126,8 +125,6 @@ void	shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd)
 	t_job	*job;
 	t_cmd	*elem;
 	t_cmd	*cpy_elem;
-	t_cmd	*start;
-	int 	i;
 
 	job = first_jobs;
 	while ((job->next))

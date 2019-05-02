@@ -80,7 +80,7 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 	exit(EXIT_SUCCESS);
 }
 
-int		shell_father(int pid_child, t_job *j, t_cmd *elem)
+int		shell_father(int pid_child, t_cmd *elem)
 {
 	int status;
 
@@ -103,7 +103,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	if ((child = fork()) == 0)
 		shell_child(elem, shell, job);
 	else
-		elem->ret = shell_father(child, job, elem);
+		elem->ret = shell_father(child, elem);
 	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
 	{
 		elem->stopped = 1;

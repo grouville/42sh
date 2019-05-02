@@ -22,8 +22,6 @@ void wait_for_job_fg_bg(t_job *j)
 {
 	int status;
 	pid_t pid;
-	id_t id;
-	siginfo_t t;
 
 	while (1)
 	{

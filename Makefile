@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -g #-Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 NAME = 42sh
 
@@ -79,6 +79,8 @@ SRCS =  shell/main.c \
 		builtins/builtin_fc_execute_command.c \
 		builtins/builtin_localvar.c \
 		builtins/builtin_jobs.c \
+		builtins/builtin_jobs_l_option.c \
+		builtins/utils_job.c \
 		builtins/fg.c \
 		builtins/bg.c \
         editor/get_stdin.c \

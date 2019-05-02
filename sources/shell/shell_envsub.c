@@ -56,7 +56,6 @@ void			shell_check_tilde(char **arg)
 BOOL		check_env_substitution(char *arg)
 {
 	int		i;
-	char 	quote;
 
 	if (arg[0] == '}')
 	{

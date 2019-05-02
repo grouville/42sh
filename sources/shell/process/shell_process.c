@@ -25,7 +25,6 @@
 
 int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 {
-	int exec;
 	int fd[3];
 
 	(*elem)->done = 1;

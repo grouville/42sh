@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/06 23:35:03 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 08:08:07 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 00:08:55 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -72,7 +72,7 @@ BOOL	cd_is_recheable(char **envp, char *path, char *dir)
 int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 {
 	char	*cur_dir;
-	char 	*tmp;
+	char	*tmp;
 
 	if (!cd_is_recheable(*envp, path_dest, dir))
 	{

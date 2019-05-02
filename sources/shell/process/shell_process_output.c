@@ -19,6 +19,7 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 	int		i;
 	char	*output;
 
+	fd = 0; // Rajout de ca, pour la compil, check si c'est bon
 	output = *ptn_output;
 	if (output[0] == '&')
 	{
@@ -31,8 +32,7 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 		if (output[i] != '\0' && output[1] != '-')
 			return (shell_error_prepare("ambiguous", output) - 1);
 		else if (output[i] == '\0')
-
-		fd = ft_atoi(output + 1);
+			fd = ft_atoi(output + 1);
 		if ((fd < 0 || fd > 2) && output[1] != '-')
 			return (shell_error_prepare("bad fd", output) - 1);
 		else

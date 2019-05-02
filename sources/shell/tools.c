@@ -77,7 +77,7 @@ void		clean_jobs_all(void)
 	free(jsig->first_job);
 }
 
-int			shell_exit(t_cmd **cmd, t_shell **shell)
+int			shell_exit(t_shell **shell)
 {
 	int		ret;
 

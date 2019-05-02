@@ -68,7 +68,6 @@ int		check_synthax_stdout_to(t_output *redis)
 
 BOOL	check_syntax_redi(t_cmd *next)
 {
-	char *token;
 	if (check_synthax_stdout_to(next->output))
 	{
 		write(2, "42sh: syntax error near unexpected token `>'\n", 45);
