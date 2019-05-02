@@ -75,7 +75,10 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	char 	*tmp;
 
 	if (!cd_is_recheable(*envp, path_dest, dir))
+	{
+		ft_strdel(&path_dest);
 		return (0);
+	}
 	chdir(path_dest);
 	if (abs_path)
 		cur_dir = get_cur_dir();
@@ -98,7 +101,10 @@ BOOL	buildin_cd_opt(char **cmd, int *i)
 		(*i)++;
 	if (cmd[*i - 1][0] == '-' && cmd[*i - 1][ft_strlen(cmd[*i - 1]) - 1] ==
 																		'P')
+	{
+		printf("-<|option P -- 1|>\n");
 		return (1);
+	}
 	else
 		return (0);
 }
@@ -125,9 +131,12 @@ int		builtin_cd(char **cmd, char ***envp)
 	else if (ft_strcmp(cmd[i], "..") == 0 &&
 						ft_strcmp(tmp = get_cur_dir(), "/") != 0)
 		path_dest = ft_strdup(cd_rmv_last_path(tmp));
+	else if (ft_strcmp(cmd[i], ".") == 0)
+		path_dest = ft_strdup(get_envp(*envp, "PWD"));
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
+	printf("-<path dest|%s| abs_path %d>\n", path_dest, abs_path);
 	ret = !path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path);
 	return (ret);
 }
