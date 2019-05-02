@@ -53,7 +53,6 @@ void	shell_save_histo(t_shell *shl)
 int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 									t_prompt *prmt, t_job *jobs)
 {
-	printf("-<shell command exec |%s|>\n", shl->str);
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
 		ft_strdel(&shl->str);
@@ -88,11 +87,10 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		//print_jobs();
 		do_job_notification(&cmd);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);
-		if (ret == -1 && !check_jobs_on_exit(&cmd))
+		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
 				break ;
 	}
 	return (shell_exit(&cmd, &shl));

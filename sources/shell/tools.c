@@ -62,17 +62,17 @@ void		shell_init(t_shell **shell, t_prompt *prompt,
 void		clean_jobs_all(void)
 {
 	t_job	*curr;
-	t_job	*prev;
+	t_job	*tmp;
 	t_js	*jsig;
 
 	jsig = getter_job();
-	curr = jsig->first_job;
-	prev = jsig->first_job;
-	while ((curr = curr->next))
+	curr = jsig->first_job->next;
+	tmp = jsig->first_job;
+	while (curr)
 	{
-		prev = curr->next;
+		tmp = curr->next;
 		free_job(&curr, NULL);
-		curr = prev;
+		curr = tmp;
 	}
 	free(jsig->first_job);
 }

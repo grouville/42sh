@@ -90,6 +90,7 @@ void	free_job(t_job **j, t_cmd **cmd)
 {
 	if (cmd)
 		*cmd = NULL;
+	printf("-<del du job |%s|>\n", (*j)->cmds->args[0]);
 	clean_cmd(&(*j)->cmds);
 	free(*j);
 	*j = NULL;
@@ -137,6 +138,7 @@ void do_job_notification(t_cmd **cmd)
 				jprev->next = jnext;
 				if (j == jsig->first_job)
 					jsig->first_job = jsig->first_job->next;
+				//printf("-<|on free %s|>\n", j->cmds->args[0]);
 				free_job (&j, cmd);
 				j = jprev;
 			}
@@ -163,6 +165,7 @@ void do_job_notification(t_cmd **cmd)
 		 * marking them so that we won’t do this more than once.  */
 		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified)
 		{
+			*cmd = NULL;
 			format_job_info(j, "Stopped", j->num);
 			j->notified = 1;
 		}

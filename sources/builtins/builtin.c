@@ -112,7 +112,6 @@ void	shell_builtin2(t_cmd *elem, t_shell *shell)
 		elem->ret = ft_builtin_test(elem->args, elem->args_raw);
 	if (elem->args && elem->args[0] && ft_strcmp("fg", elem->args[0]) == 0)
 		elem->ret = ft_builtin_fg(elem->args);
-	printf("elem->ret: %d\n", elem->ret);
 	if (elem->args && elem->args[0] && ft_strcmp("bg", elem->args[0]) == 0)
 		elem->ret = ft_builtin_bg(elem->args);
 	if (elem->args && elem->args[0] && ft_strcmp("jobs", elem->args[0]) == 0)

@@ -358,7 +358,7 @@ int					count_job_bg(void);
 void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
-int     			check_jobs_on_exit(t_cmd **cmd);
+int     			check_jobs_on_exit(t_cmd **cmd, t_shell *shl);
 int					job_is_signaled(t_job *j);
 
 /*
