@@ -59,7 +59,7 @@ BOOL	ft_isempty(char *str)
 }
 
 /*
-** Split line jusqu'au prochain delimiteur
+** split line jusqu'au prochain delimiteur
 ** Le premier maillon start de {cmd} (pointé par tous les autres) est vide.
 */
 

@@ -27,8 +27,11 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 		i = 1;
 		while (ft_isdigit(output[i]))
 			i++;
+		printf("-<|%s|%d>\n", output, i);
 		if (output[i] != '\0' && output[1] != '-')
 			return (shell_error_prepare("ambiguous", output) - 1);
+		else if (output[i] == '\0')
+
 		fd = ft_atoi(output + 1);
 		if ((fd < 0 || fd > 2) && output[1] != '-')
 			return (shell_error_prepare("bad fd", output) - 1);

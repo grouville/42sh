@@ -27,15 +27,44 @@ BOOL	cmd_syntax_shortcut(t_cmd *next)
 	return (0);
 }
 
+int		check_syntax_redi_stdout(t_output *redis)
+{
+	t_output	*read;
+
+	read = redis;
+	while (read != NULL)
+	{
+		if (read->to == NULL || ft_strcmp(read->to, "&") == 0)
+			return (0);
+		read = read->next;
+	}
+	return (1);
+}
+
+int		check_synthax_stdout_to(t_output *redis)
+{
+	t_output *read;
+
+	read = redis;
+	while (read != NULL)
+	{
+		if (!read->to || ft_strcmp(read->to, "&") == 0)
+			return (1);
+		if (read->to == NULL)
+			return (0);
+		read = read->next;
+	}
+	return (0);
+}
+
 /*
 ** -2 pour un hrdc ou input indiqué mais non rempli (cat <) || (cat <<)
 */
 
 BOOL	check_syntax_redi(t_cmd *next)
 {
-	//int last;
-
-	if (!stdout_to(next->output))
+	char *token;
+	if (check_synthax_stdout_to(next->output))
 	{
 		write(2, "42sh: syntax error near unexpected token `>'\n", 45);
 		return (1);
