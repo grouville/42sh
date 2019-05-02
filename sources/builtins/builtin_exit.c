@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/08 13:41:53 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/02/08 13:41:53 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 08:07:37 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -37,8 +37,6 @@ int		is_only_digit(char *arg)
 
 int		builtin_exit(t_cmd *elem, t_shell *shell)
 {
-	unsigned char ret;
-
 	if (elem->args[1] == NULL)
 	{
 		shell->ret = 0;
@@ -46,7 +44,8 @@ int		builtin_exit(t_cmd *elem, t_shell *shell)
 	}
 	else if (!is_only_digit(elem->args[1]))
 	{
-		ft_dprintf(2, "42sh: exit: %s: numeric argument required\n", elem->args[1]);
+		ft_dprintf(2, "42sh: exit: %s: numeric argument required\n",
+		elem->args[1]);
 		shell->ret = 2;
 		return (-1);
 	}
@@ -58,8 +57,7 @@ int		builtin_exit(t_cmd *elem, t_shell *shell)
 	}
 	else
 	{
-		ret = (unsigned char)ft_atoi(elem->args[1]);
-		shell->ret = ret;
+		shell->ret = (unsigned char)ft_atoi(elem->args[1]);
 		return (-1);
 	}
 }

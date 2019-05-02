@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/23 13:13:48 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 02:11:10 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 08:11:08 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,11 +33,11 @@ int		check_builtin_unset(t_shell *shell, char **args)
 	return (0);
 }
 
-void 	builtin_set_check_duplicate(t_shell *shell, char *envl_var)
+void	builtin_set_check_duplicate(t_shell *shell, char *envl_var)
 {
 	int		n;
 	char	*var_envl;
-	char 	*var_envp;
+	char	*var_envp;
 	BOOL	var_is_in_envp;
 
 	var_is_in_envp = 0;
@@ -93,16 +93,16 @@ BOOL	shell_is_builtin(t_cmd *elem, t_shell *shell)
 	!ft_strcmp("set", elem->args[0]) || !ft_strcmp("unset", elem->args[0]) ||
 	!ft_strcmp("export", elem->args[0]) || !ft_strcmp("type", elem->args[0]) ||
 	!ft_strcmp("alias", elem->args[0]) || !ft_strcmp("fc", elem->args[0]) ||
-	!ft_strcmp("unalias", elem->args[0])|| !ft_strcmp("test", elem->args[0]) ||
+	!ft_strcmp("unalias", elem->args[0]) || !ft_strcmp("test", elem->args[0]) ||
 	!ft_strcmp("fg", elem->args[0]) || !ft_strcmp("bg", elem->args[0]) ||
-	!ft_strcmp("jobs", elem->args[0]) || 
+	!ft_strcmp("jobs", elem->args[0]) ||
 	!ft_strcmp("exit", elem->args[0])) && (elem->done = 1))
 		return (1);
 	else
 		return (0);
 }
 
-void 	shell_builtin2(t_cmd *elem, t_shell *shell)
+void	shell_builtin2(t_cmd *elem, t_shell *shell)
 {
 	if (elem->args && elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
 		elem->ret = builtin_type(elem->args + 1, shell->envp);
@@ -112,6 +112,7 @@ void 	shell_builtin2(t_cmd *elem, t_shell *shell)
 		elem->ret = ft_builtin_test(elem->args, elem->args_raw);
 	if (elem->args && elem->args[0] && ft_strcmp("fg", elem->args[0]) == 0)
 		elem->ret = ft_builtin_fg(elem->args);
+	printf("elem->ret: %d\n", elem->ret);
 	if (elem->args && elem->args[0] && ft_strcmp("bg", elem->args[0]) == 0)
 		elem->ret = ft_builtin_bg(elem->args);
 	if (elem->args && elem->args[0] && ft_strcmp("jobs", elem->args[0]) == 0)

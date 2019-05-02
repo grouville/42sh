@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/04 13:00:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 13:17:57 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 09:28:35 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -45,7 +45,8 @@ static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
 		{
 			i = -1;
 			while (tmp->hrdc[++i])
-				ft_dprintf(2, "42sh: warning: here-document at line %d delimited "
+				ft_dprintf(2, "42sh: warning: here-document at line %d "
+				"delimited "
 				"by end-of-file (wanted `%s')\n", (unsigned long)tmp ==
 				(unsigned long)*cmd && tmp->next_cmd ? fc->heredoc[0] :
 				fc->heredoc[1], tmp->hrdc[i]);
@@ -70,15 +71,10 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		fc->heredoc[1] + 0;
 		if ((shell->str = fc->cmd_list->cmd) && write(1, fc->cmd_list->cmd,
 		ft_strlen(fc->cmd_list->cmd)) && write(1, "\n", 1) &&
-		(fc->ret = shell_command_execution(shell, cmd, 0, p, getter_job()->first_job)) == -1)
+		(fc->ret = shell_command_execution(shell, cmd, 0, p,
+		getter_job()->first_job)) == -1)
 		{
-			while (fc->cmd_list)
-			{
-				tmp = fc->cmd_list->next;
-				free(fc->cmd_list->cmd);
-				free(fc->cmd_list);
-				fc->cmd_list = tmp;
-			}
+			fc->cmd_list->cmd = NULL;
 			return ;
 		}
 		if (*p != PROMPT && (!fc->heredoc[0] || ((*cmd && cmd_addr !=
@@ -97,10 +93,11 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	p = PROMPT;
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
-		fc->ret = shell_command_execution(shell, &cmd, 0, &p, getter_job()->first_job) == -1;
+		fc->ret = shell_command_execution(shell, &cmd, 0, &p,
+		getter_job()->first_job);
 	builtin_fc_remove_hist_node(shell);
-	shell_clean_data(NULL, shell, 1);
-	if (fc->ret == -1 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
+	ft_strdel(&shell->str);
+	if (fc->ret != 0 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
 		return ;
 	builtin_fc_execute_commands_list(fc, &p, &cmd, shell);
 	if (p != PROMPT)

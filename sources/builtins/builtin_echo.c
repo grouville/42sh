@@ -6,21 +6,21 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/07 19:56:27 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/14 11:00:07 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 08:03:51 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-int 	check_echo_fdout(t_output *output)
+int		check_echo_fdout(t_output *output)
 {
-	t_output *find_fd1;
-	char *fd_1;
+	t_output	*find_fd1;
+	char		*fd_1;
 
 	fd_1 = NULL;
 	find_fd1 = output;
-	while(find_fd1)
+	while (find_fd1)
 	{
 		if (find_fd1->from == 1)
 			fd_1 = find_fd1->to;

@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/08 19:14:11 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/08 19:14:11 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 07:51:22 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,8 +16,8 @@
 char		**del_locvars(char **args, int i)
 {
 	int		len;
-	char 	**ret;
-	int 	j;
+	char	**ret;
+	int		j;
 
 	len = ft_arrlen(args);
 	ret = (char **)malloc(sizeof(char *) * (len - i + 1));
@@ -28,7 +28,6 @@ char		**del_locvars(char **args, int i)
 	ft_arrdel(&args);
 	return (ret);
 }
-
 
 /*
 ** ajoute les vars local si chaque arg de args sont des déclarations de var
@@ -56,4 +55,3 @@ int			builtin_localvar(char ***ptn_args, char **args_raw)
 	}
 	return (1);
 }
-

@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/11 17:33:02 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/11 17:33:02 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 08:08:25 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,8 +16,8 @@
 void	builtin_export_envl_to_envp(t_shell *shell, char *cmd)
 {
 	int		i;
-	char 	*var;
-	char 	*value;
+	char	*var;
+	char	*value;
 
 	i = 0;
 	while (shell->envl[i])

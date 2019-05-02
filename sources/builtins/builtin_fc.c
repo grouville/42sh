@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/04 13:17:32 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 09:24:35 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,20 +31,29 @@ static int		builtin_fc_init_op(char **args, char **op)
 	return (i);
 }
 
-int				builtin_fc_exit(t_fc **fc)
+static int		builtin_fc_exit(t_fc **fc)
 {
-	int ret;
+	int		ret;
+	t_data	*tmp;
 
 	ret = (*fc)->ret;
 	ft_strdel(&(*fc)->first);
 	ft_strdel(&(*fc)->last);
 	ft_strdel(&(*fc)->op);
+	while ((*fc)->cmd_list)
+	{
+		tmp = (*fc)->cmd_list->next;
+		ft_strdel(&(*fc)->cmd_list->cmd);
+		free((*fc)->cmd_list);
+		(*fc)->cmd_list = tmp;
+	}
 	free((*fc));
 	unlink("/tmp/.42sh-fc_cmd_list");
+	dprintf(2, "fc exit\n");
 	return (ret);
 }
 
-int				builtin_fc_init(t_fc **fc, t_shell *shell, char **args)
+static int		builtin_fc_init(t_fc **fc, t_shell *shell, char **args)
 {
 	if (!(*fc = ft_memalloc(sizeof(t_fc))))
 		exit(EXIT_FAILURE);

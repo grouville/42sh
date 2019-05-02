@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/13 23:03:27 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/02/13 23:03:27 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 07:53:41 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -26,9 +26,9 @@ char	*get_var(char *var_key)
 	return (ret);
 }
 
-char 	*value_multiline(char *value)
+char	*value_multiline(char *value)
 {
-	char 	*ret;
+	char	*ret;
 
 	if (ft_strchr(value, '\n'))
 		value = ft_remplace_char_by_str(value, '\n', "\\n");
@@ -43,14 +43,14 @@ char 	*value_multiline(char *value)
 char	*get_value(char *arg)
 {
 	int		i;
-	char 	*tmp;
+	char	*tmp;
 
 	i = 0;
 	while (arg && arg[i])
 	{
 		if (arg[i] == '=')
 		{
-			tmp =  ft_strdup(arg + i + 1);
+			tmp = ft_strdup(arg + i + 1);
 			if (ft_strchr(tmp, '\n') || ft_strchr(tmp, '\''))
 				tmp = value_multiline(tmp);
 			return (tmp);

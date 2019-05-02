@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/08 13:19:17 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/02/08 13:19:17 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 08:02:43 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,9 +18,9 @@
 ** Si var est un seul digit c'est invalid
 */
 
-BOOL		is_var(char *arg)
+BOOL	is_var(char *arg)
 {
-	int 	i;
+	int		i;
 
 	i = 0;
 	while (arg[i] && arg[i] != '=')
