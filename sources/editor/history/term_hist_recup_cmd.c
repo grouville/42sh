@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/03 14:29:35 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 12:30:26 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 15:28:50 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -57,7 +57,7 @@ t_data		*recup_hist_from_file(t_data *hist, char *file)
 			j = -1;
 		}
 		if (j == -1 && ft_isprint(file[i]))
-				j = i;
+			j = i;
 		if (((file[i] == '\'' || file[i] == '\"' || file[i] == '`') && c == 0)
 			|| ((c == '\'' && file[i] == '\'') || (c == '\"' && file[i] == '\"')
 			|| (c == '`' && file[i] == '`')))

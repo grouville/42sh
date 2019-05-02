@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/04 13:16:01 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/02 15:40:24 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -112,6 +112,7 @@ SRCS =  shell/main.c \
 		editor/history/term_hist_recup_cmd.c \
 		editor/history/term_history.c \
 		editor/history/term_history_incremental_search.c \
+		editor/history/term_history_incremental_search_print.c \
 		hash/hash.c \
         hash/delete_print_search.c \
         hash/hash_function.c \

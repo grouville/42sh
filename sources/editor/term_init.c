@@ -6,12 +6,13 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/08/10 02:51:08 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 23:18:51 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 15:27:18 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
+#include "time.h"
 
 int			term_reinit(struct termios *raw_mode)
 {
@@ -49,12 +50,15 @@ int			get_term_raw_mode(int mode)
 t_editor	*line_editor_init(char **line, t_prompt prompt, int prompt_size,
 			t_data **hist)
 {
-	t_editor *ed;
+	t_editor		*ed;
+	struct timespec tim;
 
+	ft_bzero(&tim, sizeof(tim));
+	tim.tv_nsec = 50000000L;
+	nanosleep(&tim, (struct timespec *)NULL);
 	if (!(ed = (t_editor *)malloc(sizeof(t_editor))))
 		return (NULL);
 	ft_bzero(ed, sizeof(*ed));
-	//sleep(1);//tant que job écrit dans fd = shell [Attention l'input de l'user pas save]
 	ed->cur_col = get_cursor_position(0);
 	ed->cur_row = get_cursor_position(1);
 	ed->first_row = ed->cur_row;

@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/12 00:01:33 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/12 19:20:32 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/02 15:31:26 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -64,7 +64,7 @@ static int		get_keyboard_key(t_editor *ed, t_prompt *prompt,
 	else if (HOME_KEY || CTRL_A || END_KEY || CTRL_E)
 		HOME_KEY || CTRL_A ? go_to_begin_of_line(ed) : go_to_end_of_line(ed);
 	else if (ed->hist->cmd && ((BACKSPACE && ed->cursor_str_pos) ||
-	((CTRL_D  || DEL_KEY) && ed->hist->cmd[ed->cursor_str_pos])))
+	((CTRL_D || DEL_KEY) && ed->hist->cmd[ed->cursor_str_pos])))
 		backspace(ed);
 	else if (TAB_KEY)
 		ed->ret = term_tabulator(ed, prompt, envp, envl);
@@ -72,7 +72,7 @@ static int		get_keyboard_key(t_editor *ed, t_prompt *prompt,
 		term_history(ed);
 	else if (CTRL_R &&
 	((ed->ret = term_history_incremental_search(ed, *prompt))))
-			get_keyboard_key(ed, prompt, envp, envl);
+		get_keyboard_key(ed, prompt, envp, envl);
 	else if (ft_isprint(ed->key[0]) && enough_space_on_screen(ed))
 		return (print_key(ed));
 	return (EXIT_SUCCESS);
@@ -87,7 +87,7 @@ int				get_stdin(t_shell *shell, t_prompt *prompt)
 			display_prompt(*prompt), &shell->hist)))
 		return (-2);
 	while (isatty(STDIN_FILENO) &&
-	(ed->ret = get_read_key(STDIN_FILENO, &ed->key)) != - 1)
+	(ed->ret = get_read_key(STDIN_FILENO, &ed->key)) != -1)
 	{
 		tputs(tgetstr("vi", NULL), 1, ft_putchar);
 		if (term_size(ed) == EXIT_SUCCESS)
