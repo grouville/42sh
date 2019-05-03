@@ -347,7 +347,8 @@ void				put_job_in_foreground(t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
 void 				update_status(void);
 void				wait_for_job(t_job *j);
-void				do_job_notification(t_cmd **cmd, t_shell *shl);
+void				do_job_notification(t_cmd **cmd, t_shell *shl,
+										t_cmd **cmd_jobs);
 void				mark_job_as_running(t_job *j);
 void				continue_job(t_job *j, int foreground);
 void 				format_job_info_signal(t_job *j, const char *status,

@@ -101,6 +101,5 @@ t_job		*find_jobnum(char *num, t_job **j)
 		if (job->num == number && job->sep == SPL_SPRLU)
 			break ;
 	*j = job;
-	printf("jobnum: %d|%s|\n", (*j)->num, (*j)->cmds->args[0]);
 	return (job);
 }

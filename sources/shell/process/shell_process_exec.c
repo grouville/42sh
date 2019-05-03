@@ -104,10 +104,11 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		shell_child(elem, shell, job);
 	else
 		elem->ret = shell_father(child, elem);
-	if (elem->ret == 4735 || elem->sep == SPL_SPRLU)
+	if (elem->ret == 4735 || job->sep == SPL_SPRLU)
 	{
 		elem->stopped = 1;
 		elem->done = 0;
+		job->running = 1;
 		//elem->ret = 146;
 	}
 	if (elem->ret == 3)

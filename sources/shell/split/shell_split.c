@@ -66,6 +66,7 @@ BOOL	ft_isempty(char *str)
 t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 {
 	t_cmd	*cmd;
+	t_cmd	*tmp;
 
 	if (ft_isempty(line) || !iscomplet(line, prompt))
 		return (NULL);
@@ -83,7 +84,10 @@ t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 			cmd->sep == DBL_PIPE || cmd->sep == DBL_SPRLU)))
 	{
 		*prompt = B_QUOTE;
-		clean_cmd(&cmd);
+		tmp = cmd->start;
+		clean_cmd(&cmd->start->next_cmd);
+		free(tmp);
+		sleep(3);
 		return (NULL);
 	}
 	else

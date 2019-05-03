@@ -122,29 +122,15 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 *** - Need to check if it is any command
 */
 
-int		check_last_command_jobs(void)
+int		check_last_command_jobs(t_cmd **cmd)
 {
-	t_job		*j;
 	t_cmd		*elem;
-	BOOL		is_jobs;
 
-	j = getter_job()->first_job;
-	is_jobs = 0;
-	while ((j = j->next))
-	{
-		if (j->state != -1)
-		{
-			elem = j->cmds;
-			while (elem)
-			{
-				if (ft_strcmp(elem->args[0], "jobs") == 0)
-					is_jobs = 1;
-				elem = elem->next_cmd;
-			}
-		}
-	}
-	// printf("isjobs: %d\n", is_jobs);
-	return (is_jobs);
+	elem = *cmd;
+	while ((elem = elem->next_cmd))
+		if (ft_strcmp(elem->args[0], "jobs") == 0 && elem->done == 0)
+			return (1);
+	return (0);
 }
 
 
@@ -175,7 +161,7 @@ int		check_last_command_fc(void)
 ** Delete terminated jobs from the active job list.
 */
 
-void do_job_notification(t_cmd **cmd, t_shell *shl)
+void do_job_notification(t_cmd **cmd, t_shell *shl, t_cmd **cmd_jobs)
 {
 	t_job		*j;
 	t_job		*jnext;
@@ -186,11 +172,8 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 	/* Update status information for child processes.  */
 	update_status();
 	/* Manage the printing of the do_job_notification or not (will be managed by the job builtin) */
-	if (shl->str && (check_last_command_jobs() || check_last_command_fc()))
-	{
-		printf("je ret\n");
+	if (shl->str && (check_last_command_jobs(cmd_jobs) || check_last_command_fc()))
 		return ;
-	}
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))
