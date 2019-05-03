@@ -52,8 +52,6 @@ void put_job_in_foreground (t_job *j, int cont)
 	jsig = getter_job();
 	/* Put the job into the foreground.  */
 	tcsetpgrp (jsig->shell_terminal, j->pgid);
-
-
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 	{
@@ -82,15 +80,13 @@ void put_job_in_background (t_job *j, int cont)
 	if (cont)
 		if (kill (-j->pgid, SIGCONT) < 0)
 			perror ("kill (SIGCONT)");
-//	if (cont)
-//	if (kill (-j->pgid, SIGTTIN) < 0)
-//		perror ("kill (SIGCONT)");
 }
 
 void put_process_suspended(t_job *j, t_cmd *elem)
 {
 	t_js	*jsig;
 
+	printf("passe pas ici");
 //	ft_dprintf(1, "[%d]  + %d suspended")
 	j->sep = SPL_SPRLU;
 	elem->stopped = 1;

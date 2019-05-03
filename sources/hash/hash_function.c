@@ -72,3 +72,30 @@ int			ft_get_hash(char *str, int size_table, int attempt)
 	hash_b = ft_hash_generic(str, HT_PRIME_2, size_table);
 	return ((hash_a + (attempt * (hash_b + 1))) % size_table);
 }
+
+void		check_path_loop(char **path_env, char **path, char **str,
+				int *count)
+{
+	int		j;
+	char	*join_slash;
+	char	*join_cmd;
+
+	j = 0;
+	while (path_env[j])
+	{
+		join_slash = ft_strjoin(path_env[j], "/");
+		join_cmd = ft_strjoin(join_slash, *str);
+		free(join_slash);
+		if (access(join_cmd, F_OK) == 0)
+		{
+			if (*count >= 1)
+				free(*path);
+			*path = ft_strdup(join_cmd);
+			(*count)++;
+		}
+		j++;
+		free(join_cmd);
+	}
+	if (!(*path))
+		*path = NULL;
+}

@@ -6,7 +6,7 @@
 /*   By: gurival- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/19 18:02:22 by gurival-     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/03 02:20:46 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 02:33:53 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,7 +15,7 @@
 
 /*
 *** - Aim of the function :
-*** - return the reverse of ret_in (which can be 0 or 1)
+*** - returns the reverse of ret_in (which can be 0 or 1)
 *** - regarding the number of T_NOT argument (== number of "!")
 */
 
@@ -29,6 +29,16 @@ int				process_exclam(int nb, int ret_in)
 	else
 		ret = (nb % 2 == 0 ? 0 : 1);
 	return (ret);
+}
+
+void			ft_print_norm(char *str, BOOL cas)
+{
+	if (cas == 1)
+		ft_dprintf(2, "bash: test: %s: unary operator expected\n",
+			str);
+	else if (cas == 2)
+		ft_dprintf(2, "bash: test: %s: binary operator expected\n",
+			str);
 }
 
 /*
@@ -56,10 +66,10 @@ int				ft_test_4_args(t_args_tok **t, int boul)
 		else if (t[0]->type == T_NOT && t[1]->type == T_NOT
 			&& (t[2]->type == T_ARGS || t[2]->type == T_EXPANSED)
 				&& is_any(t[3]) && (ret = 2) && boul == 0)
-			ft_dprintf(2, "bash: test: %s: unary operator expected\n", t[2]->op);
+			ft_print_norm(t[2]->op, 1);
 		else if (t[0]->type == T_NOT && is_all(t[1]) && is_s_bin(t[2])
 			&& is_any(t[3]) && (ret = 2) && boul == 0)
-			ft_dprintf(2, "bash: test: %s: binary operator expected\n", t[2]->op);
+			ft_print_norm(t[2]->op, 2);
 	}
 	return (ret);
 }

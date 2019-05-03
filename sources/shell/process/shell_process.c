@@ -67,8 +67,10 @@ int		launch_job(t_job *job, t_shell *shell)
 			return (-1);
 		else if (ret == -2)
 			break ;
+		printf("shell->ret: %d\n", shell->ret);
+		// ctrl - z ne fonctionne plus
 		if (shell->ret == 4735 && (suspended = 1)) //4735 ret status d'un Ctrl-Z
-			put_process_suspended(job, elem); 
+			put_process_suspended(job, elem);
 		elem = elem->next_cmd;
 	}
 	if (!jsig->shell_is_interactive)

@@ -73,6 +73,8 @@ t_htable		*new_hash_table();
 
 int				ft_hash_generic(char *str, int prime, int size_table);
 int				ft_get_hash(char *str, int size_table, int attempt);
+void			check_path_loop(char **path_env, char **path,
+					char **str, int *count);
 
 /*
 *** - resize_hash.c

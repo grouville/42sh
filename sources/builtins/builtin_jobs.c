@@ -6,7 +6,7 @@
 /*   By: gurival- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/03 00:37:25 by gurival-     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/03 02:26:24 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 04:21:38 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -122,6 +122,19 @@ void			process_jobs_only_arg(char option)
 	}
 }
 
+void			ft_builtin_jobs_norm(char option, char **cmd, t_job **job,
+					int begin)
+{
+	if (option == 0 && find_jobnum(cmd[begin], job))
+		process_jobs_without_options(job);
+	else if (option == 'p' && find_jobnum(cmd[begin], job))
+		process_jobs_option_p(job);
+	else if (option == 'l' && find_jobnum(cmd[begin], job))
+		process_jobs_option_l(job);
+	else
+		ft_dprintf(1, "No such job %s\n", cmd[begin]);
+}
+
 /*
 *** - Aim of the function :
 *** - Manage the jobs builtin
@@ -138,7 +151,7 @@ int				ft_builtin_jobs(char **cmd)
 	char	option;
 	int		len;
 	BOOL	other_arg;
-	t_job	**job;
+	t_job	*job;
 
 	job = NULL;
 	len = ft_len_array_char(cmd);
@@ -149,16 +162,9 @@ int				ft_builtin_jobs(char **cmd)
 	else
 	{
 		while (++begin < len)
-		{
-			if (option == 0 && find_jobnum(cmd[begin], job))
-				process_jobs_without_options(job);
-			else if (option == 'p' && find_jobnum(cmd[begin], job))
-				process_jobs_option_p(job);
-			else if (option == 'l' && find_jobnum(cmd[begin], job))
-				process_jobs_option_l(job);
-			else
-				ft_dprintf(1, "No such job %s\n", cmd[begin]);
-		}
+			ft_builtin_jobs_norm(option, cmd, &job, begin);
 	}
 	return (0);
 }
+
+// REGLER PROBLEME NUMERO DANS JOBS QUAND EXEC PUIS JOBS, ON PERD LE NUMERO
