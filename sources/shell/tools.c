@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:19:43 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 09:42:51 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 13:53:57 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -107,8 +107,8 @@ t_shell		*init_shell(char **envp)
 	if (check_if_env_var_existing(shell->envp, "OLDPWD"))
 		shell->envp = rmv_key_env(shell->envp, "OLDPWD");
 	shell->hist = init_hist((shell->hist_path =
-	build_full_path(get_envp(shell->envp, "HOME"), ".21sh_history")));
-	shell->alias = builtin_alias_get_alias_from_file(".21sh_alias");
+	build_full_path(get_envp(shell->envp, "HOME"), ".42sh_history")));
+	shell->alias = builtin_alias_get_alias_from_file(".42sh_alias");
 	if (!(shell->envl = (char **)malloc(sizeof(char *))))
 		exit(EXIT_FAILURE);
 	shell->envl[0] = NULL;
