@@ -104,8 +104,8 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 	int 	ret;
 	t_job	*job;
 
-	do_job_notification(NULL, shell);
 	shell_prepare(jobs, *cmd);
+	do_job_notification(NULL, shell);
 	job = jobs;
 	while ((job = job->next))
 	{
