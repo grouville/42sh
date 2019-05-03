@@ -13,6 +13,9 @@
 
 .PHONY: all clean fclean re
 
+VERT=\033[32;05m
+
+
 CFLAGS = -c -g -Wall -Wextra -Werror
 NAME = libft.a
 
@@ -74,6 +77,8 @@ $(NAME) : $(OBJ)
 
 ./%.o : ./%.c
 	@gcc $(CFLAGS) -I $(DIR_INC) -c $< -o $@
+	@printf "$(VERT)Created $@\r"\
+
 
 clean :
 	@rm -rf $(OBJ)
