@@ -104,9 +104,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 	int 	ret;
 	t_job	*job;
 
-	printf("-<|on arrive iic avec %s|>\n", (*cmd)->next_cmd->args[0]);
 	do_job_notification(NULL, shell);
-	printf("-<|fiin|>\n");
 	shell_prepare(jobs, *cmd);
 	job = jobs;
 	while ((job = job->next))
