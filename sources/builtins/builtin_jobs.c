@@ -6,7 +6,7 @@
 /*   By: gurival- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/03 00:37:25 by gurival-     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/03 00:43:59 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 02:26:24 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@
 *** - Otherwise, we return the i - 1 in order to loop on the jobs
 */
 
-int		ft_normalize_av(char ***av, char *c, int *begin,
+int				ft_normalize_av(char ***av, char *c, int *begin,
 					BOOL *other_arg)
 {
 	int		i;
@@ -103,7 +103,7 @@ void			process_jobs_option_p(t_job **job)
 *** - In that case, we list all the jobs in bg
 */
 
-void			process_jobs_only_arg(option)
+void			process_jobs_only_arg(char option)
 {
 	t_job	*job;
 

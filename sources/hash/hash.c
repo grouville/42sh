@@ -6,7 +6,7 @@
 /*   By: gurival- <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/04/19 18:02:22 by gurival-     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/22 14:20:42 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 02:07:25 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -74,7 +74,7 @@ int		ft_usage_is_good(char *limitor, char *str)
 	return (0);
 }
 
-int			ft_check_arguments(int *i, char **cmd, int *boul, t_shell *env)
+int		ft_check_arguments(int *i, char **cmd, int *boul, t_shell *env)
 {
 	while (cmd[*i] && cmd[*i][0] == '-')
 	{
@@ -92,8 +92,8 @@ int			ft_check_arguments(int *i, char **cmd, int *boul, t_shell *env)
 	return (0);
 }
 
-void		add_binary_to_hash(int *i, char **cmd, t_shell *env,
-				char **path)
+void	add_binary_to_hash(int *i, char **cmd, t_shell *env,
+			char **path)
 {
 	char **all_paths;
 
@@ -108,10 +108,7 @@ void		add_binary_to_hash(int *i, char **cmd, t_shell *env,
 			{
 				check_path(all_paths, path, &(cmd[*i]));
 				if (!(*path))
-				{
-					ft_dprintf(1, "%s", "bash: hash:");
-					ft_dprintf(1, "%s: not found\n", cmd[*i]);
-				}
+					ft_dprintf(2, "%s %s: not found\n", "bash: hash:", cmd[*i]);
 				else
 				{
 					if (!env->t)
@@ -124,7 +121,7 @@ void		add_binary_to_hash(int *i, char **cmd, t_shell *env,
 	ft_arrdel(&all_paths);
 }
 
-int			ft_builtin_hash(char **cmd, t_shell *env)
+int		ft_builtin_hash(char **cmd, t_shell *env)
 {
 	int			i;
 	int			len;
