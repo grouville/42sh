@@ -21,6 +21,7 @@
 ** return 0 pour passer au job suivant
 ** return 1 pour passer à la commande suivante
 ** return -1 dans le cas d'un exit confirmé
+** return -2 dans le cas de bad subsitution --> cancel cmd
 */
 
 int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
@@ -50,6 +51,8 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	return (1);
 }
 
+
+
 int		launch_job(t_job *job, t_shell *shell)
 {
 	t_cmd	*elem;
@@ -66,10 +69,8 @@ int		launch_job(t_job *job, t_shell *shell)
 		if (ret == -1)
 			return (-1);
 		else if (ret == -2)
-			break ;
-		printf("shell->ret: %d\n", shell->ret);
-		// ctrl - z ne fonctionne plus
-		if (shell->ret == 4735 && (suspended = 1)) //4735 ret status d'un Ctrl-Z
+			return (-2);
+		if (elem->ret == 4735 && (suspended = 1)) //4735 ret status d'un Ctrl-Z
 			put_process_suspended(job, elem);
 		elem = elem->next_cmd;
 	}
@@ -82,14 +83,31 @@ int		launch_job(t_job *job, t_shell *shell)
 	return (1);
 }
 
+void	shell_skip_job(t_job *job)
+{
+	t_cmd *elem;
+
+	while (job)
+	{
+		elem = job->cmds;
+		while (elem)
+		{
+			elem->done = 1;
+			elem = elem->next_cmd;
+		}
+		job = job->next;
+	}
+}
 
 int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 {
 	int 	ret;
 	t_job	*job;
 
+	printf("-<|on arrive iic avec %s|>\n", (*cmd)->next_cmd->args[0]);
+	do_job_notification(NULL, shell);
+	printf("-<|fiin|>\n");
 	shell_prepare(jobs, *cmd);
-	do_job_notification(cmd, shell);
 	job = jobs;
 	while ((job = job->next))
 	{
@@ -99,11 +117,15 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 			job->state = -1;
 			if (ret == -1)
 				return (-1);
+			else if (ret == -2)
+			{
+				shell_skip_job(job);
+				break ;
+			}
 		}
 	}
 	ft_strdel(&shell->str);
 	ft_strdel(&shell->hrdc_tmp);
-	//shell_clean_data(cmd, shell, 1);
 	return (1);
 }
 

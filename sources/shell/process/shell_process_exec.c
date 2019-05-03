@@ -108,7 +108,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		elem->stopped = 1;
 		elem->done = 0;
-		elem->ret = 0;
+		//elem->ret = 146;
 	}
 	if (elem->ret == 3)
 		ft_dprintf(2, "Quit : 3\n");

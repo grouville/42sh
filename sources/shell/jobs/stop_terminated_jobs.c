@@ -126,12 +126,22 @@ int		check_last_command(void)
 {
 	t_job		*j;
 	t_cmd		*elem;
+	BOOL		is_jobs;
 
 	j = getter_job()->first_job;
-	while (j->next)
-		j = j->next;
-	elem = j->cmds;
-	return (!ft_strcmp(elem->args[0], "jobs") ? 1 : 0);
+	is_jobs = 0;
+	while ((j = j->next))
+	{
+		elem = j->cmds;
+		while (elem)
+		{
+			if (ft_strcmp(elem->args[0], "fc") == 0 ||
+				ft_strcmp(elem->args[0], "jobs") == 0)
+				is_jobs = 1;
+			elem = elem->next_cmd;
+		}
+	}
+	return (is_jobs);
 }
 
 /*
@@ -151,11 +161,7 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 	update_status();
 	/* Manage the printing of the do_job_notification or not (will be managed by the job builtin) */
 	if (shl->str && check_last_command())
-	{
-		if (cmd)
-			*cmd = NULL;
 		return ;
-	}
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))
@@ -170,7 +176,7 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 				if (j == jsig->first_job)
 					jsig->first_job = jsig->first_job->next;
 				//printf("-<|on free %s|>\n", j->cmds->args[0]);
-				free_job (&j, cmd);
+				free_job(&j, cmd);
 				j = jprev;
 			}
 			jprev = j;
@@ -197,9 +203,11 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified && j->running)
 		{
 			*cmd = NULL;
-			format_job_info(j, "Stopped", j->num);
+			if (j->notified_crtrz == 0)
+				format_job_info(j, "Stopped", j->num);
 			j->notified = 1;
 		}
+
 		/* Don’t say anything about jobs that are still running.  */
 		jprev = jprev->next;
 	}

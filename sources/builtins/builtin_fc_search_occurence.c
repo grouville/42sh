@@ -60,8 +60,8 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 			else
 			{
 				if (fc->op && ft_strchr(fc->op, 'l') && !ft_strchr(fc->op, 'n'))
-					dprintf(1, "%d\t", tmp->nb);
-				dprintf(1, "%s\n", tmp->cmd);
+					ft_dprintf(1, "%d\t", tmp->nb);
+				ft_dprintf(1, "%s\n", tmp->cmd);
 			}
 		}
 		if (first_occurence && (!last_nb || first_nb == last_nb ||

@@ -88,6 +88,7 @@ typedef struct		s_job
 	int 			state;
 	int				running; /* 0 if command is running, otherwise error number */
 	char			notified;    /* true if user told about stopped job */
+	char 			notified_crtrz;
 	struct termios	tmodes;      /* saved terminal modes */
 	struct s_job	*next;
 }					t_job;
@@ -407,20 +408,22 @@ int					job_is_signaled(t_job *j);
 ** {export tty=/dev/ttys001} {echo test > $tty} et car ttys001 recoit
 ** {echo test > "/dev/ttys001\\"} --> error avec {/dev/ttys001\\}
 ** echo test > file > /dev/ttys001 (le dernier est prit en compte mais file est créé)
-** echo test > glob"{\n}file"
+** echo test > glob"{ENTER}file" --> test dans file {glob?file}
 ** echo test>file1>file2
 ** echo test>file1\>file2
 ** echo test>file1\\>file2
+** echo test \22>&1 --> test 22 dans &1
+** echo test > file_no_right
 ** echo test && {ENTER} \ {ENTER} \\ {ENTER} puis flèche du haut et histo == {echo test && \\}
 ** ; puis ;; (pas le meme msg d'erreur)
-** {t &&} --> prompt
+** {t &&} --> bquote
 ** >>>
 ** <!< { } - $?
 ** ls\ --> saut de ligne puis ls exec --> pas de saut de ligne dans l'histo
 ** mkdir ~/folder && cd ~/folder && chmod 111 ~/folder && ~/21sh/./21sh && echo file_not_found > file
 ** << EOF cat nofile ;; --> les EOF puis ;; puis erreur de cat
 ** ;; "test {ENTER} " --> les fermetures des quotes sont prio face au ;;
-** echo test \1>/dev/ttys00\2 '1>/dev/ttys003'
+** echo test \1>/dev/ttys00\2 '1>/dev/ttys003' --> on envoi test et
 ** echo test > file && cat < file>>file2
 ** a=5 b=3 echo $a (variable local ignoré)
 ** echo test << "1" && test ; <<\2
@@ -469,10 +472,9 @@ int					job_is_signaled(t_job *j);
 ** pwd && exit && ls & --> pwd mais pas d'exit ni ls
 ** echo ${} | wc --> les 2 sont exec
 ** echo ${} || echo ok ; echo ok
-** echo ${} && wc --> fail pas de wc
-** echo ${} || wc --> fail pwd de wc
+** echo ${} &&/|| wc --> fail pas de wc
 ** ls | echo ${} | wc &
-** voir les valeurs de retour selon http://www.tldp.org/LDP/abs/html/exitcodes.html
+** voir les valeurs de retour d'exit selon http://www.tldp.org/LDP/abs/html/exitcodes.html
 */
 
 /*

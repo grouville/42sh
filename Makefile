@@ -13,7 +13,7 @@
 
 .PHONY: all clean fclean re
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 
 NAME = 42sh
 

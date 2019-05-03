@@ -89,10 +89,10 @@ void put_process_suspended(t_job *j, t_cmd *elem)
 {
 	t_js	*jsig;
 
-	printf("passe pas ici");
-//	ft_dprintf(1, "[%d]  + %d suspended")
 	j->sep = SPL_SPRLU;
+	j->running = 1;
 	elem->stopped = 1;
+	j->notified_crtrz = 1;
 	ft_dprintf(1, "[%d]+  %-10s%s\n", count_job_bg(), "Stopped", elem->args[0]);
 //	do_job_notification();
 	jsig = getter_job();

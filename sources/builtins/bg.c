@@ -118,7 +118,6 @@ int				ft_builtin_bg(char **cmd)
 			ret = 1;
 		if (j)
 		{
-			printf("debug ma poule\n");
 			put_job_in_background_bg(j, job_is_stopped(j)
 				&& j->running ? 1 : 0);
 		}

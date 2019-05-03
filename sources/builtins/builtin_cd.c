@@ -101,10 +101,7 @@ BOOL	buildin_cd_opt(char **cmd, int *i)
 		(*i)++;
 	if (cmd[*i - 1][0] == '-' && cmd[*i - 1][ft_strlen(cmd[*i - 1]) - 1] ==
 																		'P')
-	{
-		printf("-<|option P -- 1|>\n");
 		return (1);
-	}
 	else
 		return (0);
 }
@@ -136,7 +133,6 @@ int		builtin_cd(char **cmd, char ***envp)
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
-	printf("-<path dest|%s| abs_path %d>\n", path_dest, abs_path);
 	ret = !path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path);
 	return (ret);
 }

@@ -46,6 +46,24 @@ void	shell_save_histo(t_shell *shl)
 		shl->hist = hist_add(shl->hist);
 }
 
+void	shell_check_backslash_end(char **line)
+{
+	int		i;
+	char 	*del;
+
+	i = 0;
+	while (*line && (*line)[i])
+	{
+		if (i > 0 && (*line)[i] == 10 && (*line)[i - 1] == '\\')
+		{
+			del = ft_strcutword(line, i - 1, 2);
+			ft_strdel(&del);
+			return ;
+		}
+		i++;
+	}
+}
+
 /*
 ** shl->str peut être mangé par hrdc_fill (pas besoin de split)
 */
@@ -60,6 +78,7 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	}
 	if (!hrdc_fill(prmt, cmd, shl, ret) && !check_shrt(prmt, ret, shl))
 		return (-1);
+	shell_check_backslash_end(&shl->str);
 	if ((shl->str && ((*cmd) = shell_split(shl->str, shl->envp, prmt))) ||
 			(*prmt == PROMPT && *cmd && ((*cmd)->process).stdin_send))
 	{
@@ -87,7 +106,7 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		if (!shl->str)
+		if (shl->str == 0)
 			do_job_notification(&cmd, shl);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);

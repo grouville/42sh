@@ -27,6 +27,8 @@ void	shell_ret(t_cmd *elem, t_shell *shell)
 	ret = 0;
 	if (elem->ret == 256 || elem->bad_substitution || elem->ret == 1)
 		ret = 1;
+	else if (elem->ret == 4735)
+		ret = 146;
 	else if (elem->ret == 16384)
 		ret = 64;
 	else if (elem->ret == 32256)

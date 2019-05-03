@@ -28,7 +28,6 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 		i = 1;
 		while (ft_isdigit(output[i]))
 			i++;
-		printf("-<|%s|%d>\n", output, i);
 		if (output[i] != '\0' && output[1] != '-')
 			return (shell_error_prepare("ambiguous", output) - 1);
 		else if (output[i] == '\0')
@@ -133,20 +132,23 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 	t_output	*output;
 	int			is_fd;
 	int			fd_file;
+	char 		*tmp;
 
 	output = elem->output;
 	while (output != NULL)
 	{
+		tmp = NULL;
 		if (output->from == 1 && (elem->process.last_redi = 1))
-			ft_strdel(&(elem->process).fd_stdout);
+			tmp = (elem->process).fd_stdout;
 		else if (output->from == 2 && (elem->process.last_redi = 2))
-			ft_strdel(&(elem->process).fd_stderr);
+			tmp  = (elem->process).fd_stderr;
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
 		else if (!is_fd && (fd_file = is_recheable_output(output, shell, elem->sep)))
 			shell_set_output_file(output, elem, fd_file);
 		else
 			return (0);
+		ft_strdel(&tmp);
 		output = output->next;
 	}
 	return (1);
