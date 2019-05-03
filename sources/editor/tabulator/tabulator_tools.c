@@ -6,7 +6,7 @@
 /*   By: dewalter <dewalter@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/01 23:43:13 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/01 21:54:51 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 07:57:18 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -20,7 +20,7 @@ char	*build_full_path(char *path, char *d_name)
 	if (path && path[0] == '~')
 	{
 		if (path[1] == '/')
-			full_path = ft_strdup(get_user_name());
+			full_path = get_user_name();
 		else
 			full_path = ft_strdup("/Users/");
 		if (!full_path)
