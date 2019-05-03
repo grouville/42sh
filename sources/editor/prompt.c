@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/13 23:22:07 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/26 23:25:50 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/03 13:47:24 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -46,6 +46,8 @@ static int		prompt_type(t_prompt prompt)
 		return (ft_putstrlen("heredoc> "));
 	else if (prompt == BACKSLASH)
 		return (ft_putstrlen("backslash> "));
+	else if (prompt == BRACE)
+		return (ft_putstrlen("brace> "));
 	return (0);
 }
 
