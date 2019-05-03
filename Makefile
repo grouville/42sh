@@ -13,6 +13,10 @@
 
 .PHONY: all clean fclean re
 
+NOCOLOR=\033[0m
+VERT=\033[32;05m
+JAUNE=\033[33m
+PURPLE=\033[0;35m
 CFLAGS = -g #-Wall -Wextra -Werror
 
 NAME = 42sh
@@ -136,7 +140,7 @@ OBJS_FOLDERS = builtins editor editor/tabulator editor/history shell \
 OBJS = $(addprefix $(DIR_OBJ),$(SRCS:.c=.o))
 OBJS_FOLDERS_BIS = $(addprefix $(DIR_OBJ),$(OBJS_FOLDERS))
 
-all: lib $(NAME)
+all:	$(NAME) lib
 
 lib:
 		@if !(make -q -C $(DIR_LIB)); then \
@@ -147,12 +151,13 @@ lib:
 
 $(NAME): $(OBJS)
 	@make -C $(DIR_LIB)
-	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address
+	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address	
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)
 	@gcc -o $@ -c $< $(DIR_INC2) $(CFLAGS)
-
+	@printf "$(PURPLE)Created $@\r $(NOCOLOR)"
+	
 clean:
 	@rm -rf $(DIR_OBJ)
 	@make clean -C $(DIR_LIB)
