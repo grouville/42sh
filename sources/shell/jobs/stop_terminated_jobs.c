@@ -122,7 +122,33 @@ void format_job_info_signal(t_job *j, const char *status, int nb_bgjob)
 *** - Need to check if it is any command
 */
 
-int		check_last_command(void)
+int		check_last_command_jobs(void)
+{
+	t_job		*j;
+	t_cmd		*elem;
+	BOOL		is_jobs;
+
+	j = getter_job()->first_job;
+	is_jobs = 0;
+	while ((j = j->next))
+	{
+		if (j->state != -1)
+		{
+			elem = j->cmds;
+			while (elem)
+			{
+				if (ft_strcmp(elem->args[0], "jobs") == 0)
+					is_jobs = 1;
+				elem = elem->next_cmd;
+			}
+		}
+	}
+	// printf("isjobs: %d\n", is_jobs);
+	return (is_jobs);
+}
+
+
+int		check_last_command_fc(void)
 {
 	t_job		*j;
 	t_cmd		*elem;
@@ -135,12 +161,12 @@ int		check_last_command(void)
 		elem = j->cmds;
 		while (elem)
 		{
-			if (ft_strcmp(elem->args[0], "fc") == 0 ||
-				ft_strcmp(elem->args[0], "jobs") == 0)
+			if (ft_strcmp(elem->args[0], "fc") == 0)
 				is_jobs = 1;
 			elem = elem->next_cmd;
 		}
 	}
+	// printf("isjobs: %d\n", is_jobs);
 	return (is_jobs);
 }
 
@@ -160,8 +186,11 @@ void do_job_notification(t_cmd **cmd, t_shell *shl)
 	/* Update status information for child processes.  */
 	update_status();
 	/* Manage the printing of the do_job_notification or not (will be managed by the job builtin) */
-	if (shl->str && check_last_command())
+	if (shl->str && (check_last_command_jobs() || check_last_command_fc()))
+	{
+		printf("je ret\n");
 		return ;
+	}
 	jprev = jsig->first_job;
 	j = jsig->first_job;
 	while ((j = j->next))

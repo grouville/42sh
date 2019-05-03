@@ -67,7 +67,7 @@ void		free_job_after_signal(t_job **job)
 	t_job	*jnext;
 
 	jprev = getter_job()->first_job;
-	while (jprev->next)
+	while (jprev)
 	{
 		if (jprev->next->pgid == (*job)->pgid)
 			break ;
@@ -101,5 +101,6 @@ t_job		*find_jobnum(char *num, t_job **j)
 		if (job->num == number && job->sep == SPL_SPRLU)
 			break ;
 	*j = job;
+	printf("jobnum: %d|%s|\n", (*j)->num, (*j)->cmds->args[0]);
 	return (job);
 }

@@ -106,8 +106,10 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		if (shl->str == 0)
+		if (!shl->str)
+		{
 			do_job_notification(&cmd, shl);
+		}
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);
 		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
