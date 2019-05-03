@@ -194,6 +194,7 @@ void do_job_notification(t_cmd **cmd, t_shell *shl, t_cmd **cmd_jobs)
 			jprev = j;
 			continue ;
 		}
+		printf("-<|ok|>\n");
 		// jnext = j->next;
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */

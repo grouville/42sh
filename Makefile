@@ -151,12 +151,12 @@ lib:
 
 $(NAME): $(OBJS)
 	@make -C $(DIR_LIB)
-	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address	
+	@gcc -o $(NAME) $(OBJS) -L $(DIR_LIB) -lft -ltermcap #-fsanitize=address
 
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)
 	@gcc -o $@ -c $< $(DIR_INC2) $(CFLAGS)
-	@printf "$(PURPLE)Created $@\r $(NOCOLOR)"
+	@printf "$(PURPLE)Created $@\n $(NOCOLOR)"
 	
 clean:
 	@rm -rf $(DIR_OBJ)

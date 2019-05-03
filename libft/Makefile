@@ -77,7 +77,7 @@ $(NAME) : $(OBJ)
 
 ./%.o : ./%.c
 	@gcc $(CFLAGS) -I $(DIR_INC) -c $< -o $@
-	@printf "$(VERT)Created $@\r"\
+	@printf "$(VERT)Created $@\n"\
 
 
 clean :
