@@ -62,7 +62,7 @@ int				check_if_job_exists_bg(char *cmd, t_job **j)
 					ft_atoi(cmd + 1), j));
 	else
 	{
-		ft_dprintf(2, "bash: fg: %s: no such job\n", cmd);
+		ft_dprintf(2, "bash: bg: %s: no such job\n", cmd);
 		return (1);
 	}
 	return (0);
