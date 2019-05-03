@@ -78,8 +78,8 @@ void		format_job_info_l_option(t_job *j, const char *status)
 	while (elem)
 	{
 		i = 0;
-		while (elem->args_raw[i])
-			ft_dprintf(1, "%s ", elem->args_raw[i++]);
+		while (elem->args[i])
+			ft_dprintf(1, "%s ", elem->args[i++]);
 		if (elem->next_cmd)
 		{
 			print_sep(1, elem->sep);
@@ -105,7 +105,8 @@ void		process_jobs_option_l(t_job **job)
 			format_job_info_l_option(*job, "Done");
 		free_job_after_signal(job);
 	}
-	else if (job_is_stopped(*job) && (*job)->running != 0)
+	else if (job_is_stopped(*job) && (*job)->running != 0
+		&& (*job)->running != 999)
 	{
 		format_job_info_signal_l_option(*job, "Stopped", (*job)->running);
 		(*job)->notified = 1;

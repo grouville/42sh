@@ -22,6 +22,8 @@ int		check_fd_input(char *input, t_shell *shell)
 	{
 		shell_envpsub(&input, shell->envp, shell->envl);
 		shl_quotesub(input);
+		if (ft_strcmp(input, "&-") == 0)
+			return (1);
 		i = 1;
 		while (ft_isdigit(input[i]))
 			i++;
@@ -77,8 +79,6 @@ int		check_input_file(char **std_in, t_shell *shell)
 ** On remplit stdin_send seulement si c'est le dernier input et qu'il
 ** ne correspond pas à un HRDC
 */
-
-
 
 int		shell_read_input(t_cmd *elem, t_shell *shell)
 {

@@ -108,7 +108,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		elem->stopped = 1;
 		elem->done = 0;
-		job->running = 1;
+		job->running = 999;
 		//elem->ret = 146;
 	}
 	if (elem->ret == 3)
@@ -139,6 +139,7 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		return (1);
+	//read_lexing(elem);
 	shell_plomberie(elem->process);
 	if (job->sep != SPL_SPRLU && !elem->bad_substitution)
 		is_builtin = shell_builtin(elem, shell);

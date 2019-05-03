@@ -43,7 +43,9 @@ int mark_process_status (pid_t pid, int status)
 					}
 					else
 					{
+						printf("-<|1|>\n");
 						elem->done = 1;
+						printf("-<%s|2|>\n", elem->args[0]);
 						if (WIFSIGNALED (status))
 							elem->signal = WTERMSIG (elem->status);
 					}

@@ -93,7 +93,7 @@ int		shell_get_hrdc(char **arg, int i, t_cmd *cmd)
 	while ((cmd->input)[last] != NULL)
 		last++;
 	cmd->input[last - 1] = (cmd->process).stdin_send;
-	return (i);
+	return (i - 2);
 }
 
 int 	shell_get_stdin_send(char **arg, int i, t_cmd *cmd)

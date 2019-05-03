@@ -54,6 +54,8 @@ void	shell_plomberie(t_process process)
 {
 	if (process.stdin_send)
 		shell_pipe_stdin(process.stdin_send);
+	if (process.fd_stdin && process.fd_stdin[1] == '-')
+		close(0);
 	if (process.fd_stdin && process.fd_stdin[1] != '0')
 		dup2(ft_atoi(process.fd_stdin + 1), 0);
 	if (process.last_redi == 1)

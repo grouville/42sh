@@ -67,23 +67,6 @@ void	format_job_info(t_job *j, const char *status, int nb_bgjob)
 	ft_dprintf(1, "\n");
 }
 
-int		count_job_bg(void)
-{
-	t_job	*j;
-	int 	nb_jobbg;
-	t_js	*jsig;
-
-	nb_jobbg = 0;
-	jsig = getter_job();
-	j = jsig->first_job;
-	while ((j = j->next))
-	{
-		if (j->sep == SPL_SPRLU && j->state == -1)
-			nb_jobbg += 1;
-	}
-	return (nb_jobbg + 1);
-}
-
 void	free_job(t_job **j, t_cmd **cmd)
 {
 	if (cmd)
@@ -128,7 +111,9 @@ int		check_last_command_jobs(t_cmd **cmd)
 
 	elem = *cmd;
 	while ((elem = elem->next_cmd))
-		if (ft_strcmp(elem->args[0], "jobs") == 0 && elem->done == 0)
+		if (elem->args && elem->args[0] &&
+				ft_strcmp(elem->args[0], "jobs") == 0 &&
+			elem->done == 0)
 			return (1);
 	return (0);
 }
@@ -147,7 +132,8 @@ int		check_last_command_fc(void)
 		elem = j->cmds;
 		while (elem)
 		{
-			if (ft_strcmp(elem->args[0], "fc") == 0)
+			if (elem->args && elem->args[0] &&
+					ft_strcmp(elem->args[0], "fc") == 0)
 				is_jobs = 1;
 			elem = elem->next_cmd;
 		}
@@ -194,7 +180,6 @@ void do_job_notification(t_cmd **cmd, t_shell *shl, t_cmd **cmd_jobs)
 			jprev = j;
 			continue ;
 		}
-		printf("-<|ok|>\n");
 		// jnext = j->next;
 		/* If all processes have completed, tell the user the job has
 		   completed and delete it from the list of active jobs.  */

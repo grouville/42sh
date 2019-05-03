@@ -368,7 +368,7 @@ void				print_sep(int fd, t_sep sep);
 /* Return true if all processes in the job have completed.  */
 int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
-int					count_job_bg(void);
+//int					count_job_bg(void);
 void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);

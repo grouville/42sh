@@ -78,7 +78,7 @@ void put_job_in_foreground (t_job *j, int cont)
 
 void put_job_in_background (t_job *j, int cont)
 {
-	ft_dprintf(1, "[%d] %d\n", count_job_bg(), j->pgid);
+	ft_dprintf(1, "[%d] %d\n", j->num, j->pgid);
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 		if (kill (-j->pgid, SIGCONT) < 0)
@@ -93,7 +93,7 @@ void put_process_suspended(t_job *j, t_cmd *elem)
 	j->running = 1;
 	elem->stopped = 1;
 	j->notified_crtrz = 1;
-	ft_dprintf(1, "[%d]+  %-10s%s\n", count_job_bg(), "Stopped", elem->args[0]);
+	ft_dprintf(1, "[%d]+  %-10s%s\n", j->num, "Stopped", elem->args[0]);
 //	do_job_notification();
 	jsig = getter_job();
 	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);

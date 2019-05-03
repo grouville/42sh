@@ -87,7 +87,7 @@ void			ft_builtin_bg_norm(char **cmd, int *ret, t_job **j)
 void			put_job_in_background_bg(t_job *j, int cont)
 {
 	if (cont)
-		ft_dprintf(1, "[%d] %d\n", count_job_bg(), j->pgid);
+		ft_dprintf(1, "[%d] %d\n", j->num, j->pgid);
 	else
 		ft_dprintf(1, "bash: bg: job %d already in background\n",
 			j->num);

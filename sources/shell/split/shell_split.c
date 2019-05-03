@@ -87,7 +87,6 @@ t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 		tmp = cmd->start;
 		clean_cmd(&cmd->start->next_cmd);
 		free(tmp);
-		sleep(3);
 		return (NULL);
 	}
 	else

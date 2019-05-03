@@ -30,18 +30,17 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 
 	(*elem)->done = 1;
 	shell_prepare_args(*elem, shell);
-	//read_lexing(*elem);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
 		(*elem)->ret = shell_exec_pipes(elem, shell, job);
 	else if (!(*elem)->bad_substitution)
 		(*elem)->ret = shell_exec(*elem, shell, job);
 	shell_reinit_fd(fd);
+	if ((*elem)->ret == -1)
+		return (-1);
 	shell_ret(*elem, shell);
 	if ((*elem)->bad_substitution)
 		return (-2);
-	if ((*elem)->ret == -1)
-		return (-1);
 	else if ((*elem)->ret == EXIT_SUCCESS && (*elem)->sep == DBL_PIPE)
 		*elem = shell_process_skip_cmd(*elem, DBL_PIPE);
 	else if (shell->ret > 0 && (*elem)->sep == DBL_SPRLU)
@@ -122,6 +121,7 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 			}
 		}
 	}
+	*cmd = NULL;
 	ft_strdel(&shell->str);
 	ft_strdel(&shell->hrdc_tmp);
 	return (1);

@@ -106,7 +106,7 @@ int		main(void)
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
 		shl->count += 1;
-		if (!shl->str)
+		if (!shl->str && prmt == PROMPT)
 			do_job_notification(&cmd, shl, NULL);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);

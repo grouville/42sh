@@ -70,7 +70,8 @@ void			process_jobs_without_options(t_job **job)
 			format_job_info(*job, "Done", (*job)->num);
 		free_job_after_signal(job);
 	}
-	else if (job_is_stopped(*job) && (*job)->running != 0)
+	else if (job_is_stopped(*job) && (*job)->running != 0
+		&& (*job)->running != 999)
 	{
 		format_job_info(*job, "Stopped", (*job)->num);
 		(*job)->notified = 1;

@@ -97,8 +97,11 @@ void	clean_cmd(t_cmd **cmd)
 
 int		shell_clean_data(t_cmd **cmd, t_shell *shell, BOOL hrdc_tmp)
 {
+	t_cmd *start;
+
+	start = (*cmd)->start;
 	clean_cmd(&(*cmd)->start->next_cmd);
-	free((*cmd)->start);
+	free(start);
 	*cmd = NULL;
 	ft_strdel(&shell->str);
 	if (hrdc_tmp)
