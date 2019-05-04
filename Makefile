@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/05/02 15:40:24 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/04 18:34:07 by gurival-    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -122,19 +122,18 @@ SRCS =  shell/main.c \
 		editor/history/term_history_incremental_search.c \
 		editor/history/term_history_incremental_search_print.c \
 		hash/hash.c \
-        hash/delete_print_search.c \
-        hash/hash_function.c \
-        hash/insert_element_hash.c \
-        hash/new_elements.c \
-        hash/prime.c \
-        hash/resize_hash.c \
-        test/test.c \
-        test/process_2_3args_test.c \
-        test/process_binary.c \
-        test/process_unary.c \
-        test/tokenize_test.c \
-        test/utils_test.c \
-        norme.c
+		hash/delete_print_search.c \
+		hash/hash_function.c \
+		hash/insert_element_hash.c \
+		hash/new_elements.c \
+		hash/prime.c \
+		hash/resize_hash.c \
+		test/test.c \
+		test/process_2_3args_test.c \
+		test/process_binary.c \
+		test/process_unary.c \
+		test/tokenize_test.c \
+		test/utils_test.c \
 
 INCLUDES_FILE = shell.h
 

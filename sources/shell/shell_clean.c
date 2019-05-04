@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/23 20:20:21 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/02/23 20:20:21 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 18:31:15 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -76,7 +76,7 @@ int		shell_clean_data(t_cmd **cmd, t_shell *shell, BOOL hrdc_tmp)
 	return (1);
 }
 
-void		clean_jobs_all(void)
+void	clean_jobs_all(void)
 {
 	t_job	*curr;
 	t_job	*tmp;

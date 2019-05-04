@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:19:43 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/03 13:53:57 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 18:32:42 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -70,7 +70,8 @@ t_shell		*init_shell(void)
 	return (shell);
 }
 
-void		shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd, t_job **jobs)
+void		shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
+				t_job **jobs)
 {
 	t_js	*jsig;
 
