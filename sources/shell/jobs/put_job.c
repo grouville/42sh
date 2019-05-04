@@ -6,86 +6,78 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/17 23:01:39 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 23:01:39 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 19:02:37 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-# include "shell.h"
+#include "shell.h"
 
 /*
 *** - Aim of the function :
 *** - wait only used when fg and bg are being processed
 */
 
-void wait_for_job_fg_bg(t_job *j)
+void	wait_for_job_fg_bg(t_job *j)
 {
-	int status;
-	pid_t pid;
+	int		status;
+	pid_t	pid;
 
 	while (1)
 	{
-		// printf("-<|loop|>\n");  j->cmds->pid
-		pid = waitpid (WAIT_ANY, &status, WUNTRACED);
-		// printf("-<|fin wait pid %d|>\n", pid);
-		if (mark_process_status (pid, status))
+		pid = waitpid(WAIT_ANY, &status, WUNTRACED);
+		if (mark_process_status(pid, status))
 			break ;
-		// printf("-<|mark procss staus ok|>\n");
-		if (job_is_stopped (j))
+		if (job_is_stopped(j))
 			break ;
-		// printf("-<|job is stopped ok|>\n");
-		if (job_is_completed (j))
+		if (job_is_completed(j))
 			break ;
-		// printf("-<|job is completed ok|>\n");
-
 	}
 }
 
-/* Put job j in the foreground.  If cont is nonzero,
-   restore the saved terminal modes and send the process group a
-   SIGCONT signal to wake it up before we block.  */
+/*
+*** - Put job j in the foreground.  If cont is nonzero,
+*** - restore the saved terminal modes and send the process group a
+*** - SIGCONT signal to wake it up before we block.
+*/
 
-void put_job_in_foreground (t_job *j, int cont)
+void	put_job_in_foreground(t_job *j, int cont)
 {
 	t_js	*jsig;
 
 	jsig = getter_job();
-	/* Put the job into the foreground.  */
-	tcsetpgrp (jsig->shell_terminal, j->pgid);
-	/* Send the job a continue signal, if necessary.  */
+	tcsetpgrp(jsig->shell_terminal, j->pgid);
 	if (cont)
 	{
 		if (j->running && j->running != 999)
 		{
-			tcsetattr (jsig->shell_terminal, TCSADRAIN, &j->tmodes);
-			if (kill (- j->pgid, SIGCONT) < 0)
-				perror ("kill (SIGCONT)");
+			tcsetattr(jsig->shell_terminal, TCSADRAIN, &j->tmodes);
+			if (kill(-j->pgid, SIGCONT) < 0)
+				;
 		}
 		wait_for_job_fg_bg(j);
 	}
 	else
-		/* Wait for it to report.  */
-		wait_for_job (j);
-	/* Put the shell back in the foreground.  */
-	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);
-	/* Restore the shell’s terminal modes.  */
-	tcgetattr (jsig->shell_terminal, &j->tmodes);
-	tcsetattr (jsig->shell_terminal, TCSADRAIN, &(jsig->shell_tmodes));
+		wait_for_job(j);
+	tcsetpgrp(jsig->shell_terminal, jsig->shell_pgid);
+	tcgetattr(jsig->shell_terminal, &j->tmodes);
+	tcsetattr(jsig->shell_terminal, TCSADRAIN, &(jsig->shell_tmodes));
 }
 
-/* Put a job in the background.  If the cont argument is true, send
-   the process group a SIGCONT signal to wake it up.  */
+/*
+*** - Put a job in the background.  If the cont argument is true, send
+*** - the process group a SIGCONT signal to wake it up.
+*/
 
-void put_job_in_background (t_job *j, int cont)
+void	put_job_in_background(t_job *j, int cont)
 {
 	ft_dprintf(1, "[%d] %d\n", j->num, j->pgid);
-	/* Send the job a continue signal, if necessary.  */
 	if (cont)
-		if (kill (-j->pgid, SIGCONT) < 0)
-			perror ("kill (SIGCONT)");
+		if (kill(-j->pgid, SIGCONT) < 0)
+			;
 }
 
-void put_process_suspended(t_job *j, t_cmd *elem)
+void	put_process_suspended(t_job *j, t_cmd *elem)
 {
 	t_js	*jsig;
 
@@ -94,11 +86,8 @@ void put_process_suspended(t_job *j, t_cmd *elem)
 	elem->stopped = 1;
 	j->notified_crtrz = 1;
 	ft_dprintf(1, "[%d]+  %-10s%s\n", j->num, "Stopped", elem->args[0]);
-//	do_job_notification();
 	jsig = getter_job();
-	tcsetpgrp (jsig->shell_terminal, jsig->shell_pgid);
-	/* Restore the shell’s terminal modes.  */
-	tcgetattr (jsig->shell_terminal, &j->tmodes);
-	tcsetattr (jsig->shell_terminal, TCSADRAIN, &(jsig->shell_tmodes));
-
+	tcsetpgrp(jsig->shell_terminal, jsig->shell_pgid);
+	tcgetattr(jsig->shell_terminal, &j->tmodes);
+	tcsetattr(jsig->shell_terminal, TCSADRAIN, &(jsig->shell_tmodes));
 }
