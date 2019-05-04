@@ -74,7 +74,7 @@ int		check_input_file(char **std_in, t_shell *shell)
 	return (1);
 }
 
-int		shell_read_input_file(t_cmd *elem, t_shell *shell, int *i)
+int		shell_read_input_file(t_cmd *elem, int *i)
 {
 	int		fd;
 	char	*tmp;
@@ -102,7 +102,6 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 {
 	int		i;
 	int		is_fd;
-	int		fd;
 
 	i = 0;
 	while (elem->input && elem->input[i])
@@ -117,7 +116,7 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 		}
 		else if (!is_fd && check_input_file(&elem->input[i], shell))
 		{
-			if (shell_read_input_file(elem, shell, &i) == 0)
+			if (shell_read_input_file(elem, &i) == 0)
 				return (0);
 		}
 		else

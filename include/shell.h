@@ -329,6 +329,7 @@ int					check_synthax_stdout_to(t_output *redis);
 void				clean_arr_mlti(char **arr);
 void				clean_redi(t_output **redi);
 void				check_hash_then_path(t_cmd *elem, t_shell *shell);
+char				**ft_arrjoin(char **arr1, char **arr2);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

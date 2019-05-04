@@ -82,7 +82,6 @@ int		shell_split_err(t_cmd *cmd, t_prompt *prompt)
 t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 {
 	t_cmd	*cmd;
-	t_cmd	*tmp;
 
 	if (ft_isempty(line) || !iscomplet(line, prompt))
 		return (NULL);
