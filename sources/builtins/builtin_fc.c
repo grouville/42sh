@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 09:35:41 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 10:39:29 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,6 +36,7 @@ static int		builtin_fc_exit(t_fc **fc)
 	int		ret;
 	t_data	*tmp;
 
+	dprintf(2, "fc->ret_exit: %d\n", (*fc)->ret);
 	ret = (*fc)->ret;
 	ft_strdel(&(*fc)->first);
 	ft_strdel(&(*fc)->last);
@@ -74,31 +75,6 @@ static int		builtin_fc_init(t_fc **fc, t_shell *shell, char **args)
 		shell->str = (*fc)->editor;
 	}
 	return (0);
-}
-
-static void		builtin_fc_search_first_and_last(char **args, t_fc *fc)
-{
-	int nb;
-
-	nb = 0;
-	while (args && args[++fc->i] && nb < 2)
-	{
-		if ((args[fc->i][0] == '-' && ft_isdigit(args[fc->i][1])) ||
-				ft_isdigit(args[fc->i][0]))
-			!nb ? (fc->first = ft_itoa(ft_atoi(args[fc->i])))
-				: (fc->last = ft_itoa(ft_atoi(args[fc->i])));
-		else
-			!nb ? (fc->first = ft_strdup(args[fc->i]))
-				: (fc->last = ft_strdup(args[fc->i]));
-		nb++;
-	}
-	if (!fc->first && fc->op && ft_strchr(fc->op, 'l'))
-	{
-		fc->first = ft_strdup("-15");
-		fc->last = ft_strdup("-1");
-	}
-	else if (!fc->first)
-		fc->first = ft_strdup("-1");
 }
 
 void			builtin_fc_set_state_fc(void)

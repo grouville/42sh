@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 11:01:40 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 10:48:34 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 12:07:36 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -112,6 +112,8 @@ int		main(void)
 		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);
 		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
 				break ;
+		if (shl->str && prmt == PROMPT)
+			ft_strdel(&shl->str);
 	}
 	return (shell_exit(&shl));
 }

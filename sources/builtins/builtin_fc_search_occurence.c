@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/04 13:15:39 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 07:36:24 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 10:26:09 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -69,6 +69,31 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 			break ;
 		tmp = first_occurence && last_nb > first_nb ? tmp->next : tmp->prev;
 	}
+}
+
+void			builtin_fc_search_first_and_last(char **args, t_fc *fc)
+{
+	int nb;
+
+	nb = 0;
+	while (args && args[++fc->i] && nb < 2)
+	{
+		if ((args[fc->i][0] == '-' && ft_isdigit(args[fc->i][1])) ||
+				ft_isdigit(args[fc->i][0]))
+			!nb ? (fc->first = ft_itoa(ft_atoi(args[fc->i])))
+				: (fc->last = ft_itoa(ft_atoi(args[fc->i])));
+		else
+			!nb ? (fc->first = ft_strdup(args[fc->i]))
+				: (fc->last = ft_strdup(args[fc->i]));
+		nb++;
+	}
+	if (!fc->first && fc->op && ft_strchr(fc->op, 'l'))
+	{
+		fc->first = ft_strdup("-15");
+		fc->last = ft_strdup("-1");
+	}
+	else if (!fc->first)
+		fc->first = ft_strdup("-1");
 }
 
 int				builtin_fc_search_occurence(t_fc *fc, t_data *hist)
