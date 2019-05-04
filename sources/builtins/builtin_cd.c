@@ -112,7 +112,6 @@ int		builtin_cd(char **cmd, char ***envp)
 	char	*path_dest;
 	int		i;
 	char	*tmp;
-	int		ret;
 
 	tmp = NULL;
 	abs_path = buildin_cd_opt(cmd, &i);
@@ -133,6 +132,5 @@ int		builtin_cd(char **cmd, char ***envp)
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
-	ret = !path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path);
-	return (ret);
+	return (!path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path));
 }
