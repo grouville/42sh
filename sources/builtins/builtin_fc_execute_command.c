@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/04 13:00:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 09:35:43 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 10:22:09 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -97,8 +97,12 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	builtin_fc_remove_hist_node(shell);
 	ft_strdel(&shell->str);
 	if (fc->ret != 0 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
+	{
+		fc->ret = fc->ret != -1 ? ft_atoi(get_envp(shell->envl, "?")) : fc->ret;
 		return ;
+	}
 	builtin_fc_execute_commands_list(fc, &p, &cmd, shell);
+	fc->ret = fc->ret != -1 ? ft_atoi(get_envp(shell->envl, "?")) : fc->ret;
 	if (p != PROMPT)
 		builtin_fc_error(fc, p, &cmd);
 }
