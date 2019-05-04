@@ -51,6 +51,7 @@ SRCS =  shell/main.c \
  		shell/split/shell_split_stdin_tools.c \
         shell/process/shell_process.c \
         shell/process/shell_process_prepare.c \
+        shell/process/shell_process_prepare_tools.c \
         shell/process/shell_process_output.c \
         shell/process/shell_process_output_tools.c \
         shell/process/shell_process_input.c \

@@ -24,7 +24,8 @@ void	is_complet_read_str(char *str, char *ptn_quote, int *ptn_i)
 			*ptn_i += 2;
 		if (ft_strchr("'\"", str[*ptn_i]) && *ptn_quote == ' ')
 			*ptn_quote = str[*ptn_i];
-		else if (str[*ptn_i] == '$' && str[*ptn_i + 1] == '{' && *ptn_quote == ' ')
+		else if (str[*ptn_i] == '$' && str[*ptn_i + 1] == '{' &&
+					*ptn_quote == ' ')
 			*ptn_quote = '}';
 		else if (str[*ptn_i] == *ptn_quote && *ptn_quote != ' ')
 			*ptn_quote = ' ';
@@ -62,7 +63,6 @@ BOOL	iscomplet(char *str, t_prompt *prompt)
 	else
 		return (1);
 }
-
 
 char	*shell_trim(char **str)
 {

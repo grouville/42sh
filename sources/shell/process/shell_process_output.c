@@ -19,7 +19,7 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 	int		i;
 	char	*output;
 
-	fd = 0; // Rajout de ca, pour la compil, check si c'est bon
+	fd = 0;
 	output = *ptn_output;
 	if (output[0] == '&')
 	{
@@ -51,10 +51,10 @@ int		is_recheable_output(t_output *output, t_shell *shell)
 	complete_output_paths(&output->to, shell);
 	if (output->append)
 		fd_open = open(output->to, O_WRONLY | O_CREAT | O_APPEND,
-					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+							S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	else
 		fd_open = open(output->to, O_WRONLY | O_CREAT | O_TRUNC,
-					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
+							S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	if (fd_open < 0)
 	{
 		if (ft_isdir(output->to))
@@ -133,7 +133,7 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 		if (output->from == 1 && (elem->process.last_redi = 1))
 			tmp = (elem->process).fd_stdout;
 		else if (output->from == 2 && (elem->process.last_redi = 2))
-			tmp  = (elem->process).fd_stderr;
+			tmp = (elem->process).fd_stderr;
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
 		else if (!is_fd && (fd_file = is_recheable_output(output, shell)))

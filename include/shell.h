@@ -298,7 +298,7 @@ int					get_nbarg(char *str, t_prompt *prompt);
 char				*get_arg(char **str, t_cmd *cmd);
 void				shell_ret(t_cmd *elem, t_shell *shell);
 t_cmd				*shell_process_skip_cmd(t_cmd *elem, t_sep sep);
-int 				clean_jobs(t_job **jobs);
+void				shell_clean_emptyargs(t_cmd *elem);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -328,6 +328,7 @@ char 				*ft_remplace_char_by_str(char *word, char c, char *str);
 int					check_synthax_stdout_to(t_output *redis);
 void				clean_arr_mlti(char **arr);
 void				clean_redi(t_output **redi);
+void				check_hash_then_path(t_cmd *elem, t_shell *shell);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -380,7 +381,6 @@ void				print_sep(int fd, t_sep sep);
 /* Return true if all processes in the job have completed.  */
 int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
-//int					count_job_bg(void);
 void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
@@ -389,6 +389,7 @@ int					job_is_signaled(t_job *j);
 void				clean_jobs_all(void);
 int					check_last_command_jobs(t_cmd **cmd);
 int					check_last_command_fc(void);
+int 				clean_jobs(t_job **jobs);
 
 /*
 ** Hard test

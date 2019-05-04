@@ -17,10 +17,11 @@
 ** shell exec peut retourner 0=RAS ou -1=quite mais pas dans un pipe
 */
 
-void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2], t_job *job)
+void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2],
+							t_job *job)
 {
 	int		exec;
-	char 	*tmp;
+	char	*tmp;
 
 	close(fd_pipe[0]);
 	if (elem->sep == SPL_PIPE)
@@ -31,7 +32,6 @@ void	shell_child_pipe(t_cmd *elem, t_shell *shell, int fd_pipe[2], t_job *job)
 		ft_strdel(&tmp);
 	}
 	exec = shell_exec(elem, shell, job);
-	//printf("-<exec de %s|%d|>\n", elem->args[0], exec);
 	if (exec == 1)
 		exit(EXIT_FAILURE);
 	else
@@ -57,11 +57,10 @@ void	shell_father_pipe(t_cmd *elem, int fd_pipe[2], t_job *job, int child)
 	elem->pid = child;
 	if (getter_job()->shell_is_interactive)
 	{
-//		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) &&
 				elem->next_cmd == NULL && !job->pgid)
 			job->pgid = child;
-		setpgid (child, job->pgid);
+		setpgid(child, job->pgid);
 	}
 }
 
@@ -75,7 +74,7 @@ int		shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job)
 	int		child;
 	BOOL	elem_no_pipe;
 	int		status;
-	int 	status2;
+	int		status2;
 
 	elem_no_pipe = 0;
 	while (elem_no_pipe == 0)
