@@ -387,6 +387,8 @@ void				put_process_suspended(t_job *j, t_cmd *elem);
 int     			check_jobs_on_exit(t_shell *shl);
 int					job_is_signaled(t_job *j);
 void				clean_jobs_all(void);
+int					check_last_command_jobs(t_cmd **cmd);
+int					check_last_command_fc(void);
 
 /*
 ** Hard test

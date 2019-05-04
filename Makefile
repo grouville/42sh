@@ -64,6 +64,8 @@ SRCS =  shell/main.c \
         shell/jobs/wait_job.c \
         shell/jobs/job_is.c \
         shell/jobs/put_job.c \
+		shell/jobs/job_tools.c \
+		shell/jobs/do_job_notif.c \
         shell/jobs/stop_terminated_jobs.c \
 		shell/jobs/getter_job.c \
 		builtins/builtin_cd.c \
