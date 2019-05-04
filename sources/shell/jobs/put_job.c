@@ -55,7 +55,7 @@ void put_job_in_foreground (t_job *j, int cont)
 	/* Send the job a continue signal, if necessary.  */
 	if (cont)
 	{
-		if (j->running)
+		if (j->running && j->running != 999)
 		{
 			tcsetattr (jsig->shell_terminal, TCSADRAIN, &j->tmodes);
 			if (kill (- j->pgid, SIGCONT) < 0)
