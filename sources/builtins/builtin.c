@@ -150,6 +150,5 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 	shell_builtin2(elem, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("exit", elem->args[0]) == 0)
 		return (builtin_exit(elem, shell));
-	dprintf(2, "ret_builtin: %d\n", elem->ret);
 	return (ret);
 }

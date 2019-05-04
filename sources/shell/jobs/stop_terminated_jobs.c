@@ -198,7 +198,8 @@ void do_job_notification(t_cmd **cmd, t_shell *shl, t_cmd **cmd_jobs)
 		}
 		/* Notify the user about stopped jobs,
 		 * marking them so that we won’t do this more than once.  */
-		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified && j->running)
+		else if (j->sep == SPL_SPRLU && job_is_stopped (j) && !j->notified &&
+				 	j->running && j->running != 999)
 		{
 			if (cmd)
 				*cmd = NULL;

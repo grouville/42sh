@@ -93,19 +93,15 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
 		fc->ret = shell_command_execution(shell, &cmd, 0, &p,
-		getter_job()->first_job);
+										  getter_job()->first_job);
 	builtin_fc_remove_hist_node(shell);
 	ft_strdel(&shell->str);
 	if (fc->ret != 0 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
 	{
-		dprintf(2, "fc->ret: %d\n", fc->ret);
-		dprintf(2, "$?: %d\n", ft_atoi(get_envp(shell->envl, "?")));
 		fc->ret = fc->ret != -1 ? ft_atoi(get_envp(shell->envl, "?")) : fc->ret;
 		return ;
 	}
 	builtin_fc_execute_commands_list(fc, &p, &cmd, shell);
-	dprintf(2, "fc->ret_1: %d\n", fc->ret);
-	dprintf(2, "$?_1: %d\n", ft_atoi(get_envp(shell->envl, "?")));
 	fc->ret = fc->ret != -1 ? ft_atoi(get_envp(shell->envl, "?")) : fc->ret;
 	if (p != PROMPT)
 		builtin_fc_error(fc, p, &cmd);

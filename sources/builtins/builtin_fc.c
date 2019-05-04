@@ -31,12 +31,22 @@ static int		builtin_fc_init_op(char **args, char **op)
 	return (i);
 }
 
+int			builtin_fc_correct_ret(ret)
+{
+	if (ret == 131)
+		ret = 3;
+	else if (ret == 146)
+		ret = 4735;
+	else
+		ret *= 256;
+	return (ret);
+}
+
 static int		builtin_fc_exit(t_fc **fc)
 {
 	int		ret;
 	t_data	*tmp;
 
-	dprintf(2, "fc->ret_exit: %d\n", (*fc)->ret);
 	ret = (*fc)->ret;
 	ft_strdel(&(*fc)->first);
 	ft_strdel(&(*fc)->last);
@@ -50,6 +60,7 @@ static int		builtin_fc_exit(t_fc **fc)
 	}
 	free((*fc));
 	unlink("/tmp/.42sh-fc_cmd_list");
+	ret = builtin_fc_correct_ret(ret);
 	return (ret);
 }
 
@@ -113,7 +124,9 @@ int				builtin_fc(char **args, t_shell *shell)
 		!(fc->ret = builtin_fc_search_occurence(fc, shell->hist))))
 			if (!fc->op || ((ft_strchr(fc->op, 'e') || ft_strchr(fc->op, 's'))
 			&& !ft_strchr(fc->op, 'l')))
+			{
 				builtin_fc_execute_commands(fc, shell);
+			}
 	}
 	return (builtin_fc_exit(&fc));
 }

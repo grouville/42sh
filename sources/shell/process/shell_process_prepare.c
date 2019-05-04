@@ -69,7 +69,7 @@ void	check_hash_then_path(t_cmd *elem, t_shell *shell)
 }
 
 
-void	shell_prepare_args(t_cmd *elem, t_shell *shell)
+void		shell_prepare_args(t_cmd *elem, t_shell *shell)
 {
 	int i;
 

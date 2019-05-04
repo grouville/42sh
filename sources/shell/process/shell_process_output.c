@@ -54,14 +54,8 @@ int		is_recheable_output(t_output *output, t_shell *shell, int sep)
 
 	msg_err = ft_strdup(output->to);
 	complete_output_paths(&output->to, shell);
-	if (sep == SPL_SPRLU && output->append)
-		fd_open = open(output->to, O_RDWR | O_CREAT | O_APPEND,
-						S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-	else if (output->append)
+	if (output->append)
 		fd_open = open(output->to, O_WRONLY | O_CREAT | O_APPEND,
-					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
-	else if (sep == SPL_SPRLU)
-		fd_open = open(output->to, O_RDWR | O_CREAT | O_TRUNC,
 					   S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
 	else
 		fd_open = open(output->to, O_WRONLY | O_CREAT | O_TRUNC,

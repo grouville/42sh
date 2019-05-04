@@ -60,7 +60,6 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		   This has to be done both by the shell and in the individual
 		   child processes because of potential race conditions.  */
 		pid = getpid ();
-//		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
 			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
@@ -75,6 +74,9 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 	}
 	if (elem->bad_substitution)
 		exit(EXIT_FAILURE);
+	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
+		exit(EXIT_FAILURE);
+	shell_plomberie(elem->process);
 	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
 	exit(EXIT_SUCCESS);
@@ -131,24 +133,27 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 **   0 --> ok elem suivant
 **   1 --> elem fail
 **  -1 --> un exit est nécessaire
+**
+** Dans le cas d'un builtin on ne fork pas cependant les signaux sont SIG_IGN
+** donc pas de Ctrl-C/D/Z et open d'un fifo bloquant
 */
 
 int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	int	is_builtin;
 
-	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
-		return (1);
-	//read_lexing(elem);
-	shell_plomberie(elem->process);
-	if (job->sep != SPL_SPRLU && !elem->bad_substitution)
-		is_builtin = shell_builtin(elem, shell);
-	else
-		is_builtin = 0;
-	if (!is_builtin && elem->exec && !elem->bad_substitution)
+	is_builtin = 0;
+	if (job->sep != SPL_SPRLU && !elem->bad_substitution &&
+			(is_builtin = shell_is_builtin(elem, shell)))
+	{
+		if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
+			return (1);
+		shell_plomberie(elem->process);
+		if (shell_builtin(elem, shell) == -1)
+			return (-1);
+	}
+	else if (!is_builtin && elem->exec && !elem->bad_substitution)
 		elem->ret = shell_execve(elem, shell, job);
-	else if (is_builtin == -1)
-		return (-1);
 	if (elem->process.fd_stdin[1] != '0')
 		close(ft_atoi(elem->process.fd_stdin + 1));
 	if (elem->process.fd_fileout != 1)

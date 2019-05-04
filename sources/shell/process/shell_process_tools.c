@@ -21,8 +21,8 @@ void	shell_prcs_sigint(int signum)
 
 void	shell_ret(t_cmd *elem, t_shell *shell)
 {
-	char *tmp;
-	unsigned char ret;
+	char	*tmp;
+	int		ret;
 
 	ret = 0;
 	if (elem->ret == 256 || elem->bad_substitution || elem->ret == 1)
@@ -37,8 +37,12 @@ void	shell_ret(t_cmd *elem, t_shell *shell)
 		ret = 127;
 	else if (elem->ret == 3)
 		ret = 131;
+	else if (elem->ret == 9)
+		ret = 137;
+	else if (elem->ret == 11)
+		ret = 139;
 	if (ret >= 0)
-		shell->ret = (int)ret;
+		shell->ret = ret;
 	tmp = ft_itoa(shell->ret);
 	if (!(check_replace_env_variable(&shell->envl, "?", tmp)))
 		shell->envl = append_key_env(shell->envl, "?", tmp);
