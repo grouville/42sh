@@ -106,8 +106,9 @@ t_shell		*init_shell(char **envp)
 	}
 	if (check_if_env_var_existing(shell->envp, "OLDPWD"))
 		shell->envp = rmv_key_env(shell->envp, "OLDPWD");
-	shell->hist = init_hist((shell->hist_path =
-	build_full_path(get_envp(shell->envp, "HOME"), ".42sh_history")));
+	shell->hist_path =
+			build_full_path(get_envp(shell->envp, "HOME"), ".42sh_history");
+	shell->hist = init_hist(shell->hist_path);
 	shell->alias = builtin_alias_get_alias_from_file(".42sh_alias");
 	if (!(shell->envl = (char **)malloc(sizeof(char *))))
 		exit(EXIT_FAILURE);

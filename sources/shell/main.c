@@ -109,7 +109,6 @@ int		main(void)
 		if (!shl->str && prmt == PROMPT)
 			do_job_notification(&cmd, shl, NULL);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
-		//printf("-<jobs->done%s|%d|>\n", jobs->next->cmds->args[0], jobs->next->cmds->done);
 		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
 				break ;
 		if (shl->str && prmt == PROMPT)
