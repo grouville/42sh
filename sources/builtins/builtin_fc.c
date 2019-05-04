@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 18:28:07 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:19:51 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -29,17 +29,6 @@ static int		builtin_fc_init_op(char **args, char **op)
 		return (-1);
 	}
 	return (i);
-}
-
-int			builtin_fc_correct_ret(int ret)
-{
-	if (ret == 131)
-		ret = 3;
-	else if (ret == 146)
-		ret = 4735;
-	else
-		ret *= 256;
-	return (ret);
 }
 
 static int		builtin_fc_exit(t_fc **fc)

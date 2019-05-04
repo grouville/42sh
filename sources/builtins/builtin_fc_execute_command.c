@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/04 13:00:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 10:37:13 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:11:26 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -81,6 +81,17 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		free(fc->cmd_list);
 		fc->cmd_list = tmp;
 	}
+}
+
+int				builtin_fc_correct_ret(int ret)
+{
+	if (ret == 131)
+		ret = 3;
+	else if (ret == 146)
+		ret = 4735;
+	else
+		ret *= 256;
+	return (ret);
 }
 
 void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
