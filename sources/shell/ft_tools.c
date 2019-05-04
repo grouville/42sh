@@ -66,11 +66,11 @@ int		ft_read_file(char *filename, char **file_content)
 ** Retourne word malloc.
 */
 
-char 	*ft_strcutword(char **str, int i, int len_word)
+char	*ft_strcutword(char **str, int i, int len_word)
 {
 	char	*aft;
 	char	*bfr;
-	char 	*ret;
+	char	*ret;
 	size_t	len;
 
 	if (!*str || len_word == 0)
@@ -93,12 +93,12 @@ char 	*ft_strcutword(char **str, int i, int len_word)
 ** retourne {word} avec {str} à la place de {c}
 */
 
-char 	*ft_remplace_char_by_str(char *word, char c, char *str)
+char	*ft_remplace_char_by_str(char *word, char c, char *str)
 {
 	char	**split_value;
 	int		i;
-	char 	*ret;
-	char 	*tmp;
+	char	*ret;
+	char	*tmp;
 
 	split_value = ft_strsplit(word, c);
 	ft_strdel(&word);

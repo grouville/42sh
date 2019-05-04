@@ -70,8 +70,7 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		fc->heredoc[1] + 0;
 		if ((shell->str = fc->cmd_list->cmd) && write(1, fc->cmd_list->cmd,
 		ft_strlen(fc->cmd_list->cmd)) && write(1, "\n", 1) &&
-		(fc->ret = shell_command_execution(shell, cmd, 0, p,
-		getter_job()->first_job)) == -1)
+		(fc->ret = shell_command_execution(shell, cmd, 0, p) == -1))
 		{
 			fc->cmd_list->cmd = NULL;
 			return ;
@@ -92,8 +91,7 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	p = PROMPT;
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
-		fc->ret = shell_command_execution(shell, &cmd, 0, &p,
-										  getter_job()->first_job);
+		fc->ret = shell_command_execution(shell, &cmd, 0, &p);
 	builtin_fc_remove_hist_node(shell);
 	ft_strdel(&shell->str);
 	if (fc->ret != 0 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))

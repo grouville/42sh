@@ -42,64 +42,15 @@ int			init_terminal_data(void)
 	return (0);
 }
 
-void		shell_init(t_shell **shell, t_prompt *prompt,
-		t_cmd **cmd, char **env, t_job **jobs)
+t_shell		*init_shell(void)
 {
-	t_js	*jsig;
-
-	jsig = getter_job();
-	if (init_terminal_data())
-		exit(EXIT_FAILURE);
-	*shell = init_shell(env);
-	*prompt = PROMPT;
-	*cmd = NULL;
-	*jobs = malloc(sizeof(t_job));
-	ft_bzero(*jobs, sizeof(t_job));
-	jsig->first_job = *jobs;
-	process_init_shell_for_job();
-}
-
-void		clean_jobs_all(void)
-{
-	t_job	*curr;
-	t_job	*tmp;
-	t_js	*jsig;
-
-	jsig = getter_job();
-	curr = jsig->first_job->next;
-	tmp = jsig->first_job;
-	while (curr)
-	{
-		tmp = curr->next;
-		free_job(&curr, NULL);
-		curr = tmp;
-	}
-	free(jsig->first_job);
-}
-
-int			shell_exit(t_shell **shell)
-{
-	int		ret;
-
-	if ((*shell)->hist)
-		fill_hist_file((*shell)->hist, (*shell)->hist_path);
-	ft_strdel(&(*shell)->hist_path);
-	if ((*shell)->alias)
-		ft_arrdel(&(*shell)->alias);
-	ret = (*shell)->ret;
-	clean_shell(shell);
-	clean_jobs_all();
-	return (ret);
-}
-
-t_shell		*init_shell(char **envp)
-{
-	t_shell *shell;
+	t_shell			*shell;
+	extern char		**environ;
 
 	if (!(shell = malloc(sizeof(t_shell))))
 		exit(EXIT_FAILURE);
 	ft_bzero(shell, sizeof(t_shell));
-	if (!(shell->envp = init_env(ft_arrdup(envp))))
+	if (!(shell->envp = init_env(ft_arrdup(environ))))
 	{
 		free(shell);
 		exit(EXIT_FAILURE);
@@ -117,6 +68,37 @@ t_shell		*init_shell(char **envp)
 	if (!shell->hist)
 		exit(EXIT_FAILURE);
 	return (shell);
+}
+
+void		shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd, t_job **jobs)
+{
+	t_js	*jsig;
+
+	jsig = getter_job();
+	if (init_terminal_data())
+		exit(EXIT_FAILURE);
+	*shell = init_shell();
+	*prompt = PROMPT;
+	*cmd = NULL;
+	*jobs = malloc(sizeof(t_job));
+	ft_bzero(*jobs, sizeof(t_job));
+	jsig->first_job = *jobs;
+	process_init_shell_for_job();
+}
+
+int			shell_exit(t_shell **shell)
+{
+	int		ret;
+
+	if ((*shell)->hist)
+		fill_hist_file((*shell)->hist, (*shell)->hist_path);
+	ft_strdel(&(*shell)->hist_path);
+	if ((*shell)->alias)
+		ft_arrdel(&(*shell)->alias);
+	ret = (*shell)->ret;
+	clean_shell(shell);
+	clean_jobs_all();
+	return (ret);
 }
 
 /*

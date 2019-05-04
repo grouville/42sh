@@ -144,6 +144,15 @@ typedef	struct		s_fc
 	t_data			*cmd_list;
 }					t_fc;
 
+typedef struct		s_norme
+{
+	t_shell			*shl;
+	t_prompt		prmt;
+	t_cmd			*cmd;
+	t_shortcut		ret;
+	t_job			*jobs;
+}					t_norme;
+
 typedef enum		e_sep
 {
 	SPL_PIPE = 1,
@@ -199,7 +208,7 @@ int					builtin_fc_search_occurence(t_fc *fc, t_data *hist);
 void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
 void				builtin_fc_search_first_and_last(char **args, t_fc *fc);
 int					shell_command_execution(t_shell *shl, t_cmd **cmd,
-						t_shortcut ret, t_prompt *prmt, t_job *jobs);
+						t_shortcut ret, t_prompt *prmt);
 BOOL				is_var(char *arg);
 int					builtin_localvar(char ***ptn_args, char **args_raw);
 int			    	ft_builtin_fg(char **cmd);
@@ -297,7 +306,6 @@ int 				clean_jobs(t_job **jobs);
 **┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 */
 
-t_shell				*init_shell(char **envp);
 int					check_if_env_var_existing(char **env, char*var);
 char				**init_env(char **envp);
 int					shell_error(char *type, int n, ...);
@@ -310,13 +318,16 @@ void				shl_quotesub(char *arg);
 void				*shl_mlc(char *type, int n, ...);
 int					shell_exit(t_shell **shell);
 void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
-						char **env, t_job **job);
+						t_job **job);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
 char 				*ft_strcutword(char **str, int i, int len_word);
 BOOL				check_syntax_err(t_cmd *cmd);
 size_t 				shell_argsub_len_var(char *argi);
 char 				*ft_remplace_char_by_str(char *word, char c, char *str);
+int					check_synthax_stdout_to(t_output *redis);
+void				clean_arr_mlti(char **arr);
+void				clean_redi(t_output **redi);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -373,8 +384,9 @@ void				process_init_shell_for_job(void);
 void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
-int     			check_jobs_on_exit(t_cmd **cmd, t_shell *shl);
+int     			check_jobs_on_exit(t_shell *shl);
 int					job_is_signaled(t_job *j);
+void				clean_jobs_all(void);
 
 /*
 ** Hard test

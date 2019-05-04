@@ -22,7 +22,7 @@ BOOL	cmd_syntax_shortcut(t_cmd *next)
 	if (next->hrdc && (int)next->hrdc[0] == -1)
 	{
 		ft_dprintf(2, "42sh: syntax error near unexpected token `newline'\n");
-			return (1);
+		return (1);
 	}
 	return (0);
 }
@@ -42,27 +42,6 @@ int		check_syntax_redi_stdout(t_output *redis)
 }
 
 /*
-** Par securité on doucle check les redis out
-*/
-
-int		check_synthax_stdout_to(t_output *redis)
-{
-	t_output *read;
-
-	read = redis;
-	while (read != NULL)
-	{
-		if (!read->to || ft_strcmp(read->to, "&") == 0 ||
-			ft_strcmp(read->to, ">") == 0 || ft_strcmp(read->to, ">>") == 0)
-			return (1);
-		if (read->to == NULL)
-			return (0);
-		read = read->next;
-	}
-	return (0);
-}
-
-/*
 ** -2 pour un hrdc ou input indiqué mais non rempli (cat <) || (cat <<)
 */
 
@@ -78,9 +57,8 @@ BOOL	check_syntax_redi(t_cmd *next)
 		ft_dprintf(2, "42sh: syntax error near unexpected token `<'\n");
 		return (1);
 	}
-	//pourquoi voir que le [0] ? et hrdc plante always lors de son free
 	if (((next->input && (int)next->input[0] == -2) ||
-	  (next->hrdc && (int)next->hrdc[0] == -2)) && next->next_cmd == NULL)
+		(next->hrdc && (int)next->hrdc[0] == -2)) && next->next_cmd == NULL)
 	{
 		ft_dprintf(2, "42sh: syntax error near unexpected token `newline'\n");
 		return (1);

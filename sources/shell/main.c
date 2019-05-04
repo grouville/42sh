@@ -49,7 +49,7 @@ void	shell_save_histo(t_shell *shl)
 void	shell_check_backslash_end(char **line)
 {
 	int		i;
-	char 	*del;
+	char	*del;
 
 	i = 0;
 	while (*line && (*line)[i])
@@ -69,7 +69,7 @@ void	shell_check_backslash_end(char **line)
 */
 
 int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
-									t_prompt *prmt, t_job *jobs)
+									t_prompt *prmt)
 {
 	if (ret != CTRLC && ret != CTRLD && shl->str && check_expansions(shl))
 	{
@@ -86,8 +86,8 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 			return (1);
 		shell_save_histo(shl);
 		if (check_syntax_err(*cmd))
-			return(shell_clean_data(cmd, shl, 0));
-		else if (shell_process(jobs, cmd, shl) == -1)
+			return (shell_clean_data(cmd, shl, 0));
+		else if (shell_process(getter_job()->first_job, cmd, shl) == -1)
 			return (-1);
 	}
 	return (0);
@@ -95,24 +95,21 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 
 int		main(void)
 {
-	extern char **environ;
-	t_shell		*shl;
-	t_prompt	prmt;
-	t_cmd		*cmd;
-	t_shortcut	ret;
-	t_job		*jobs;
+	t_norme			norme;
 
-	shell_init(&shl, &prmt, &cmd, environ, &jobs);
-	while ((ret = get_stdin(shl, &prmt)) != -1)
+	ft_bzero(&norme, sizeof(t_norme));
+	shell_init(&norme.shl, &norme.prmt, &norme.cmd, &norme.jobs);
+	while ((norme.ret = get_stdin(norme.shl, &norme.prmt)) != -1)
 	{
-		shl->count += 1;
-		if (!shl->str && prmt == PROMPT)
-			do_job_notification(&cmd, shl, NULL);
-		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
-		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
-				break ;
-		if (shl->str && prmt == PROMPT)
-			ft_strdel(&shl->str);
+		norme.shl->count += 1;
+		if (!norme.shl->str && norme.prmt == PROMPT)
+			do_job_notification(&norme.cmd, norme.shl, NULL);
+		norme.ret = shell_command_execution(norme.shl, &norme.cmd,
+				norme.ret, &norme.prmt);
+		if (norme.ret == -1 && !check_jobs_on_exit(norme.shl))
+			break ;
+		if (norme.shl->str && norme.prmt == PROMPT)
+			ft_strdel(&norme.shl->str);
 	}
-	return (shell_exit(&shl));
+	return (shell_exit(&norme.shl));
 }

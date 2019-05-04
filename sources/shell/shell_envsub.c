@@ -16,7 +16,7 @@
 struct passwd	*shell_struct_user(char **arg)
 {
 	char			*tmp;
-	char 			*name;
+	char			*name;
 	struct passwd	*user;
 	uid_t			uid;
 
@@ -53,7 +53,7 @@ void			shell_check_tilde(char **arg)
 	}
 }
 
-BOOL		check_env_substitution(char *arg)
+BOOL			check_env_substitution(char *arg)
 {
 	int		i;
 
@@ -81,7 +81,7 @@ BOOL		check_env_substitution(char *arg)
 ** Retourne 2=bad sub si la var n'est pas correct != (A-Za-z0-9_) ou == ${}
 */
 
-int			shell_envpsub(char **arg, char **envp, char **envl)
+int				shell_envpsub(char **arg, char **envp, char **envl)
 {
 	int		i;
 	char	quote;

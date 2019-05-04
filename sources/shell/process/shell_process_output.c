@@ -42,7 +42,7 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 	return (0);
 }
 
-int		is_recheable_output(t_output *output, t_shell *shell, int sep)
+int		is_recheable_output(t_output *output, t_shell *shell)
 {
 	int		fd_open;
 	char	*msg_err;
@@ -136,7 +136,7 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 			tmp  = (elem->process).fd_stderr;
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
-		else if (!is_fd && (fd_file = is_recheable_output(output, shell, elem->sep)))
+		else if (!is_fd && (fd_file = is_recheable_output(output, shell)))
 			shell_set_output_file(output, elem, fd_file);
 		else
 			return (0);
