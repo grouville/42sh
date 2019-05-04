@@ -228,6 +228,8 @@ int					ft_len_array_char(char **av);
 t_job				*find_jobnum(char *num, t_job **j);
 void            	process_jobs_option_l(t_job **job);
 t_job				*find_jobnum(char *num, t_job **j);
+int					ft_normalize_av(char ***av, char *c, int *begin,
+						BOOL *other_arg);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

@@ -90,6 +90,7 @@ SRCS =  shell/main.c \
 		builtins/builtin_jobs.c \
 		builtins/builtin_jobs_l_option.c \
 		builtins/utils_job.c \
+		builtins/utils_builtin.c \
 		builtins/fg.c \
 		builtins/bg.c \
         editor/get_stdin.c \
