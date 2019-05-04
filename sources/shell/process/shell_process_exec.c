@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/21 22:44:23 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/21 22:44:23 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 20:52:29 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,7 +21,7 @@ void	shell_exec_print_error(t_cmd *elem)
 		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
 	else if (ft_strcmp("file or directory", elem->exec) == 0)
 		ft_dprintf(2, "42sh: %s: No such file or directory\n",
-				   elem->args[0]);
+			elem->args[0]);
 	else if (ft_strcmp("no allowed", elem->exec) == 0)
 		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
 }
@@ -38,7 +38,7 @@ int		shell_exec_error(t_cmd *elem)
 			ft_strcmp("directory", elem->exec) == 0)
 			exit(126);
 		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
-				 ft_strcmp("not found", elem->exec) == 0)
+			ft_strcmp("not found", elem->exec) == 0)
 			exit(127);
 		else
 			ret = 0;
@@ -46,37 +46,35 @@ int		shell_exec_error(t_cmd *elem)
 	return (ret);
 }
 
+void	change_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGTSTP, SIG_DFL);
+	signal(SIGTTIN, SIG_DFL);
+	signal(SIGTTOU, SIG_DFL);
+	signal(SIGCHLD, SIG_DFL);
+}
+
 void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	pid_t	pid;
 	t_js	*jsig;
-	int 	builtin;
+	int		builtin;
 
 	jsig = getter_job();
 	if (jsig->shell_is_interactive)
 	{
-		/* Put the process into the process group and give the process group
-		   the terminal, if appropriate.
-		   This has to be done both by the shell and in the individual
-		   child processes because of potential race conditions.  */
-		pid = getpid ();
-		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
+		pid = getpid();
+		setpgid(pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
-			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
-
-		/* Set the handling for job control signals back to the default.  */
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
+			tcsetpgrp(jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
+		change_signals();
 	}
 	if (elem->bad_substitution)
 		exit(EXIT_FAILURE);
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		exit(EXIT_FAILURE);
-	//read_lexing(elem);
 	shell_plomberie(elem->process);
 	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
@@ -89,7 +87,7 @@ int		shell_father(int pid_child, t_cmd *elem)
 
 	status = -4735;
 	if (elem->sep != SPL_SPRLU)
-		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
+		waitpid(pid_child, &status, WUNTRACED);
 	return (status);
 }
 
@@ -121,7 +119,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
 			job->pgid = child;
-		setpgid (child, job->pgid);
+		setpgid(child, job->pgid);
 	}
 	return (elem->ret);
 }
@@ -147,7 +145,6 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 			return (1);
-		//read_lexing(elem);
 		shell_plomberie(elem->process);
 		if (shell_builtin(elem, shell) == -1)
 			return (-1);

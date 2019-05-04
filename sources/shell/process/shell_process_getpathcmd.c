@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:20:46 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/05/05 23:20:46 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 20:54:08 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,7 +55,7 @@ char	*check_path_cmd(char *exec_path, char *exec)
 		ret = (char *)-3;
 	else if (exec && ft_isdir(exec))
 		ret = (char *)-1;
-	else if (exec  && exec[0] == '/' && access(exec, X_OK) != -1)
+	else if (exec && exec[0] == '/' && access(exec, X_OK) != -1)
 		ret = ft_strdup(exec);
 	else if (exec && exec[0] == '/' && stat(exec, &buffer) == 0 &&
 				access(exec, X_OK) == -1)
