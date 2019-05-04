@@ -6,7 +6,7 @@
 /*   By: dewalter <dewalter@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/01 23:21:54 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/03/28 01:53:28 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 17:34:06 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,9 +16,13 @@
 int		builtin_type_check_builtin(char *d_name)
 {
 	if (!ft_strcmp(d_name, "echo") || !ft_strcmp(d_name, "cd") ||
-		!ft_strcmp(d_name, "type") || !ft_strcmp(d_name, "unsetenv") ||
-		!ft_strcmp(d_name, "setenv") || !ft_strcmp(d_name, "exit") ||
-		!ft_strcmp(d_name, "env"))
+		!ft_strcmp(d_name, "type") || !ft_strcmp(d_name, "set") ||
+		!ft_strcmp(d_name, "unset") || !ft_strcmp(d_name, "exit") ||
+		!ft_strcmp(d_name, "export") || !ft_strcmp(d_name, "hash") ||
+		!ft_strcmp(d_name, "unset") || !ft_strcmp(d_name, "alias") ||
+		!ft_strcmp(d_name, "unalias") || !ft_strcmp(d_name, "test") ||
+		!ft_strcmp(d_name, "fg") || !ft_strcmp(d_name, "bg") ||
+		!ft_strcmp(d_name, "jobs"))
 		return (1);
 	return (0);
 }

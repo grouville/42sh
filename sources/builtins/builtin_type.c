@@ -6,24 +6,27 @@
 /*   By: dewalter <dewalter@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/28 18:21:28 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 07:42:00 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 17:50:17 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	builtin_type_free(t_type *tp)
+int		builtin_type_free(t_type *tp)
 {
 	int		i;
+	int		ret;
 
 	i = 0;
+	ret = tp->match[1];
 	while (tp->bin[i])
 		ft_strdel(&(tp->bin)[i++]);
 	ft_strdel(&tp->bin[i]);
 	ft_strdel(&tp->op);
 	free(tp->bin);
 	free(tp);
+	return (ret);
 }
 
 int		builtin_type_init(t_type **tp, char **envp, char **args)
@@ -96,6 +99,5 @@ int		builtin_type(char **args, char **envp)
 		&& (tp->match[1] = 1))
 			ft_dprintf(2, "42sh: type: %s: not found\n", args[tp->i]);
 	}
-	builtin_type_free(tp);
-	return (tp->match[1]);
+	return (builtin_type_free(tp));
 }
