@@ -76,6 +76,7 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		exit(EXIT_FAILURE);
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		exit(EXIT_FAILURE);
+	//read_lexing(elem);
 	shell_plomberie(elem->process);
 	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
@@ -111,7 +112,6 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		elem->stopped = 1;
 		elem->done = 0;
 		job->running = 999;
-		//elem->ret = 146;
 	}
 	if (elem->ret == 3)
 		ft_dprintf(2, "Quit : 3\n");
@@ -119,7 +119,6 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	elem->pid = child;
 	if (jsig->shell_is_interactive)
 	{
-//		if (!job->pgid && (elem->ret == -4735 || elem->ret == 4735))
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
 			job->pgid = child;
 		setpgid (child, job->pgid);
@@ -148,6 +147,7 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 			return (1);
+		//read_lexing(elem);
 		shell_plomberie(elem->process);
 		if (shell_builtin(elem, shell) == -1)
 			return (-1);

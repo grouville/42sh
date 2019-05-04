@@ -42,11 +42,6 @@ int		check_fd_output(char **ptn_output, t_shell *shell)
 	return (0);
 }
 
-/*
-** Dans le cas d'un fifo en background if faut O_RDWR l'open pour ne pas
-** attendre l'envoi de data dans le pipe
-*/
-
 int		is_recheable_output(t_output *output, t_shell *shell, int sep)
 {
 	int		fd_open;
@@ -133,6 +128,7 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 	output = elem->output;
 	while (output != NULL)
 	{
+		fd_file = -1;
 		tmp = NULL;
 		if (output->from == 1 && (elem->process.last_redi = 1))
 			tmp = (elem->process).fd_stdout;
@@ -144,6 +140,8 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 			shell_set_output_file(output, elem, fd_file);
 		else
 			return (0);
+		if (output->next && fd_file > 0)
+			close(fd_file);
 		ft_strdel(&tmp);
 		output = output->next;
 	}

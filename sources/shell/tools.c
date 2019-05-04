@@ -114,7 +114,6 @@ t_shell		*init_shell(char **envp)
 		exit(EXIT_FAILURE);
 	shell->envl[0] = NULL;
 	shell->envl = append_key_env(shell->envl, "?", "0");
-
 	if (!shell->hist)
 		exit(EXIT_FAILURE);
 	return (shell);
