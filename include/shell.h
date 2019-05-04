@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 12:05:38 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:19:46 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                   v                                     /                  */
 /* ************************************************************************** */
@@ -207,6 +207,7 @@ int					builtin_fc(char **args, t_shell *shell);
 int					builtin_fc_search_occurence(t_fc *fc, t_data *hist);
 void				builtin_fc_execute_commands(t_fc *fc, t_shell *shell);
 void				builtin_fc_search_first_and_last(char **args, t_fc *fc);
+int					builtin_fc_correct_ret(int ret);
 int					shell_command_execution(t_shell *shl, t_cmd **cmd,
 						t_shortcut ret, t_prompt *prmt);
 BOOL				is_var(char *arg);
