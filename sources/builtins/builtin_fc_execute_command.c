@@ -83,17 +83,6 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 	}
 }
 
-int				builtin_fc_correct_ret(int ret)
-{
-	if (ret == 131)
-		ret = 3;
-	else if (ret == 146)
-		ret = 4735;
-	else
-		ret *= 256;
-	return (ret);
-}
-
 void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 {
 	t_prompt	p;

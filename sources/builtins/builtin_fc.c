@@ -49,7 +49,6 @@ static int		builtin_fc_exit(t_fc **fc)
 	}
 	free((*fc));
 	unlink("/tmp/.42sh-fc_cmd_list");
-	ret = builtin_fc_correct_ret(ret);
 	return (ret);
 }
 
