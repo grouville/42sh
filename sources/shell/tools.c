@@ -92,6 +92,8 @@ int			shell_exit(t_shell **shell)
 {
 	int		ret;
 
+	if ((*shell)->t)
+		delete_hash_table(&((*shell)->t));
 	if ((*shell)->hist)
 		fill_hist_file((*shell)->hist, (*shell)->hist_path);
 	ft_strdel(&(*shell)->hist_path);
