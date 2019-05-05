@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/05/04 18:34:07 by gurival-    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/05 14:15:05 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -146,7 +146,7 @@ OBJS_FOLDERS = builtins editor editor/tabulator editor/history shell \
 OBJS = $(addprefix $(DIR_OBJ),$(SRCS:.c=.o))
 OBJS_FOLDERS_BIS = $(addprefix $(DIR_OBJ),$(OBJS_FOLDERS))
 
-all:	$(NAME) lib
+all:	$(NAME) lib after_make
 
 lib:
 		@if !(make -q -C $(DIR_LIB)); then \
@@ -162,8 +162,10 @@ $(NAME): $(OBJS)
 $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@mkdir -p $(DIR_OBJ) $(OBJS_FOLDERS_BIS)
 	@gcc -o $@ -c $< $(DIR_INC2) $(CFLAGS)
-	@printf "$(PURPLE)Created $@\n $(NOCOLOR)"
-	
+	@printf "\e[?25l\e[J$(PURPLE)Created $@ $(NOCOLOR)\r"
+
+after_make:
+		@printf "\e[?25h"
 clean:
 	@rm -rf $(DIR_OBJ)
 	@make clean -C $(DIR_LIB)
