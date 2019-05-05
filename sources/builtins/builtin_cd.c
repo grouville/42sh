@@ -77,7 +77,7 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	if (!cd_is_recheable(*envp, path_dest, dir))
 	{
 		ft_strdel(&path_dest);
-		return (0);
+		return (1);
 	}
 	chdir(path_dest);
 	if (abs_path)

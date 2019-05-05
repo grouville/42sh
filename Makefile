@@ -6,7 +6,7 @@
 #    By: ythollet <marvin@le-101.fr>                +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/05/04 20:51:29 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/05/05 14:15:05 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/05 17:06:40 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -167,7 +167,7 @@ $(DIR_OBJ)%.o: $(DIR_SRC)%.c  $(DIR_INC)/$(INCLUDES_FILE)
 	@printf "\e[?25l\e[J$(PURPLE)Created $@ $(NOCOLOR)\r"
 
 after_make:
-		@printf "\e[?25h"
+		@printf "\e[0m\e[?25h"
 clean:
 	@rm -rf $(DIR_OBJ)
 	@make clean -C $(DIR_LIB)
