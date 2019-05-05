@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:20:46 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 20:54:08 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:21:40 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -66,10 +66,10 @@ char	*check_path_cmd(char *exec_path, char *exec)
 	return (ret);
 }
 
-char 	*shell_check_binaire(char *exec)
+char	*shell_check_binaire(char *exec)
 {
-	char 	*tmp;
-	char 	*path_binaire;
+	char	*tmp;
+	char	*path_binaire;
 
 	tmp = get_cur_dir();
 	path_binaire = ft_strjoin_mltp(3, tmp, "/", exec + 2);

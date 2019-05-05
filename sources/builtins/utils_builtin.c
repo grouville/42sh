@@ -46,6 +46,24 @@ BOOL			shell_is_builtin(t_cmd *elem, t_shell *shell)
 		return (0);
 }
 
+BOOL			shell_is_builtin_str(char *str)
+{
+	if (!str)
+		return (1);
+	else if ((ft_strcmp("hash", str) == 0 ||
+	!ft_strcmp("echo", str) || !ft_strcmp("cd", str) ||
+	!ft_strcmp("set", str) || !ft_strcmp("unset", str) ||
+	!ft_strcmp("export", str) || !ft_strcmp("type", str) ||
+	!ft_strcmp("alias", str) || !ft_strcmp("fc", str) ||
+	!ft_strcmp("unalias", str) || !ft_strcmp("test", str) ||
+	!ft_strcmp("fg", str) || !ft_strcmp("bg", str) ||
+	!ft_strcmp("jobs", str) ||
+	!ft_strcmp("exit", str)))
+		return (1);
+	else
+		return (0);
+}
+
 /*
 *** - Aim of the function
 *** - Check if arg is a number

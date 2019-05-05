@@ -221,6 +221,7 @@ int					job_percentage_number_exists_or_not_fg(char *cmd, int nb,
 int					check_usage(char *cmd);
 int					is_number(char *cmd);
 BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
+BOOL				shell_is_builtin_str(char *str);
 int			    	ft_builtin_jobs(char **cmd);
 void           		free_job_after_signal(t_job **job);
 int					ft_usage_error(char *cmd, int ret);

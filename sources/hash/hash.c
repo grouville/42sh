@@ -25,29 +25,6 @@ int		check_path(char **path_env, char **path, char **str)
 	return (count);
 }
 
-int		ft_usage_is_good(char *limitor, char *str)
-{
-	int		i;
-	int		n;
-	BOOL	limitor_ok;
-
-	i = 1;
-	while (str[i])
-	{
-		limitor_ok = 0;
-		n = 0;
-		while (limitor[n])
-		{
-			if (str[i] == limitor[n++])
-				limitor_ok = 1;
-		}
-		if (limitor_ok == 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 int		ft_check_arguments(int *i, char **cmd, int *boul, t_shell *env)
 {
 	while (cmd[*i] && cmd[*i][0] == '-')
@@ -64,6 +41,14 @@ int		ft_check_arguments(int *i, char **cmd, int *boul, t_shell *env)
 	if (--(*i) && *boul == TO_RESET && env->t)
 		delete_hash_table(&(env->t));
 	return (0);
+}
+
+void	add_binary_to_hash_norm(int *i, char **cmd, t_shell *env,
+			char **path)
+{
+	if (!env->t)
+		env->t = new_hash_table();
+	insert_element(env->t, cmd[*i], *path);
 }
 
 void	add_binary_to_hash(int *i, char **cmd, t_shell *env,
@@ -84,12 +69,10 @@ void	add_binary_to_hash(int *i, char **cmd, t_shell *env,
 				if (!(*path))
 					ft_dprintf(2, "%s %s: not found\n", "bash: hash:", cmd[*i]);
 				else
-				{
-					if (!env->t)
-						env->t = new_hash_table();
-					insert_element(env->t, cmd[*i], *path);
-				}
+					add_binary_to_hash_norm(i, cmd, env, path);
 			}
+			else if (!shell_is_builtin_str(cmd[*i]))
+				ft_dprintf(2, "%s %s: not found\n", "bash: hash:", cmd[*i]);
 		}
 	}
 	ft_arrdel(&all_paths);
