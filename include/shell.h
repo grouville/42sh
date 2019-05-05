@@ -5,10 +5,10 @@
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2018/12/17 16:53:36 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 22:19:46 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Created: 2019/05/05 16:27:06 by ythollet     #+#   ##    ##    #+#       */
+/*   Updated: 2019/05/05 16:27:08 by ythollet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
-/*                   v                                     /                  */
+/*                                                        /                   */
 /* ************************************************************************** */
 
 #ifndef SHELL_H
@@ -36,7 +36,7 @@ typedef struct		s_process
 	int				fd_fileout;
 	char			*fd_stderr;
 	int				fd_fileerr;
-	int 			last_redi;
+	int				last_redi;
 }					t_process;
 
 typedef struct		s_stdout
@@ -60,20 +60,20 @@ typedef struct		s_stdout
 
 typedef struct		s_cmd
 {
-	char			*exec; //path du binaire
-	char			**args; //binaire + les paranètres
-	char 			**args_raw; // pour builtin test
-	t_output		*output; //redirection de sortie
-	char			**input; //tableau des fichier/fd en input
-	char			**hrdc; //liste des char* attendu en tant que heredoc
-	t_process		process; //les fd à dup2
-	int				sep; //separateur
-	int				ret; //valeur de retour
-	pid_t			pid;          /* process ID */
-	BOOL			done;    /* true if process has completed */
-	BOOL			stopped;      /* true if process has stopped */
-	BOOL			signal;		/* contains the signal used to kill process */
-	int				status;       /* reported status value */
+	char			*exec;
+	char			**args;
+	char			**args_raw;
+	t_output		*output;
+	char			**input;
+	char			**hrdc;
+	t_process		process;
+	int				sep;
+	int				ret;
+	pid_t			pid;
+	BOOL			done;
+	BOOL			stopped;
+	BOOL			signal;
+	int				status;
 	BOOL			bad_substitution;
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
@@ -82,19 +82,18 @@ typedef struct		s_cmd
 typedef struct		s_job
 {
 	t_cmd			*cmds;
-	int 			sep;
-	int 			num;
-	pid_t			pgid;        /* process group ID */
-	int 			state;
-	int				running; /* 0 if command is running, otherwise error number */
-	char			notified;    /* true if user told about stopped job */
-	char 			notified_crtrz;
-	struct termios	tmodes;      /* saved terminal modes */
+	int				sep;
+	int				num;
+	pid_t			pgid;
+	int				state;
+	int				running;
+	char			notified;
+	char			notified_crtrz;
+	struct termios	tmodes;
 	struct s_job	*next;
 }					t_job;
 
-/* The active jobs are linked into a list.  This is its head.   */
-typedef struct		job_signal
+typedef struct		s_job_signal
 {
 	t_job			*first_job;
 	pid_t			shell_pgid;
@@ -124,7 +123,7 @@ typedef struct		s_shell
 	int				ret;
 	t_data			*hist;
 	t_htable		*t;
-	int 			count;
+	int				count;
 	int				is_interactive;
 }					t_shell;
 
@@ -212,22 +211,22 @@ int					shell_command_execution(t_shell *shl, t_cmd **cmd,
 						t_shortcut ret, t_prompt *prmt);
 BOOL				is_var(char *arg);
 int					builtin_localvar(char ***ptn_args, char **args_raw);
-int			    	ft_builtin_fg(char **cmd);
-int			    	ft_builtin_bg(char **cmd);
-int         		find_last_job_put_in_background(void);
+int					ft_builtin_fg(char **cmd);
+int					ft_builtin_bg(char **cmd);
+int					find_last_job_put_in_background(void);
 int					check_if_job_exists(char *cmd, t_job **j);
 int					job_percentage_number_exists_or_not_fg(char *cmd, int nb,
-                		t_job **job);
+															t_job **job);
 int					check_usage(char *cmd);
 int					is_number(char *cmd);
 BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
 BOOL				shell_is_builtin_str(char *str);
-int			    	ft_builtin_jobs(char **cmd);
-void           		free_job_after_signal(t_job **job);
+int					ft_builtin_jobs(char **cmd);
+void				free_job_after_signal(t_job **job);
 int					ft_usage_error(char *cmd, int ret);
 int					ft_len_array_char(char **av);
 t_job				*find_jobnum(char *num, t_job **j);
-void            	process_jobs_option_l(t_job **job);
+void				process_jobs_option_l(t_job **job);
 t_job				*find_jobnum(char *num, t_job **j);
 int					ft_normalize_av(char ***av, char *c, int *begin,
 						BOOL *other_arg);
@@ -332,10 +331,10 @@ void				shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
 						t_job **job);
 char				*get_next_hrdc(char **hrdc);
 BOOL				check_expansions(t_shell *shell);
-char 				*ft_strcutword(char **str, int i, int len_word);
+char				*ft_strcutword(char **str, int i, int len_word);
 BOOL				check_syntax_err(t_cmd *cmd);
-size_t 				shell_argsub_len_var(char *argi);
-char 				*ft_remplace_char_by_str(char *word, char c, char *str);
+size_t				shell_argsub_len_var(char *argi);
+char				*ft_remplace_char_by_str(char *word, char c, char *str);
 int					check_synthax_stdout_to(t_output *redis);
 void				clean_arr_mlti(char **arr);
 void				clean_redi(t_output **redi);
@@ -352,10 +351,9 @@ char				**ft_arrjoin(char **arr1, char **arr2);
 ** - delete_print_search.c
 */
 
-void                ft_print_hash(t_shell *env);
-int                 ft_builtin_hash(char **cmd, t_shell *env);
+void				ft_print_hash(t_shell *env);
+int					ft_builtin_hash(char **cmd, t_shell *env);
 int					ft_usage_is_good(char *limitor, char *str);
-
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -370,151 +368,29 @@ int					ft_usage_is_good(char *limitor, char *str);
 void				put_job_in_background(t_job *j, int cont);
 void				put_job_in_foreground(t_job *j, int cont);
 int					mark_process_status (pid_t pid, int status);
-void 				update_status(void);
+void				update_status(void);
 void				wait_for_job(t_job *j);
 void				do_job_notification(t_cmd **cmd, t_shell *shl,
 										t_cmd **cmd_jobs);
 void				mark_job_as_running(t_job *j);
 void				continue_job(t_job *j, int foreground);
-void 				format_job_info_signal(t_job *j, const char *status,
+void				format_job_info_signal(t_job *j, const char *status,
 						int nb_bgjob);
 void				format_job_info(t_job *j, const char *status,
 						int nb_bgjob);
-
-/* Find the active job with the indicated pgid.  */
 t_job				*find_job(pid_t pgid);
-
-
-/* Return true if all processes in the job have stopped or completed.  */
 int					job_is_stopped(t_job *j);
 void				print_sep(int fd, t_sep sep);
-
-
-/* Return true if all processes in the job have completed.  */
 int					job_is_completed(t_job *j);
 void				process_init_shell_for_job(void);
 void				free_job(t_job **j, t_cmd **cmd);
 t_js				*getter_job(void);
 void				put_process_suspended(t_job *j, t_cmd *elem);
-int     			check_jobs_on_exit(t_shell *shl);
+int					check_jobs_on_exit(t_shell *shl);
 int					job_is_signaled(t_job *j);
 void				clean_jobs_all(void);
 int					check_last_command_jobs(t_cmd **cmd);
 int					check_last_command_fc(void);
-int 				clean_jobs(t_job **jobs);
-
-/*
-** Hard test
-** <  echo ~ ~te~st" ~ '$USER  \""+\\$USER+$US\ER~$USERS' ~ t"e$USER \'~'' ""'`' ""' \' ""'" \'>
-** <echo "test>
-** <echo test\ {ENTER} ' {ENTER} test {ENTER} '>
-** <echo 'test\'.
-** echo tes't $USER te'st
-** echo tes"t $USER te"st
-** lancer minishell et <cd -> bash: cd: OLDPWD not set
-** path avec lien <cd -L -L -P -L .>  --> pas de redi
-** && <cd -L -P .> --> redi
-** <mkdir test1> && <chmod 666 test1> && <cd test> --> Fail
-** <mkdir test2> && <chmod 111 test2> && <cd test2> --> OK
-** mkdir folder && cd folder && cd .. && rm -rf folder && cd -
-** <cd \./> && pwd --> PWD et OLDPWD devrait avoir la meme valeur
-** <cd \/.///> && env PWD && cd ..
-** <cd ~///./folder//.//>
-** cd ~bocal/Public --> {~} correspond à /Users et {~/} correpond à /Users/ythollete
-** echo ~root
-** cat * | ./minishell <-- pas a executer mais a protéger
-** env -i ./minishell && unsetenv PATH && echo $HOME && cd ~
-** ./minishell && unsetenv HOME && cd $random --> HOME not set
-** ./minishell < "n'importe quel fichier"
-** </> && <~> && </Users>
-** ./minishell && ./minishell && ./minishell && CtrC && CtrlD && exit
-** echo `ls\` --> ` && echo `ls\``
-** echo "text" > file ; < file cat
-** {echo test 1>/dev/ttys001 1>&2} --> la derniere redi est prit en compte et print test
-** cat << EOF existing_file {ENTER} word1 {ENTER} EOF {ENTER}
-** echo test >'&2' && cat "&2" --> fichier &2
-** echo file > '&'
-** {export tty=/dev/ttys001} {echo test > $tty} et car ttys001 recoit
-** {echo test > "/dev/ttys001\\"} --> error avec {/dev/ttys001\\}
-** echo test > file > /dev/ttys001 (le dernier est prit en compte mais file est créé)
-** echo test > glob"{ENTER}file" --> test dans file {glob?file}
-** echo test>file1>file2
-** echo test>file1\>file2
-** echo test>file1\\>file2
-** echo test \22>&1 --> test 22 dans &1
-** echo test > file_no_right
-** echo test && {ENTER} \ {ENTER} \\ {ENTER} puis flèche du haut et histo == {echo test && \\}
-** ; puis ;; (pas le meme msg d'erreur)
-** {t &&} --> bquote
-** >>>
-** <!< { } - $?
-** ls\ --> saut de ligne puis ls exec --> pas de saut de ligne dans l'histo
-** mkdir ~/folder && cd ~/folder && chmod 111 ~/folder && ~/21sh/./21sh && echo file_not_found > file
-** << EOF cat nofile ;; --> les EOF puis ;; puis erreur de cat
-** ;; "test {ENTER} " --> les fermetures des quotes sont prio face au ;;
-** echo test \1>/dev/ttys00\2 '1>/dev/ttys003' --> on envoi test et
-** echo test > file && cat < file>>file2
-** a=5 b=3 echo $a (variable local ignoré)
-** echo test << "1" && test ; <<\2
-** cat << "EO {ENTER} F" {ENTER} puis essayer de fermer
-** heredoc puis Cltr-c et Ctrl-v
-** cat <<t {ENTER} test {Ctrl-D} ->> heredoc stop mais test dans cat
-** << \'"test"\\
-** >oui<<EOF
-** <<EOF<file_stdin
-** <<EOF>file_stdout
-** {test && w} et {test || w} --> test renvoi FAIL
-** env -i env
-** exit | ls --> ne doit pas exit
-** setenv VAR file && echo no_var>'$VAR' && echo var>$VAR
-** setenv VAR ambiguous_redirect > $VAR
-** export VAR file && echo test >~/$VAR
-** unsetenv $HOME && echo "pwd.h get the *pw_name" >~/file
-** echo file_line > file && cat << EOF1 < file << EOF2 puis line1 \n EOF1 \n line2 \n EOF2 --> dernier element avec bash et en suivant l'ordre pour zsh
-** exit 1arg 2arg --> no exit
-** cat <&\2
-** echo test >folder/unfind_folder/file
-** echo test >&0
-** echo test > file | cat -->stdou prio sur pipe
-** echo test | cat < file --> file écrase le pipe
-** exit 2>file
-** exit | test
-** exit 1 2 --> too many arg et pas d'exit
-** exit t --> exit mais pas msg "numeric arg required"
-** / et /tmp --> "Is directory"
-** auteur
-** ls doesnotexist . >/dev/null 2>&1 (rien) et ls doesnotexist . 2>&1 >/dev/null (no such file or..)
-** /Users/ythollet/42h/42sh -->exec et ~/42/42sh -->exec et 42sh -->pas exec
-** a="1'2{ENTER}3" --> echo $a = 1'2 3
-** "no'var"=command_not_found
-** a={te"st}|ENTER|" --> a=$'{test}\n'
-** 1=pasok mais a1=ok
-** a={test
-** alias ls="echo noprint" && \ls --> ls est exec
-** ls && cat || ls --> Ctrl-Z de cat --> ls s'execute
-** cat &
-** cat + Ctrl-Z puis ls
-** mkfifo fifo && cat < fifo et avec autre shell : ls > fifo
-** mkfifo fifo && ls >> fifo et lire fifo
-** lorsque fifo est déjà en lecture ou ecriture avec un autre shell --> print error msg
-** ls && exit &
-** pwd && exit && ls & --> pwd mais pas d'exit ni ls
-** echo ${} | wc --> les 2 sont exec
-** echo ${} || echo ok ; echo ok
-** echo ${} &&/|| wc --> fail pas de wc
-** ls | echo ${} | wc &
-** voir les valeurs de retour d'exit selon http://www.tldp.org/LDP/abs/html/exitcodes.html
-*/
-
-/*
-** HARD TEST (et inutile)
-** exit 2>file
-*/
+int					clean_jobs(t_job **jobs);
 
 #endif
-
-// Question :
-//lors d'un output vers un tty quelle test faire pour check si tty ouvert
-//Quelle logique dans "echo test 0>fichier" ?
-//PATH=~/21sh --> foncitonnalité de TAB
-//comment faire pour que Clion rajoute les nouveaux .c dans le Makefile
