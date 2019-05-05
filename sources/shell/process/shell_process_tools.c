@@ -39,7 +39,6 @@ t_cmd	*shell_process_skip_cmd(t_cmd *elem, t_sep sep)
 {
 	while (elem->sep == sep)
 	{
-		dprintf(2, "-<mis a done |%s|>\n", elem->args[0]);
 		elem = elem->next_cmd;
 		elem->done = 1;
 	}
