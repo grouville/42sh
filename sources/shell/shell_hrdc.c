@@ -82,8 +82,12 @@ int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd, int nb_line)
 {
 	ft_dprintf(2, "42sh: warning: here-document at line %d delimited by "
 		"end-of-file (wanted `%s')\n", nb_line, get_next_hrdc((*cmd)->hrdc));
-	clean_cmd(&(*cmd)->start);
-	*cmd = NULL;
+	while (get_next_hrdc((*cmd)->hrdc))
+		del_next_hrdc((*cmd)->hrdc);
+	free((*cmd)->hrdc);
+	if ((int)(*cmd)->process.stdin_send == -1)
+		(*cmd)->process.stdin_send = NULL;
+	(*cmd)->hrdc = NULL;
 	*prompt = PROMPT;
 	return (1);
 }
