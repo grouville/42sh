@@ -65,6 +65,7 @@ t_shell		*init_shell(void)
 		exit(EXIT_FAILURE);
 	shell->envl[0] = NULL;
 	shell->envl = append_key_env(shell->envl, "?", "0");
+	shell->count = -1;
 	if (!shell->hist)
 		exit(EXIT_FAILURE);
 	return (shell);
