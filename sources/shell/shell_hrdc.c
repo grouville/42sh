@@ -78,10 +78,10 @@ void	hrdc_fill_stdin(t_prompt *prompt, t_cmd **cmd, t_shell *shell)
 ** mais remet à NULL si rien
 */
 
-int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd)
+int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd, int nb_line)
 {
-	ft_dprintf(2, "42sh: warning: here-document at line 84 delimited by "
-				"end-of-file (wanted `%s')\n", get_next_hrdc((*cmd)->hrdc));
+	ft_dprintf(2, "42sh: warning: here-document at line %d delimited by "
+				"end-of-file (wanted `%s')\n", nb_line, get_next_hrdc((*cmd)->hrdc));
 	clean_cmd(&(*cmd)->start);
 	*cmd = NULL;
 	*prompt = PROMPT;
@@ -96,7 +96,7 @@ int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd)
 int		hrdc_fill(t_prompt *prompt, t_cmd **cmd, t_shell *shell, t_shortcut ret)
 {
 	if (*prompt == HRDC && ret == CTRLD && !shell->str)
-		return (hrdc_interrupt_ctrd(prompt, cmd));
+		return (hrdc_interrupt_ctrd(prompt, cmd, shell->count));
 	else if (*prompt == HRDC && ret == CTRLC)
 	{
 		*prompt = PROMPT;
