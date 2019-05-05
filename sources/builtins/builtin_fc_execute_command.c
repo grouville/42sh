@@ -13,23 +13,32 @@
 
 #include "shell.h"
 
-static void		builtin_fc_remove_hist_node(t_shell *shell)
+static void		builtin_fc_remove_hist_node(t_shell *shell, int mode)
 {
 	t_data *tmp;
 	t_data *tmp1;
 
-	tmp = shell->hist->prev;
-	shell->hist = shell->hist->prev->prev;
+	if (mode)
+	{
+		tmp = shell->hist->prev;
+		shell->hist = shell->hist->prev->prev;
+		while (tmp)
+		{
+			if (tmp->cmd)
+				ft_strdel(&tmp->cmd);
+			tmp1 = tmp->next;
+			free(tmp);
+			tmp = tmp1;
+		}
+	}
+	else
+	{
+		tmp = shell->hist;
+		shell->hist = shell->hist->prev;
+		free(tmp);
+	}
 	ft_strdel(&shell->hist->cmd);
 	shell->hist->next = NULL;
-	while (tmp)
-	{
-		if (tmp->cmd)
-			ft_strdel(&tmp->cmd);
-		tmp1 = tmp->next;
-		free(tmp);
-		tmp = tmp1;
-	}
 }
 
 static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
@@ -92,7 +101,7 @@ void			builtin_fc_execute_commands(t_fc *fc, t_shell *shell)
 	cmd = NULL;
 	if (!fc->op || (!ft_strchr(fc->op, 's') && ft_strchr(fc->op, 'e')))
 		fc->ret = shell_command_execution(shell, &cmd, 0, &p);
-	builtin_fc_remove_hist_node(shell);
+	builtin_fc_remove_hist_node(shell, fc->editor ? 1 : 0);
 	ft_strdel(&shell->str);
 	if (fc->ret != 0 || ((ft_atoi(get_envp(shell->envl, "?"))) >= 1))
 	{
