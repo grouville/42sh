@@ -22,18 +22,7 @@ void	ft_putendl_fd(char const *s, int fd)
 	}
 }
 
-int		manage_sig_term_ret2(int ret)
-{
-	if (ret == 11)
-		ft_putendl_fd("Segmentation fault: 11", 2);
-	else if (ret == 13)
-		ft_putendl_fd("Broken pipe: 13", 2);
-	else if (ret == 16)
-		ft_putendl_fd("Stack fault: 16", 2);
-	return (128 + ret);
-}
-
-int		manage_sig_term_ret1(int ret)
+int		manage_sig_term_ret(int ret)
 {
 	if (ret == 6)
 		ft_putendl_fd("Abort trap: 6", 2);
@@ -41,9 +30,13 @@ int		manage_sig_term_ret1(int ret)
 		ft_putendl_fd("Bus error: 10", 2);
 	else if (ret == 8)
 		ft_putendl_fd("Floating-point exception: 8", 2);
+	else if (ret == 11)
+		ft_putendl_fd("Segmentation fault: 11", 2);
+	else if (ret == 13)
+		ft_putendl_fd("Broken pipe: 13", 2);
+	else if (ret == 16)
+		ft_putendl_fd("Stack fault: 16", 2);
 	else if (ret == 4735)
 		return (4735);
-	else
-		return (manage_sig_term_ret2(ret));
 	return (ret + 128);
 }

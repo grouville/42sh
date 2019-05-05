@@ -46,7 +46,7 @@ int		right_return(int status)
 	if (WIFEXITED(status))
 		res = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		res = manage_sig_term_ret1(WTERMSIG(status));
+		res = manage_sig_term_ret(WTERMSIG(status));
 	else if (status == 4735)
 		return (4735);
 	return (res);
@@ -61,7 +61,8 @@ int		shell_father(int pid_child, t_cmd *elem)
 	if (elem->sep != SPL_SPRLU)
 	{
 		waitpid(pid_child, &status, WUNTRACED);
-		ret = right_return(status);
+		if (elem->sep != SPL_PIPE)
+			ret = right_return(status);
 	}
 	return (ret);
 }
