@@ -52,13 +52,13 @@ int		right_return(int status)
 	return (res);
 }
 
-int		shell_father(int pid_child, t_cmd *elem)
+int		shell_father(int pid_child, t_cmd *elem, t_job *job)
 {
 	int status;
 	int ret;
 
 	ret = -4735;
-	if (elem->sep != SPL_SPRLU)
+	if (job->sep != SPL_SPRLU)
 	{
 		waitpid(pid_child, &status, WUNTRACED);
 		if (elem->sep != SPL_PIPE)
@@ -80,7 +80,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	if ((child = fork()) == 0)
 		shell_child(elem, shell, job);
 	else
-		elem->ret = shell_father(child, elem);
+		elem->ret = shell_father(child, elem, job);
 	if (elem->ret == 4735 || job->sep == SPL_SPRLU)
 	{
 		elem->stopped = 1;
