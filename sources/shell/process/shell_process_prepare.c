@@ -104,23 +104,6 @@ void	shell_prepare_jobs_boucle(t_cmd *elem, t_job *first_jobs, t_job *job)
 }
 
 /*
-** cmd est découpé dans les jobs
-*/
-
-void	shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd)
-{
-	t_job	*job;
-	t_cmd	*elem;
-
-	job = first_jobs;
-	while ((job->next))
-		job = job->next;
-	elem = cmd->next_cmd;
-	shell_prepare_jobs_boucle(elem, first_jobs, job);
-	free(cmd->start);
-}
-
-/*
 ** Clean des arg vide et get exec path
 ** elem->process.stdin_send à NULL est une protection d'un seg
 */

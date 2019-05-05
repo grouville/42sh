@@ -283,6 +283,8 @@ int					complete_stdout_path(t_output *std_out, t_shell *shell);
 int					shell_error_prepare(char *msg, char *elem);
 int					shell_read_input(t_cmd *elem, t_shell *shell);
 int					shell_set_output(t_cmd *elem, t_shell *shell);
+void				shell_set_output_file(t_output *output, t_cmd *elem,
+						int fd_file);
 int					shell_exec(t_cmd *elem, t_shell *shell, t_job *job);
 void				shell_prepare_args(t_cmd *elem, t_shell *shell);
 void				shell_save_fd(int fd[3]);
@@ -293,17 +295,21 @@ int					path_to_output_exist(char *output);
 int					complete_output_paths(char **output_to, t_shell *shell);
 int					path_to_output_recheable(char *output);
 void				shell_plomberie(t_process process);
-
 int					get_stdin(t_shell *shell, t_prompt *prompt);
 int					shell_exec_pipes(t_cmd **elem, t_shell *shell, t_job *job);
 void				shell_set_fd_null(t_output *output, t_cmd *elem);
-
 int					get_nbarg(char *str, t_prompt *prompt);
 char				*get_arg(char **str, t_cmd *cmd);
 void				shell_ret(t_cmd *elem, t_shell *shell);
 t_cmd				*shell_process_skip_cmd(t_cmd *elem, t_sep sep);
 int					manage_sig_term_ret1(int ret);
 void				ft_putendl_fd(char const *s, int fd);
+void				shell_prepare_jobs(t_job *first_jobs, t_cmd *cmd);
+void				child_signals_to_dfl(void);
+int					shell_exec_error(t_cmd *elem);
+void				shell_exec_print_error(t_cmd *elem);
+void				shell_prepare_jobs_boucle(t_cmd *elem, t_job *first_jobs,
+						t_job *job);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

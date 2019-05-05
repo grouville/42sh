@@ -13,49 +13,6 @@
 
 #include "shell.h"
 
-void	shell_exec_print_error(t_cmd *elem)
-{
-	if (ft_strcmp("not found", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
-	else if (ft_strcmp("directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
-	else if (ft_strcmp("file or directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: No such file or directory\n",
-		elem->args[0]);
-	else if (ft_strcmp("no allowed", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
-}
-
-int		shell_exec_error(t_cmd *elem)
-{
-	int ret;
-
-	ret = 1;
-	if (elem->exec)
-	{
-		shell_exec_print_error(elem);
-		if (ft_strcmp("no allowed", elem->exec) == 0 ||
-			ft_strcmp("directory", elem->exec) == 0)
-			exit(126);
-		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
-			ft_strcmp("not found", elem->exec) == 0)
-			exit(127);
-		else
-			ret = 0;
-	}
-	return (ret);
-}
-
-void	child_signals(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGTSTP, SIG_DFL);
-	signal(SIGTTIN, SIG_DFL);
-	signal(SIGTTOU, SIG_DFL);
-	signal(SIGCHLD, SIG_DFL);
-}
-
 void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	pid_t	pid;
@@ -69,7 +26,7 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		setpgid(pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
 			tcsetpgrp(jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
-		child_signals();
+		child_signals_to_dfl();
 	}
 	if (elem->bad_substitution)
 		exit(EXIT_FAILURE);

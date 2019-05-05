@@ -6,7 +6,7 @@
 /*   By: canastas <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/05/04 22:07:38 by canastas     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 22:07:57 by canastas    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:55:42 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -33,7 +33,7 @@ int		manage_sig_term_ret2(int ret)
 	return (128 + ret);
 }
 
-int			manage_sig_term_ret1(int ret)
+int		manage_sig_term_ret1(int ret)
 {
 	if (ret == 6)
 		ft_putendl_fd("Abort trap: 6", 2);

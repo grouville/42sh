@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/21 15:02:55 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/21 15:02:55 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:59:00 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -71,20 +71,6 @@ int		is_recheable_output(t_output *output, t_shell *shell)
 	return (fd_open);
 }
 
-void	shell_set_output_file(t_output *output, t_cmd *elem, int fd_file)
-{
-	if (output->from == 1)
-	{
-		(elem->process).fd_stdout = ft_strdup(output->to);
-		(elem->process).fd_fileout = fd_file;
-	}
-	else if (output->from == 2)
-	{
-		(elem->process).fd_stderr = ft_strdup(output->to);
-		(elem->process).fd_fileerr = fd_file;
-	}
-}
-
 void	shell_set_output_fd(t_output *output, t_cmd *elem)
 {
 	if (ft_atoi(output->to + 1) == 1 && output->from == 0)
@@ -114,6 +100,23 @@ void	shell_set_output_fd(t_output *output, t_cmd *elem)
 	shell_set_fd_null(output, elem);
 }
 
+void	reset_output_struct(t_cmd *elem, t_output *output, int fd_file,
+			char **tmp)
+{
+	if (output->from == 1 && (elem->process.last_redi = 1))
+	{
+		*tmp = (elem->process).fd_stdout;
+		if (elem->process.fd_fileout == fd_file)
+			close(fd_file);
+	}
+	else if (output->from == 2 && (elem->process.last_redi = 2))
+	{
+		*tmp = (elem->process).fd_stderr;
+		if (elem->process.fd_fileerr == fd_file)
+			close(fd_file);
+	}
+}
+
 /*
 ** Création de file out, return 0 si erreur (no right..)
 */
@@ -123,25 +126,14 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 	t_output	*output;
 	int			is_fd;
 	int			fd_file;
-	char 		*tmp;
+	char		*tmp;
 
 	fd_file = -1;
 	output = elem->output;
 	while (output != NULL)
 	{
 		tmp = NULL;
-		if (output->from == 1 && (elem->process.last_redi = 1))
-		{
-			tmp = (elem->process).fd_stdout;
-			if (elem->process.fd_fileout == fd_file)
-				close(fd_file);
-		}
-		else if (output->from == 2 && (elem->process.last_redi = 2))
-		{
-			tmp = (elem->process).fd_stderr;
-			if (elem->process.fd_fileerr == fd_file)
-				close(fd_file);
-		}
+		reset_output_struct(elem, output, fd_file, &tmp);
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
 		else if (!is_fd && (fd_file = is_recheable_output(output, shell)))
