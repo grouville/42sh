@@ -6,7 +6,7 @@
 /*   By: dzonda <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/09/10 00:46:23 by dzonda       #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 15:44:08 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 16:31:28 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -252,10 +252,11 @@ int						tabulator_check_if_var(t_tab *tabu);
 void					tabulator_autocomplete(char **comp, char *d_name);
 char					*get_user_name(void);
 
-void			term_history_i_search_print_line(t_editor *ed, int cursor_tmp,
-				int mode);
-void			term_history_i_search_print_prompt(t_editor *ed, t_prompt prompt
-				, int mode, int *cursor_tmp);
-int				term_history_i_search_ndl(t_editor *ed, int *cur_tmp, int r);
+void					term_history_i_search_print_line(t_editor *ed,
+							int cursor_tmp, int mode);
+void					term_history_i_search_print_prompt(t_editor *ed,
+							t_prompt prompt, int mode, int *cursor_tmp);
+int						term_history_i_search_ndl(t_editor *ed, int *cur_tmp,
+							int r);
 
 #endif
