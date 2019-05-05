@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/21 22:44:23 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 20:52:29 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:40:47 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -21,7 +21,7 @@ void	shell_exec_print_error(t_cmd *elem)
 		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
 	else if (ft_strcmp("file or directory", elem->exec) == 0)
 		ft_dprintf(2, "42sh: %s: No such file or directory\n",
-			elem->args[0]);
+				   elem->args[0]);
 	else if (ft_strcmp("no allowed", elem->exec) == 0)
 		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
 }
@@ -38,7 +38,7 @@ int		shell_exec_error(t_cmd *elem)
 			ft_strcmp("directory", elem->exec) == 0)
 			exit(126);
 		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
-			ft_strcmp("not found", elem->exec) == 0)
+				 ft_strcmp("not found", elem->exec) == 0)
 			exit(127);
 		else
 			ret = 0;
@@ -46,49 +46,91 @@ int		shell_exec_error(t_cmd *elem)
 	return (ret);
 }
 
-void	change_signals(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGTSTP, SIG_DFL);
-	signal(SIGTTIN, SIG_DFL);
-	signal(SIGTTOU, SIG_DFL);
-	signal(SIGCHLD, SIG_DFL);
-}
-
 void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	pid_t	pid;
 	t_js	*jsig;
-	int		builtin;
+	int 	builtin;
 
 	jsig = getter_job();
 	if (jsig->shell_is_interactive)
 	{
-		pid = getpid();
-		setpgid(pid, (job->pgid == 0) ? pid : job->pgid);
+		/* Put the process into the process group and give the process group
+		   the terminal, if appropriate.
+		   This has to be done both by the shell and in the individual
+		   child processes because of potential race conditions.  */
+		pid = getpid ();
+		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
-			tcsetpgrp(jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
-		change_signals();
+			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
+
+		/* Set the handling for job control signals back to the default.  */
+		signal (SIGINT, SIG_DFL);
+		signal (SIGQUIT, SIG_DFL);
+		signal (SIGTSTP, SIG_DFL);
+		signal (SIGTTIN, SIG_DFL);
+		signal (SIGTTOU, SIG_DFL);
+		signal (SIGCHLD, SIG_DFL);
 	}
 	if (elem->bad_substitution)
 		exit(EXIT_FAILURE);
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		exit(EXIT_FAILURE);
+	//read_lexing(elem);
 	shell_plomberie(elem->process);
 	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
 	exit(EXIT_SUCCESS);
 }
 
+/*static int	manage_sig_term_ret_2(int ret)
+{
+	if (ret == 11)
+		ft_putendl_fd("Segmentation fault: 11", 2);
+	else if (ret == 13)
+		ft_putendl_fd("Broken pipe: 13", 2);
+	else if (ret == 16)
+		ft_putendl_fd("Stack fault: 16", 2);
+	return (128 + ret);
+}
+
+int			manage_sig_term_ret_1(int ret)
+{
+	if (ret == 6)
+		ft_putendl_fd("Abort trap: 6", 2);
+	else if (ret == 7 || ret == 0)
+		ft_putendl_fd("Bus error: 10", 2);
+	else if (ret == 8)
+		ft_putendl_fd("Floating-point exception: 8", 2);
+	else
+		return (manage_sig_term_ret_2(ret));
+	return (ret + 128);
+}
+*/
+int		right_return(int status)
+{
+	int res;
+
+	res = 0;
+	if (WIFEXITED(status))
+		res = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		res = manage_sig_term_ret_1(WTERMSIG(status));
+	return (res);
+}
 int		shell_father(int pid_child, t_cmd *elem)
 {
 	int status;
+	int ret;
 
-	status = -4735;
+	ret = -4735;
 	if (elem->sep != SPL_SPRLU)
+	{
 		waitpid(pid_child, &status, WUNTRACED);
-	return (status);
+		ret = right_return(status);
+	}
+	 //WUNTRACED pour le Ctrl-Z
+	return (ret);
 }
 
 /*
@@ -119,7 +161,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
 			job->pgid = child;
-		setpgid(child, job->pgid);
+		setpgid (child, job->pgid);
 	}
 	return (elem->ret);
 }
