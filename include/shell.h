@@ -301,7 +301,8 @@ int					get_nbarg(char *str, t_prompt *prompt);
 char				*get_arg(char **str, t_cmd *cmd);
 void				shell_ret(t_cmd *elem, t_shell *shell);
 t_cmd				*shell_process_skip_cmd(t_cmd *elem, t_sep sep);
-void				shell_clean_emptyargs(t_cmd *elem);
+int					manage_sig_term_ret1(int ret);
+void				ft_putendl_fd(char const *s, int fd);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

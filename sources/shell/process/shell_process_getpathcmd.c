@@ -66,6 +66,17 @@ char	*check_path_cmd(char *exec_path, char *exec)
 	return (ret);
 }
 
+char 	*shell_check_binaire(char *exec)
+{
+	char 	*tmp;
+	char 	*path_binaire;
+
+	tmp = get_cur_dir();
+	path_binaire = ft_strjoin_mltp(3, tmp, "/", exec + 2);
+	ft_strdel(&tmp);
+	return (check_path_cmd(path_binaire, exec + 2));
+}
+
 /*
 ** Recherche le bon path de {cmd} dans les differents path de {envp PATH}
 ** si non trouvé ou PATH inexistant on retourne {cmd}
@@ -80,6 +91,8 @@ char	*shell_getpathexec(char *exec, char **all_env)
 
 	if (exec == NULL || !ft_strcmp(".", exec) || !ft_strcmp("..", exec))
 		return (NULL);
+	if (exec[0] == '.' && exec[1] == '/')
+		return (shell_check_binaire(exec));
 	all_path = ft_strsplit(get_envp(all_env, "PATH"), ':');
 	exec_path = NULL;
 	i = 0;

@@ -125,23 +125,29 @@ int		shell_set_output(t_cmd *elem, t_shell *shell)
 	int			fd_file;
 	char 		*tmp;
 
+	fd_file = -1;
 	output = elem->output;
 	while (output != NULL)
 	{
-		fd_file = -1;
 		tmp = NULL;
 		if (output->from == 1 && (elem->process.last_redi = 1))
+		{
 			tmp = (elem->process).fd_stdout;
+			if (elem->process.fd_fileout == fd_file)
+				close(fd_file);
+		}
 		else if (output->from == 2 && (elem->process.last_redi = 2))
+		{
 			tmp = (elem->process).fd_stderr;
+			if (elem->process.fd_fileerr == fd_file)
+				close(fd_file);
+		}
 		if (((is_fd = check_fd_output(&output->to, shell)) == 1))
 			shell_set_output_fd(output, elem);
 		else if (!is_fd && (fd_file = is_recheable_output(output, shell)))
 			shell_set_output_file(output, elem, fd_file);
 		else
 			return (0);
-		if (output->next && fd_file > 0)
-			close(fd_file);
 		ft_strdel(&tmp);
 		output = output->next;
 	}

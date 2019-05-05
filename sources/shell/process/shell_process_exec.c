@@ -83,30 +83,6 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 	exit(EXIT_SUCCESS);
 }
 
-/*static int	manage_sig_term_ret_2(int ret)
-{
-	if (ret == 11)
-		ft_putendl_fd("Segmentation fault: 11", 2);
-	else if (ret == 13)
-		ft_putendl_fd("Broken pipe: 13", 2);
-	else if (ret == 16)
-		ft_putendl_fd("Stack fault: 16", 2);
-	return (128 + ret);
-}
-
-int			manage_sig_term_ret_1(int ret)
-{
-	if (ret == 6)
-		ft_putendl_fd("Abort trap: 6", 2);
-	else if (ret == 7 || ret == 0)
-		ft_putendl_fd("Bus error: 10", 2);
-	else if (ret == 8)
-		ft_putendl_fd("Floating-point exception: 8", 2);
-	else
-		return (manage_sig_term_ret_2(ret));
-	return (ret + 128);
-}
-*/
 int		right_return(int status)
 {
 	int res;
@@ -115,9 +91,12 @@ int		right_return(int status)
 	if (WIFEXITED(status))
 		res = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		res = manage_sig_term_ret_1(WTERMSIG(status));
+		res = manage_sig_term_ret1(WTERMSIG(status));
+	else if (status == 4735)
+		return (4735);
 	return (res);
 }
+
 int		shell_father(int pid_child, t_cmd *elem)
 {
 	int status;
@@ -129,7 +108,6 @@ int		shell_father(int pid_child, t_cmd *elem)
 		waitpid(pid_child, &status, WUNTRACED);
 		ret = right_return(status);
 	}
-	 //WUNTRACED pour le Ctrl-Z
 	return (ret);
 }
 

@@ -40,13 +40,15 @@ int			builtin_localvar(char ***ptn_args, char **args_raw)
 	int		i;
 	char	**args;
 
-	args = *ptn_args;
+	if (!(args = *ptn_args))
+		return (0);
 	if (!ft_strchr(args[0], '='))
 		return (0);
 	i = 0;
 	while (args[i])
 	{
-		if (!ft_strchr(args[i], '=') || !is_var(args_raw[i]))
+		if ((args[i] && !ft_strchr(args[i], '=')) || (args_raw[i] &&
+				!is_var(args_raw[i])))
 		{
 			*ptn_args = del_locvars(args, i);
 			return (0);

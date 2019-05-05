@@ -60,6 +60,7 @@ SRCS =  shell/main.c \
         shell/process/shell_process_exec.c \
         shell/process/shell_process_plomberie.c \
         shell/process/shell_process_pipe.c \
+        shell/process/shell_process_sig.c \
         shell/jobs/shell_init_jobs.c \
 		shell/jobs/check_jobs_on_exit.c \
         shell/jobs/wait_job.c \

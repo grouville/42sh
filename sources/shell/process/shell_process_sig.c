@@ -33,7 +33,7 @@ int		manage_sig_term_ret2(int ret)
 	return (128 + ret);
 }
 
-int			manage_sig_term_ret_1(int ret)
+int			manage_sig_term_ret1(int ret)
 {
 	if (ret == 6)
 		ft_putendl_fd("Abort trap: 6", 2);
@@ -41,6 +41,8 @@ int			manage_sig_term_ret_1(int ret)
 		ft_putendl_fd("Bus error: 10", 2);
 	else if (ret == 8)
 		ft_putendl_fd("Floating-point exception: 8", 2);
+	else if (ret == 4735)
+		return (4735);
 	else
 		return (manage_sig_term_ret2(ret));
 	return (ret + 128);

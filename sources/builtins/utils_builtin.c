@@ -22,6 +22,8 @@ BOOL			shell_is_builtin(t_cmd *elem, t_shell *shell)
 {
 	int i;
 
+	if (!elem->args)
+		return (0);
 	if (elem->args[0] && builtin_localvar(&elem->args, elem->args_raw))
 	{
 		i = 0;
