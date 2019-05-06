@@ -193,6 +193,7 @@ void				builtin_type_display(char *d_name, char *bin,
 											char *options, int mode);
 int					builtin_alias(char ***alias, char **args);
 char				**builtin_alias_get_alias_from_file(char *file);
+void				shell_check_alias(t_shell *shell, t_cmd *next, int index);
 int					check_executable_file(char *path);
 int					builtin_unalias(char ***alias, char **args);
 
