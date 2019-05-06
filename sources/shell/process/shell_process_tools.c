@@ -13,6 +13,22 @@
 
 #include "shell.h"
 
+void	shell_add_envl_exec(char **envl_to_add, t_shell *shell)
+{
+	char	*var;
+	char	*value;
+	int		i;
+
+	i = 0;
+	while (envl_to_add[i])
+	{
+		var = get_var(envl_to_add[i]);
+		value = get_value(envl_to_add[i]);
+		shell->envp = append_key_env(shell->envl, var, value);
+		i++;
+	}
+}
+
 void	shell_prcs_sigint(int signum)
 {
 	(void)signum;

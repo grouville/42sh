@@ -18,21 +18,11 @@
 *** - Returns true if command is builtin
 */
 
-BOOL			shell_is_builtin(t_cmd *elem, t_shell *shell)
+BOOL			shell_is_builtin(t_cmd *elem)
 {
-	int i;
-
 	if (!elem->args)
 		return (0);
-	if (elem->args[0] && builtin_localvar(&elem->args, elem->args_raw))
-	{
-		i = 0;
-		while (elem->args[i])
-			builtin_env_add(&shell->envp, &shell->envl, elem->args[i++]);
-		ft_arrdel(&elem->args);
-		return (1);
-	}
-	else if (elem->args[0] && (ft_strcmp("hash", elem->args[0]) == 0 ||
+	if (elem->args[0] && (ft_strcmp("hash", elem->args[0]) == 0 ||
 	!ft_strcmp("echo", elem->args[0]) || !ft_strcmp("cd", elem->args[0]) ||
 	!ft_strcmp("set", elem->args[0]) || !ft_strcmp("unset", elem->args[0]) ||
 	!ft_strcmp("export", elem->args[0]) || !ft_strcmp("type", elem->args[0]) ||

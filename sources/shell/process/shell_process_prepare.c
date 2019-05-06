@@ -13,22 +13,19 @@
 
 #include "shell.h"
 
-char	**ft_arrjoin(char **arr1, char **arr2)
+BOOL	shell_add_local_var(t_cmd *elem, t_shell *shell)
 {
-	int		cursor_arrs;
-	int		cursor_all_env;
-	char	**all_env;
+	int i;
 
-	cursor_arrs = 0;
-	cursor_all_env = 0;
-	all_env = malloc(sizeof(char *) * (ft_arrlen(arr1) + ft_arrlen(arr2) + 1));
-	while (arr1[cursor_arrs])
-		all_env[cursor_all_env++] = ft_strdup(arr1[cursor_arrs++]);
-	cursor_arrs = 0;
-	while (arr2[cursor_arrs])
-		all_env[cursor_all_env++] = ft_strdup(arr2[cursor_arrs++]);
-	all_env[cursor_all_env] = NULL;
-	return (all_env);
+	if (elem->args[0] && builtin_localvar(elem))
+	{
+		i = 0;
+		while (elem->args[i])
+			builtin_env_add(&shell->envp, &shell->envl, elem->args[i++]);
+		ft_arrdel(&elem->args);
+		return (1);
+	}
+	return (0);
 }
 
 void	shell_prepare_args(t_cmd *elem, t_shell *shell)

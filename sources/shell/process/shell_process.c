@@ -29,6 +29,8 @@ int		shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	int fd[3];
 
 	(*elem)->done = 1;
+	if (shell_add_local_var(*elem, shell))
+		return (1);
 	shell_prepare_args(*elem, shell);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)

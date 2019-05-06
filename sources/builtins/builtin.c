@@ -104,7 +104,7 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 {
 	int ret;
 
-	ret = shell_is_builtin(elem, shell);
+	ret = shell_is_builtin(elem);
 	if (elem->args && elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
 		elem->ret = ft_builtin_hash(elem->args, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)

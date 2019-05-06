@@ -17,7 +17,6 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	pid_t	pid;
 	t_js	*jsig;
-	int		builtin;
 
 	jsig = getter_job();
 	if (jsig->shell_is_interactive)
@@ -32,8 +31,12 @@ void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 		exit(EXIT_FAILURE);
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		exit(EXIT_FAILURE);
+	if (elem->envl_exec)
+		shell_add_envl_exec(elem->envl_exec, shell);
 	shell_plomberie(elem->process);
-	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
+	if (shell_is_builtin(elem))
+		shell_builtin(elem, shell);
+	else if (!shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
 	exit(EXIT_SUCCESS);
 }
@@ -117,7 +120,7 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 
 	is_builtin = 0;
 	if (job->sep != SPL_SPRLU && !elem->bad_substitution &&
-			(is_builtin = shell_is_builtin(elem, shell)))
+			(is_builtin = shell_is_builtin(elem)))
 	{
 		if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 			return (1);

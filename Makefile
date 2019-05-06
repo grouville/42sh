@@ -30,6 +30,7 @@ DIR_OBJ = ./Objects/
 SRCS =  shell/main.c \
         shell/tools.c \
         shell/ft_tools.c \
+        shell/ft_tools2.c \
         shell/shell_tools.c \
         shell/shell_envsub.c \
         shell/shell_argsub_env.c \

@@ -75,6 +75,7 @@ typedef struct		s_cmd
 	BOOL			signal;
 	int				status;
 	BOOL			bad_substitution;
+	char			**envl_exec;
 	struct s_cmd	*next_cmd;
 	struct s_cmd	*start;
 }					t_cmd;
@@ -209,7 +210,7 @@ void				builtin_fc_search_first_and_last(char **args, t_fc *fc);
 int					shell_command_execution(t_shell *shl, t_cmd **cmd,
 						t_shortcut ret, t_prompt *prmt);
 BOOL				is_var(char *arg);
-int					builtin_localvar(char ***ptn_args, char **args_raw);
+int					builtin_localvar(t_cmd *elem);
 int					ft_builtin_fg(char **cmd);
 int					ft_builtin_bg(char **cmd);
 int					find_last_job_put_in_background(void);
@@ -218,7 +219,7 @@ int					job_percentage_number_exists_or_not_fg(char *cmd, int nb,
 															t_job **job);
 int					check_usage(char *cmd);
 int					is_number(char *cmd);
-BOOL				shell_is_builtin(t_cmd *elem, t_shell *shell);
+BOOL				shell_is_builtin(t_cmd *elem);
 BOOL				shell_is_builtin_str(char *str);
 int					ft_builtin_jobs(char **cmd);
 void				free_job_after_signal(t_job **job);
@@ -308,6 +309,8 @@ int					shell_exec_error(t_cmd *elem);
 void				shell_exec_print_error(t_cmd *elem);
 void				shell_prepare_jobs_boucle(t_cmd *elem, t_job *first_jobs,
 						t_job *job);
+BOOL				shell_add_local_var(t_cmd *elem, t_shell *shell);
+void				shell_add_envl_exec(char **envl_to_add, t_shell *shell);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

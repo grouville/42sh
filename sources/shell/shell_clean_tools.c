@@ -17,6 +17,7 @@ void	clean_cmd2(t_cmd **cmd)
 {
 	ft_arrdel(&(*cmd)->args);
 	ft_arrdel(&(*cmd)->args_raw);
+	ft_arrdel(&(*cmd)->envl_exec);
 	clean_arr_mlti((*cmd)->hrdc);
 	clean_arr_mlti((*cmd)->input);
 	ft_strdel(&(*cmd)->process.fd_stdin);
