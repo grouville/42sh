@@ -67,7 +67,6 @@ int			builtin_localvar(t_cmd *elem)
 				!is_var(elem->args_raw[i])))
 		{
 			elem->envl_exec = save_locvars(args, i);
-			dprintf(2, "-<on del args|%s|>\n", args[i]);
 			elem->args = del_locvars(&elem->args, i);
 			return (0);
 		}

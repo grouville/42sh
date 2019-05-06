@@ -17,7 +17,7 @@ NOCOLOR=\033[0m
 VERT=\033[32;05m
 JAUNE=\033[33m
 PURPLE=\033[0;35m
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g #-Wall -Wextra -Werror
 
 NAME = 42sh
 
@@ -38,6 +38,7 @@ SRCS =  shell/main.c \
         shell/shell_error.c \
         shell/shell_hrdc.c \
         shell/shell_check.c \
+        shell/shell_alias.c \
         shell/shell_check_syntax.c \
         shell/shell_check_syntax_tools.c \
         shell/shell_clean.c \

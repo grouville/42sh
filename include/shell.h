@@ -153,6 +153,18 @@ typedef struct		s_norme
 	t_job			*jobs;
 }					t_norme;
 
+typedef struct		s_alias
+{
+	BOOL			aliased;
+	char 			quote;
+	int 			i;
+	int 			len;
+	char 			*tmp;
+	char 			*tmp2;
+	char 			*alias;
+	char 			*last_alias;
+}					t_alias;
+
 typedef enum		e_sep
 {
 	SPL_PIPE = 1,
@@ -343,6 +355,7 @@ void				clean_arr_mlti(char **arr);
 void				clean_redi(t_output **redi);
 void				check_hash_then_path(t_cmd *elem, t_shell *shell);
 char				**ft_arrjoin(char **arr1, char **arr2);
+char				*shell_alias(char *str, char **shl_al);
 
 /*
 **┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
