@@ -103,3 +103,15 @@ void		tokenize_test(char **cmd, t_args_tok ***t, char **raw_cmd)
 			tokenize_from_pattern(t, p, &i, &diff);
 	}
 }
+
+/*
+*** - Aim of the function :
+*** - For the norm, we added the ft_strdel() that returns an int in order to be
+*** - inside an if statement
+*/
+
+int			ft_strdelint(char **str)
+{
+	ft_strdel(str);
+	return (0);
+}

@@ -167,5 +167,6 @@ int						process_unary(t_test_tok tok, char *arg);
 
 void					tokenize_test(char **cmd, t_args_tok ***t,
 							char **raw_cmd);
+int						ft_strdelint(char **str);
 
 #endif
