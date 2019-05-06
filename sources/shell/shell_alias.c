@@ -93,7 +93,7 @@ char	*shell_alias(char *str, char **shl_al)
 	t_alias	*a;
 
 	a = ft_memalloc(sizeof(t_alias));
-	while (str[a->i])
+	while (str && str[a->i])
 	{
 		a->len = (int)len_arg(str + a->i, ' ');
 		a->tmp = ft_strsub(str, a->i, a->len);
