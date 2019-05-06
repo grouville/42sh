@@ -59,6 +59,7 @@ void	add_binary_to_hash(int *i, char **cmd, t_shell *env,
 	all_paths = ft_strsplit(get_envp(env->envp, "PATH"), ':');
 	while (cmd[++(*i)])
 	{
+		ft_strdel(path);
 		if (ft_strchr(cmd[*i], '/'))
 			;
 		else
@@ -68,7 +69,7 @@ void	add_binary_to_hash(int *i, char **cmd, t_shell *env,
 				check_path(all_paths, path, &(cmd[*i]));
 				if (!(*path))
 					ft_dprintf(2, "%s %s: not found\n", "bash: hash:", cmd[*i]);
-				else
+				else if (!shell_is_builtin_str(cmd[*i]))
 					add_binary_to_hash_norm(i, cmd, env, path);
 			}
 			else if (!shell_is_builtin_str(cmd[*i]))
