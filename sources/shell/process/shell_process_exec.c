@@ -90,7 +90,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 		elem->done = 0;
 		job->running = 999;
 	}
-	if (elem->ret == 3)
+	if (elem->ret == 131)
 		ft_dprintf(2, "Quit : 3\n");
 	jsig = getter_job();
 	elem->pid = child;
