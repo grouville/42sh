@@ -63,6 +63,26 @@ static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
 	clean_cmd(cmd);
 }
 
+static void		builtin_fc_substitution(t_fc *fc)
+{
+	char	*new;
+	char	*needle;
+	int		start;
+
+	if (!fc->old || !fc->cmd_list->cmd)
+		return ;
+	if ((needle = ft_strstr(fc->cmd_list->cmd, fc->old)))
+	{
+		if ((start = ft_strlen(fc->cmd_list->cmd) - ft_strlen(needle)))
+			new = ft_strsub(fc->cmd_list->cmd, 0, start);
+		ft_strjoin_free(&new, fc->new);
+		ft_strjoin_free(&new, fc->cmd_list->cmd + start + ft_strlen(fc->old));
+		ft_strdel(&fc->cmd_list->cmd);
+		fc->cmd_list->cmd = new;
+		builtin_fc_substitution(fc);
+	}
+}
+
 static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 				t_cmd **cmd, t_shell *shell)
 {
@@ -75,15 +95,15 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 		fc->cmd_list = fc->cmd_list->prev;
 	while (fc->cmd_list && ((tmp = fc->cmd_list->next) || !tmp))
 	{
+		if (fc->op && !ft_strchr(fc->op, 'l') && ft_strchr(fc->op, 's'))
+			builtin_fc_substitution(fc);
 		fc->heredoc[1] = fc->cmd_list->cmd ? fc->heredoc[1] + 1 :
 		fc->heredoc[1] + 0;
 		if ((shell->str = fc->cmd_list->cmd) && write(2, fc->cmd_list->cmd,
 		ft_strlen(fc->cmd_list->cmd)) && write(2, "\n", 1) &&
-		(fc->ret = shell_command_execution(shell, cmd, 0, p) == -1))
-		{
-			fc->cmd_list->cmd = NULL;
+		(fc->ret = shell_command_execution(shell, cmd, 0, p)) == -1 &&
+		!(fc->cmd_list->cmd = NULL))
 			return ;
-		}
 		if (*p != PROMPT && (!fc->heredoc[0] || ((*cmd && cmd_addr !=
 		(unsigned long)*cmd) && (cmd_addr = (unsigned long)*cmd))))
 			fc->heredoc[0] = fc->heredoc[1];
