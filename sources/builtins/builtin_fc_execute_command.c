@@ -63,23 +63,26 @@ static void		builtin_fc_error(t_fc *fc, t_prompt prompt,
 	clean_cmd(cmd);
 }
 
-static void		builtin_fc_substitution(t_fc *fc)
+static void		builtin_fc_substitution(t_fc *fc, int next)
 {
 	char	*new;
 	char	*needle;
-	int		start;
+	int		index;
 
-	if (!fc->old || !fc->cmd_list->cmd)
+	new = NULL;
+	index = 0;
+	if (!ft_strlen(fc->old) || !ft_strlen(fc->new) || !fc->cmd_list->cmd)
 		return ;
-	if ((needle = ft_strstr(fc->cmd_list->cmd, fc->old)))
+	if ((needle = ft_strstr(fc->cmd_list->cmd + next, fc->old)))
 	{
-		if ((start = ft_strlen(fc->cmd_list->cmd) - ft_strlen(needle)))
-			new = ft_strsub(fc->cmd_list->cmd, 0, start);
+		if ((index = ft_strlen(fc->cmd_list->cmd) - ft_strlen(needle)))
+			new = ft_strsub(fc->cmd_list->cmd, 0, index);
 		ft_strjoin_free(&new, fc->new);
-		ft_strjoin_free(&new, fc->cmd_list->cmd + start + ft_strlen(fc->old));
+		next = ft_strlen(new);
+		ft_strjoin_free(&new, fc->cmd_list->cmd + index + ft_strlen(fc->old));
 		ft_strdel(&fc->cmd_list->cmd);
 		fc->cmd_list->cmd = new;
-		builtin_fc_substitution(fc);
+		builtin_fc_substitution(fc, next);
 	}
 }
 
@@ -96,7 +99,7 @@ static void		builtin_fc_execute_commands_list(t_fc *fc, t_prompt *p,
 	while (fc->cmd_list && ((tmp = fc->cmd_list->next) || !tmp))
 	{
 		if (fc->op && !ft_strchr(fc->op, 'l') && ft_strchr(fc->op, 's'))
-			builtin_fc_substitution(fc);
+			builtin_fc_substitution(fc, 0);
 		fc->heredoc[1] = fc->cmd_list->cmd ? fc->heredoc[1] + 1 :
 		fc->heredoc[1] + 0;
 		if ((shell->str = fc->cmd_list->cmd) && write(2, fc->cmd_list->cmd,
