@@ -184,7 +184,7 @@ int					builtin_env_add(char ***envp, char ***envl, char *arg);
 int					builtin_exit(t_cmd *elem, t_shell *shell);
 char				*get_value(char *arg);
 
-int					builtin_type(char **args, char **envp);
+int					builtin_type(char **args, char **envp, char **envl);
 int					builtin_get_options(char **options, char **args,
 					char *possibility, int num);
 int					builtin_type_check_builtin(char *d_name);

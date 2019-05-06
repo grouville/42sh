@@ -79,7 +79,7 @@ int		builtin_set(t_shell *shell, char **args)
 void	shell_builtin2(t_cmd *elem, t_shell *shell)
 {
 	if (elem->args && elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
-		elem->ret = builtin_type(elem->args + 1, shell->envp);
+		elem->ret = builtin_type(elem->args + 1, shell->envp, shell->envl);
 	if (elem->args && elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
 		elem->ret = builtin_fc(elem->args + 1, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("test", elem->args[0]) == 0)

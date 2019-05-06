@@ -20,16 +20,19 @@ int		builtin_type_free(t_type *tp)
 
 	i = 0;
 	ret = tp->match[1];
-	while (tp->bin[i])
-		ft_strdel(&(tp->bin)[i++]);
-	ft_strdel(&tp->bin[i]);
+	if (tp->bin)
+	{
+		while (tp->bin[i])
+			ft_strdel(&(tp->bin)[i++]);
+		ft_strdel(&tp->bin[i]);
+		free(tp->bin);
+	}
 	ft_strdel(&tp->op);
-	free(tp->bin);
 	free(tp);
 	return (ret);
 }
 
-int		builtin_type_init(t_type **tp, char **envp, char **args)
+int		builtin_type_init(t_type **tp, char **envp, char **envl, char **args)
 {
 	if (!(*tp = (t_type*)malloc(sizeof(t_type))))
 		exit(EXIT_FAILURE);
@@ -43,7 +46,8 @@ int		builtin_type_init(t_type **tp, char **envp, char **args)
 		free(*tp);
 		return (1);
 	}
-	(*tp)->b_path = get_envp(envp, "PATH");
+	(*tp)->b_path = get_envp((check_if_env_var_existing(envp, "PATH") ? envp :
+	envl), "PATH");
 	(*tp)->bin = ft_strsplit((*tp)->b_path, ':');
 	(*tp)->match[1] = 0;
 	return (0);
@@ -74,11 +78,11 @@ void	builtin_type_search_bin(t_type *tp, char **args)
 	}
 }
 
-int		builtin_type(char **args, char **envp)
+int		builtin_type(char **args, char **envp, char **envl)
 {
 	t_type *tp;
 
-	if (builtin_type_init(&tp, envp, args) == 1)
+	if (builtin_type_init(&tp, envp, envl, args) == 1)
 		return (1);
 	while (args[++tp->i] && (tp->j = -1) == -1)
 	{

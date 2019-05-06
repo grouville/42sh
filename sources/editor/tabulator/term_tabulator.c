@@ -17,22 +17,10 @@ t_tab	*tabulator_init(int cursor_pos, char **envp, char **envl)
 {
 	t_tab *tabu;
 
-	if (!(tabu = (t_tab*)malloc(sizeof(t_tab))))
+	if (!(tabu = ft_memalloc(sizeof(t_tab))))
 		return (NULL);
-	tabu->path = NULL;
-	tabu->data = NULL;
-	tabu->home = NULL;
-	tabu->comp = NULL;
-	tabu->dir = NULL;
-	tabu->elem = NULL;
-	tabu->last_elem = NULL;
 	tabu->env = envp;
 	tabu->envl = envl;
-	tabu->nb_col = 0;
-	tabu->nb_row = 0;
-	tabu->max_len = 0;
-	tabu->nb_node = 0;
-	tabu->mode = 0;
 	tabu->start = cursor_pos;
 	tabu->end = cursor_pos;
 	return (tabu);
