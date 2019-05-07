@@ -67,7 +67,7 @@ char		*clean_value(char *value)
 		i++;
 	}
 	tmp = value + i - 1;
-	if (ft_strlen(tmp) > 0)
+	if (i > 0 && ft_strlen(tmp) > 0)
 		ft_strdelchar(&tmp, '\'');
 	return (value);
 }
