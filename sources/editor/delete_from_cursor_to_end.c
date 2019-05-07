@@ -25,7 +25,7 @@ void			delete_from_cursor_to_end(t_editor *ed)
 	ed->clipboard = ft_strdup(ed->hist->cmd + ed->cursor_str_pos);
 	ft_strdel(&(ed->hist->cmd));
 	if (ft_strlen(tmp))
-		ed->hist->cmd = ft_strdup(tmp);
+		ed->hist->cmd = tmp;
 	else
 		ft_strdel(&tmp);
 	ed->last_char = ed->cur_col;
