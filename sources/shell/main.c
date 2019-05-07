@@ -78,7 +78,7 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	}
 	if (!hrdc_fill(prmt, cmd, shl, ret) && !check_shrt(prmt, ret, shl))
 		return (-1);
-	if (*prmt == PROMPT)
+	if (*prmt == PROMPT || *prmt == BACKSLASH)
 		shell_check_backslash_end(&shl->str);
 	shl->str = shell_alias(shl->str, shl->alias);
 	if ((shl->str && ((*cmd) = shell_split(shl->str, shl->envp, prmt))) ||
