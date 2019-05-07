@@ -123,9 +123,9 @@ BOOL	check_expansions(t_shell *shell)
 		else if (shell->str[d[0]] == d[1] && d[1] != 0)
 			d[1] = 0;
 		if (shell->str[d[0]] == '!' && shell->str[d[0] + 1] != '\"' &&
-		shell->str[d[0] + 1] != ' ' && shell->str[d[0] + 1] && d[1] != '\'')
+		shell->str[d[0] + 1] != ' ' && shell->str[d[0] + 1] && d[1] != '\'' &&
+		shell->str[d[0] + 1] != '=' && (d[2] = 1))
 		{
-			d[2] = 1;
 			if ((d[0] = expansions_add_event(shell, d[0])) == -1)
 				return (1);
 			continue ;
