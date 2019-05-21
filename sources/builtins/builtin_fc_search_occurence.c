@@ -45,14 +45,14 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 		int last_nb, t_data *hist)
 {
 	t_data	*tmp;
-	int		first_occurence;
+	int		first;
 
 	tmp = hist;
-	first_occurence = 0;
+	first = 0;
 	while (tmp)
 	{
-		if ((!first_occurence && first_nb == tmp->nb && (first_occurence = 1))
-		|| (first_occurence && last_nb && first_nb != tmp->nb))
+		if ((!first && first_nb == tmp->nb && (first = 1))
+		|| (first && last_nb && first_nb != tmp->nb && last_nb <= tmp->nb))
 		{
 			if (fc->fd >= 0 && write(fc->fd, tmp->cmd, ft_strlen(tmp->cmd))
 			&& write(fc->fd, "\n", 1))
@@ -64,10 +64,10 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 				ft_dprintf(1, "%s\n", tmp->cmd);
 			}
 		}
-		if (first_occurence && (!last_nb || first_nb == last_nb ||
+		if (first && (!last_nb || first_nb == last_nb ||
 		last_nb == tmp->nb))
 			break ;
-		tmp = first_occurence && last_nb > first_nb ? tmp->next : tmp->prev;
+		tmp = first && last_nb > first_nb ? tmp->next : tmp->prev;
 	}
 }
 

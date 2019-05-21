@@ -42,15 +42,14 @@ int			init_terminal_data(void)
 	return (0);
 }
 
-t_shell		*init_shell(void)
+t_shell		*init_shell(char **envp)
 {
 	t_shell			*shell;
-	extern char		**environ;
 
 	if (!(shell = malloc(sizeof(t_shell))))
 		exit(EXIT_FAILURE);
 	ft_bzero(shell, sizeof(t_shell));
-	if (!(shell->envp = init_env(ft_arrdup(environ))))
+	if (!(shell->envp = init_env(ft_arrdup(envp))))
 	{
 		free(shell);
 		exit(EXIT_FAILURE);
@@ -61,8 +60,7 @@ t_shell		*init_shell(void)
 			build_full_path(get_envp(shell->envp, "HOME"), ".42sh_history");
 	shell->hist = init_hist(shell->hist_path);
 	shell->alias = builtin_alias_get_alias_from_file(".42sh_alias");
-	if (!(shell->envl = (char **)malloc(sizeof(char *))))
-		exit(EXIT_FAILURE);
+	shell->envl = (char **)malloc(sizeof(char *));
 	shell->envl[0] = NULL;
 	shell->envl = append_key_env(shell->envl, "?", "0");
 	shell->count = -1;
@@ -71,20 +69,19 @@ t_shell		*init_shell(void)
 	return (shell);
 }
 
-void		shell_init(t_shell **shell, t_prompt *prompt, t_cmd **cmd,
-				t_job **jobs)
+void		shell_init(t_norme *norme)
 {
 	t_js	*jsig;
 
 	jsig = getter_job();
 	if (init_terminal_data())
 		exit(EXIT_FAILURE);
-	*shell = init_shell();
-	*prompt = PROMPT;
-	*cmd = NULL;
-	*jobs = malloc(sizeof(t_job));
-	ft_bzero(*jobs, sizeof(t_job));
-	jsig->first_job = *jobs;
+	norme->shl = init_shell(norme->envp);
+	norme->prmt = PROMPT;
+	norme->cmd = NULL;
+	norme->jobs = malloc(sizeof(t_job));
+	ft_bzero(norme->jobs, sizeof(t_job));
+	jsig->first_job = norme->jobs;
 	process_init_shell_for_job();
 }
 

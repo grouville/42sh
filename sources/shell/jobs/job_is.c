@@ -84,3 +84,22 @@ int		job_is_signaled(t_job *j)
 	}
 	return (0);
 }
+
+/*
+** Return true if all processes in the job have stopped or completed.
+*/
+
+int		shell_nothere(t_job *j)
+{
+	t_cmd *p;
+
+	p = j->cmds;
+	while (p)
+	{
+		if (p->args && (!ft_strcmp(p->args[0], "./42sh")
+			|| !ft_strcmp(p->args[0], "bash") || !ft_strcmp(p->args[0], "sh")))
+			return (0);
+		p = p->next_cmd;
+	}
+	return (1);
+}

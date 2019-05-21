@@ -69,3 +69,26 @@ char		*complete_stdout_to(char **arg, t_output *add_to)
 	*arg = NULL;
 	return (ret);
 }
+
+int			chbkote(char *s, char *begin)
+{
+	int			i;
+	int			diff;
+	int			count;
+	char		*dup;
+
+	i = -1;
+	count = 0;
+	dup = s;
+	diff = dup - begin;
+	while (++i < diff && --dup)
+	{
+		if (*dup == '\\')
+			count++;
+		else if (*dup != '\\')
+			break ;
+	}
+	if (count % 2 != 0)
+		return (1);
+	return (0);
+}

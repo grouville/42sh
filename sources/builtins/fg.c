@@ -140,7 +140,7 @@ int				ft_builtin_fg(char **cmd)
 		if (check_if_job_exists(cmd[1], &j))
 			return (1);
 	}
-	put_job_in_foreground(j, job_is_stopped(j) ? 1 : 0);
+	put_job_in_foreground(j, job_is_stopped(j) && shell_nothere(j) ? 1 : 0);
 	if (ft_strcmp("cat", j->cmds->args[0]) == 0)
 		ft_putchar_fd('\n', 1);
 	return (0);

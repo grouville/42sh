@@ -98,7 +98,7 @@ int				shell_envpsub(char **arg, char **envp, char **envl)
 			quote = (*arg)[i];
 		else if ((*arg)[i] == quote && quote != ' ')
 			quote = ' ';
-		if ((*arg)[i] == '$' && quote != '\'')
+		if ((*arg)[i] == '$' && quote != '\'' && !chbkote(*arg + i, *arg))
 		{
 			if ((*arg)[i + 1] == '{' && !check_env_substitution(*arg + i + 2))
 				return (0);

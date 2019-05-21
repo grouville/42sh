@@ -141,7 +141,7 @@ t_output	*shell_std_out(char **arg, t_output **first_redi, char quote)
 			quote = (*arg)[i];
 		else if ((*arg)[i] == quote && quote != ' ')
 			quote = ' ';
-		if ((*arg)[i] == '>' && quote == ' ')
+		if ((*arg)[i] == '>' && quote == ' ' && !chbkote(*arg + i, *arg))
 		{
 			redi = add_stdout(first_redi);
 			shell_get_stdout(arg, &i, redi);

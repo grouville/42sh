@@ -26,3 +26,16 @@ t_js	*getter_job(void)
 	.shell_terminal = 0, .shell_is_interactive = 0};
 	return (&job);
 }
+
+int		put_job_done(t_job *j)
+{
+	t_cmd *p;
+
+	p = j->cmds;
+	while (p)
+	{
+		p->done = 1;
+		p = p->next_cmd;
+	}
+	return (1);
+}

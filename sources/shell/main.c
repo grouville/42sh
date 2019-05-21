@@ -95,12 +95,15 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	return (0);
 }
 
-int		main(void)
+int		main(int ac, char **av, char **envp)
 {
 	t_norme			norme;
 
 	ft_bzero(&norme, sizeof(t_norme));
-	shell_init(&norme.shl, &norme.prmt, &norme.cmd, &norme.jobs);
+	(void)ac;
+	(void)av;
+	norme.envp = envp;
+	shell_init(&norme);
 	while ((norme.ret = get_stdin(norme.shl, &norme.prmt)) != -1)
 	{
 		norme.shl->count += 1;

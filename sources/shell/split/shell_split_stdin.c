@@ -144,12 +144,13 @@ void	shell_std_in(char **arg, char quote, t_cmd *cmd)
 			quote = ' ';
 		if (triple_chevrons(*arg + i) && quote == ' ')
 			i = shell_get_stdin_send(arg, i, cmd);
-		if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<')
+		if (quote == ' ' && (*arg)[i] == '<' && (*arg)[i + 1] == '<' &&
+					!chbkote(*arg + i, *arg))
 		{
 			(cmd->process).stdin_send = (char *)-1;
 			i = shell_get_hrdc(arg, i, cmd);
 		}
-		else if (quote == ' ' && (*arg)[i] == '<')
+		else if (quote == ' ' && (*arg)[i] == '<' && !chbkote(*arg + i, *arg))
 			i = shell_get_stdin(&cmd->input, arg, i);
 		else
 			i += ((*arg)[i]) ? 1 : 0;

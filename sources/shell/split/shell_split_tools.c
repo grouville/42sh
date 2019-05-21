@@ -20,9 +20,9 @@ void	is_complet_read_str(char *str, char *ptn_quote, int *ptn_i)
 	while (str && str[*ptn_i])
 	{
 		if (str[*ptn_i] == '\\' && ft_strlen(str) >= (*ptn_i + 2) &&
-			*ptn_quote != '\'')
-			*ptn_i += 2;
-		if (ft_strchr("'\"", str[*ptn_i]) && *ptn_quote == ' ')
+				*ptn_quote != '\'')
+			*ptn_i += 1;
+		else if (ft_strchr("'\"", str[*ptn_i]) && *ptn_quote == ' ')
 			*ptn_quote = str[*ptn_i];
 		else if (str[*ptn_i] == '$' && str[*ptn_i + 1] == '{' &&
 					*ptn_quote == ' ')
@@ -55,7 +55,7 @@ BOOL	iscomplet(char *str, t_prompt *prompt)
 			*prompt = BRACE;
 		return (0);
 	}
-	else if (str && (i > 1 && str[i - 1] == '\\' && str[i - 2] != '\\'))
+	else if (str && (i > 0 && str[i - 1] == '\\' && chbkote(str + i, str)))
 	{
 		*prompt = BACKSLASH;
 		return (0);

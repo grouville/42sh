@@ -85,6 +85,18 @@ t_data		*hist_add(t_data *hist)
 	return (new);
 }
 
+void		hist_error(t_data **hist, int fd, int ret)
+{
+	ft_memdel((void**)hist);
+	if (ret == -1)
+		ft_putstr("Error history file is a directory but not a file\n");
+	if (fd == -2)
+		ft_putstr_fd("No permissions for history file\n", 2);
+	else if (fd == -1)
+		ft_putstr_fd("Error opening history file\n", 2);
+	exit(EXIT_FAILURE);
+}
+
 t_data		*init_hist(char *file)
 {
 	t_data		*hist;
@@ -92,23 +104,24 @@ t_data		*init_hist(char *file)
 	int			fd;
 	int			ret;
 
-	if (!(hist = malloc(sizeof(t_data))))
+	if (!(hist = ft_memalloc(sizeof(t_data))))
 		exit(EXIT_FAILURE);
-	ft_bzero(hist, sizeof(t_data));
 	hist->nb = 1;
 	file_str = NULL;
 	ret = 0;
-	if (!access(file, R_OK | F_OK))
-		if ((fd = open(file, O_RDONLY)))
+	fd = -2;
+	if (!access(file, R_OK | F_OK) && (fd = open(file, O_RDONLY)))
+	{
+		if ((ret = get_read_key(fd, &file_str)) != -1)
 		{
-			if ((ret = get_read_key(fd, &file_str)))
-			{
-				hist = recup_hist_from_file(hist, file_str);
-				ft_strdel(&file_str);
-			}
-			close(fd);
+			hist = recup_hist_from_file(hist, file_str);
+			ft_strdel(&file_str);
 		}
-	if (ret == -1)
-		return (NULL);
+		else
+			hist_error(&hist, fd, ret);
+		close(fd);
+	}
+	else if (!access(file, F_OK))
+		hist_error(&hist, fd, ret);
 	return (hist);
 }

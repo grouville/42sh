@@ -47,6 +47,8 @@ void	put_job_in_foreground(t_job *j, int cont)
 
 	jsig = getter_job();
 	tcsetpgrp(jsig->shell_terminal, j->pgid);
+	if (!shell_nothere(j))
+		put_job_done(j);
 	if (cont)
 	{
 		if (j->running && j->running != 999)
