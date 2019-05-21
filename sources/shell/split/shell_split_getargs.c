@@ -29,7 +29,7 @@ size_t	len_arg(char *str, char quote)
 	{
 		if (str[i] == '\\' && ft_strlen(str) >= (i + 2) && quote != '\'')
 			i += 2;
-		if (ft_strchr("'\"", str[i]) && quote == ' ')
+		else if (ft_strchr("'\"", str[i]) && quote == ' ')
 			quote = str[i++];
 		else if (str[i] == quote && quote != ' ')
 		{
@@ -37,7 +37,7 @@ size_t	len_arg(char *str, char quote)
 			i++;
 		}
 		else if ((quote == ' ' && (ft_strchr(";|&", str[i]) && (i == 0 ||
-				!ft_strchr("<>", str[i - 1]))))
+				!ft_strchr("<>", str[i - 1])) && !chbkote(str + i, str)))
 					|| (str[i] == quote &&
 					(quote == ' ' || ft_strchr("\0 ", str[i + 1]))))
 			break ;

@@ -74,6 +74,24 @@ int		check_input_file(char **std_in, t_shell *shell)
 	return (1);
 }
 
+int		shell_read_input_file(t_cmd *elem, int *i)
+{
+	int		fd;
+	char	*tmp;
+
+	if (*i == ft_arrlen(elem->input) - 1 && (int)elem->input[*i] != -3
+		&& (int)elem->input[*i] != -1)
+	{
+		if ((fd = open(elem->input[*i], O_RDONLY)) == -1)
+			return (0);
+		tmp = ft_itoa(fd);
+		ft_strdel(&(elem->process).fd_stdin);
+		(elem->process).fd_stdin = ft_strjoin("&", tmp);
+		ft_strdel(&tmp);
+	}
+	return (1);
+}
+
 /*
 ** Même si c'est seulement le dernier input qui est lu ont les check tous.
 ** On remplit stdin_send seulement si c'est le dernier input et qu'il
@@ -84,8 +102,6 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 {
 	int		i;
 	int		is_fd;
-	int		fd;
-	char	*tmp;
 
 	i = 0;
 	while (elem->input && elem->input[i])
@@ -100,16 +116,8 @@ int		shell_read_input(t_cmd *elem, t_shell *shell)
 		}
 		else if (!is_fd && check_input_file(&elem->input[i], shell))
 		{
-			if (i == ft_arrlen(elem->input) - 1 && (int)elem->input[i] != -3
-					&& (int)elem->input[i] != -1)
-			{
-				if ((fd = open(elem->input[i], O_RDONLY)) == -1)
-					return (0);
-				tmp = ft_itoa(fd);
-				ft_strdel(&(elem->process).fd_stdin);
-				(elem->process).fd_stdin = ft_strjoin("&", tmp);
-				ft_strdel(&tmp);
-			}
+			if (shell_read_input_file(elem, &i) == 0)
+				return (0);
 		}
 		else
 			return (0);

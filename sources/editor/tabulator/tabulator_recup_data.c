@@ -94,7 +94,8 @@ void	tabulator_get_binairies(t_tab *tabu)
 	char	**bin;
 
 	i = -1;
-	if (!(b_path = get_envp(tabu->env, "PATH")))
+	if (!(b_path = get_envp(check_if_env_var_existing(tabu->env, "PATH") ?
+	tabu->env : tabu->envl, "PATH")))
 		return ;
 	if (!(bin = ft_strsplit(b_path, ':')))
 		return ;

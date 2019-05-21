@@ -20,7 +20,7 @@
 
 int				is_proper_number(char *str)
 {
-	if (str && *str == '-')
+	if (str && (*str == '-' || *str == '+'))
 		str++;
 	while (str && *str)
 	{

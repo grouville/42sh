@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/06 23:35:03 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/03 00:08:55 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:07:24 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -77,7 +77,7 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	if (!cd_is_recheable(*envp, path_dest, dir))
 	{
 		ft_strdel(&path_dest);
-		return (0);
+		return (1);
 	}
 	chdir(path_dest);
 	if (abs_path)
@@ -94,8 +94,10 @@ int		cd_move(char *path_dest, char *dir, char ***envp, BOOL abs_path)
 	return (EXIT_SUCCESS);
 }
 
-BOOL	buildin_cd_opt(char **cmd, int *i)
+BOOL	buildin_cd_opt(char **cmd, int *i, char **tmp, char **path_dest)
 {
+	*tmp = NULL;
+	*path_dest = NULL;
 	*i = 1;
 	while (cmd[*i] != NULL && cmd[*i][0] == '-' && cmd[*i][1] != '\0')
 		(*i)++;
@@ -112,11 +114,8 @@ int		builtin_cd(char **cmd, char ***envp)
 	char	*path_dest;
 	int		i;
 	char	*tmp;
-	int		ret;
 
-	tmp = NULL;
-	abs_path = buildin_cd_opt(cmd, &i);
-	path_dest = NULL;
+	abs_path = buildin_cd_opt(cmd, &i, &tmp, &path_dest);
 	if (!cmd[i] && get_envp(*envp, "HOME") == NULL)
 		write(2, "42sh: cd: HOME not set\n", 23);
 	else if (!cmd[i])
@@ -133,6 +132,5 @@ int		builtin_cd(char **cmd, char ***envp)
 	else
 		path_dest = ft_strdup(cmd[i]);
 	ft_strdel(&tmp);
-	ret = !path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path);
-	return (ret);
+	return (!path_dest ? 0 : cd_move(path_dest, cmd[i], envp, abs_path));
 }

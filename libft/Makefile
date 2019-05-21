@@ -6,7 +6,7 @@
 #    By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+      #
 #                                                  #+#   #+    #+    #+#       #
 #    Created: 2018/03/14 01:36:40 by ythollet     #+#   ##    ##    #+#        #
-#    Updated: 2019/04/04 12:57:19 by dewalter    ###    #+. /#+    ###.fr      #
+#    Updated: 2019/05/05 14:13:39 by dewalter    ###    #+. /#+    ###.fr      #
 #                                                          /                   #
 #                                                         /                    #
 # **************************************************************************** #
@@ -77,8 +77,7 @@ $(NAME) : $(OBJ)
 
 ./%.o : ./%.c
 	@gcc $(CFLAGS) -I $(DIR_INC) -c $< -o $@
-	@printf "$(VERT)Created $@\n"\
-
+	@printf "\e[?25l\e[J$(VERT)Created $@\r"\
 
 clean :
 	@rm -rf $(OBJ)

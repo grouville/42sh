@@ -1,41 +1,32 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   job_is.c                                         .::    .:/ .      .::   */
+/*   ft_tools2.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2019/04/17 22:53:51 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 18:52:57 by gurival-    ###    #+. /#+    ###.fr     */
+/*   Created: 2018/12/11 01:53:07 by ythollet     #+#   ##    ##    #+#       */
+/*   Updated: 2019/02/16 08:23:05 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-/*
-*** - Aim of the function : retrieve the pointer of the struct to avoid using
-*** - a global
-*/
-
-t_js	*getter_job(void)
+char	**ft_arrjoin(char **arr1, char **arr2)
 {
-	static t_js job = (t_js) {.first_job = 0, .shell_pgid = 0,
+	int		cursor_arrs;
+	int		cursor_all_env;
+	char	**all_env;
 
-	{ .c_iflag = 0, .c_oflag = 0, .c_cflag = 0, .c_lflag = 0 },
-	.shell_terminal = 0, .shell_is_interactive = 0};
-	return (&job);
-}
-
-int		put_job_done(t_job *j)
-{
-	t_cmd *p;
-
-	p = j->cmds;
-	while (p)
-	{
-		p->done = 1;
-		p = p->next_cmd;
-	}
-	return (1);
+	cursor_arrs = 0;
+	cursor_all_env = 0;
+	all_env = malloc(sizeof(char *) * (ft_arrlen(arr1) + ft_arrlen(arr2) + 1));
+	while (arr1[cursor_arrs])
+		all_env[cursor_all_env++] = ft_strdup(arr1[cursor_arrs++]);
+	cursor_arrs = 0;
+	while (arr2[cursor_arrs])
+		all_env[cursor_all_env++] = ft_strdup(arr2[cursor_arrs++]);
+	all_env[cursor_all_env] = NULL;
+	return (all_env);
 }

@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/05 23:20:46 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/05/05 23:20:46 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:21:40 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -55,7 +55,7 @@ char	*check_path_cmd(char *exec_path, char *exec)
 		ret = (char *)-3;
 	else if (exec && ft_isdir(exec))
 		ret = (char *)-1;
-	else if (exec  && exec[0] == '/' && access(exec, X_OK) != -1)
+	else if (exec && exec[0] == '/' && access(exec, X_OK) != -1)
 		ret = ft_strdup(exec);
 	else if (exec && exec[0] == '/' && stat(exec, &buffer) == 0 &&
 				access(exec, X_OK) == -1)
@@ -64,6 +64,17 @@ char	*check_path_cmd(char *exec_path, char *exec)
 		ret = (char *)-2;
 	ft_strdel(&exec_path);
 	return (ret);
+}
+
+char	*shell_check_binaire(char *exec)
+{
+	char	*tmp;
+	char	*path_binaire;
+
+	tmp = get_cur_dir();
+	path_binaire = ft_strjoin_mltp(3, tmp, "/", exec + 2);
+	ft_strdel(&tmp);
+	return (check_path_cmd(path_binaire, exec + 2));
 }
 
 /*
@@ -80,6 +91,8 @@ char	*shell_getpathexec(char *exec, char **all_env)
 
 	if (exec == NULL || !ft_strcmp(".", exec) || !ft_strcmp("..", exec))
 		return (NULL);
+	if (exec[0] == '.' && exec[1] == '/')
+		return (shell_check_binaire(exec));
 	all_path = ft_strsplit(get_envp(all_env, "PATH"), ':');
 	exec_path = NULL;
 	i = 0;

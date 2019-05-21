@@ -13,6 +13,22 @@
 
 #include "shell.h"
 
+void	shell_add_envl_exec(char **envl_to_add, t_shell *shell)
+{
+	char	*var;
+	char	*value;
+	int		i;
+
+	i = 0;
+	while (envl_to_add[i])
+	{
+		var = get_var(envl_to_add[i]);
+		value = get_value(envl_to_add[i]);
+		shell->envp = append_key_env(shell->envl, var, value);
+		i++;
+	}
+}
+
 void	shell_prcs_sigint(int signum)
 {
 	(void)signum;
@@ -22,27 +38,9 @@ void	shell_prcs_sigint(int signum)
 void	shell_ret(t_cmd *elem, t_shell *shell)
 {
 	char	*tmp;
-	int		ret;
 
-	ret = 0;
-	if (elem->ret == 256 || elem->bad_substitution || elem->ret == 1)
-		ret = 1;
-	else if (elem->ret == 4735)
-		ret = 146;
-	else if (elem->ret == 16384)
-		ret = 64;
-	else if (elem->ret == 32256)
-		ret = 126;
-	else if (elem->ret == 32512)
-		ret = 127;
-	else if (elem->ret == 3)
-		ret = 131;
-	else if (elem->ret == 9)
-		ret = 137;
-	else if (elem->ret == 11)
-		ret = 139;
-	if (ret >= 0)
-		shell->ret = ret;
+	if (elem->ret >= 0)
+		shell->ret = elem->ret;
 	tmp = ft_itoa(shell->ret);
 	if (!(check_replace_env_variable(&shell->envl, "?", tmp)))
 		shell->envl = append_key_env(shell->envl, "?", tmp);

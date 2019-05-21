@@ -6,91 +6,68 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/21 22:44:23 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/01/21 22:44:23 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:30:22 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	shell_exec_print_error(t_cmd *elem)
-{
-	if (ft_strcmp("not found", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: command not found\n", elem->args[0]);
-	else if (ft_strcmp("directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Is a directory\n", elem->args[0]);
-	else if (ft_strcmp("file or directory", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: No such file or directory\n",
-				   elem->args[0]);
-	else if (ft_strcmp("no allowed", elem->exec) == 0)
-		ft_dprintf(2, "42sh: %s: Permission denied\n", elem->args[0]);
-}
-
-int		shell_exec_error(t_cmd *elem)
-{
-	int ret;
-
-	ret = 1;
-	if (elem->exec)
-	{
-		shell_exec_print_error(elem);
-		if (ft_strcmp("no allowed", elem->exec) == 0 ||
-			ft_strcmp("directory", elem->exec) == 0)
-			exit(126);
-		else if (ft_strcmp("file or directory", elem->exec) == 0 ||
-				 ft_strcmp("not found", elem->exec) == 0)
-			exit(127);
-		else
-			ret = 0;
-	}
-	return (ret);
-}
-
 void	shell_child(t_cmd *elem, t_shell *shell, t_job *job)
 {
 	pid_t	pid;
 	t_js	*jsig;
-	int 	builtin;
 
 	jsig = getter_job();
 	if (jsig->shell_is_interactive)
 	{
-		/* Put the process into the process group and give the process group
-		   the terminal, if appropriate.
-		   This has to be done both by the shell and in the individual
-		   child processes because of potential race conditions.  */
-		pid = getpid ();
-		setpgid (pid, (job->pgid == 0) ? pid : job->pgid);
+		pid = getpid();
+		setpgid(pid, (job->pgid == 0) ? pid : job->pgid);
 		if (job->sep != SPL_SPRLU)
-			tcsetpgrp (jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
-
-		/* Set the handling for job control signals back to the default.  */
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
+			tcsetpgrp(jsig->shell_terminal, (job->pgid == 0) ? pid : job->pgid);
+		child_signals_to_dfl();
 	}
 	if (elem->bad_substitution)
 		exit(EXIT_FAILURE);
 	if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 		exit(EXIT_FAILURE);
-	//read_lexing(elem);
+	if (elem->envl_exec)
+		shell_add_envl_exec(elem->envl_exec, shell);
 	shell_plomberie(elem->process);
-	if (!(builtin = shell_builtin(elem, shell)) && !shell_exec_error(elem))
+	if (shell_is_builtin(elem))
+		shell_builtin(elem, shell);
+	else if (!shell_exec_error(elem))
 		execve(elem->exec, elem->args, shell->envp);
 	exit(EXIT_SUCCESS);
 }
 
-int		shell_father(int pid_child, t_cmd *elem)
+int		right_return(int status)
+{
+	int res;
+
+	res = 0;
+	if (WIFEXITED(status))
+		res = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		res = manage_sig_term_ret(WTERMSIG(status));
+	else if (status == 4735) //Ctrl-Z
+		return (4735);
+	return (res);
+}
+
+int		shell_father(int pid_child, t_cmd *elem, t_job *job)
 {
 	int status;
+	int ret;
 
-	status = -4735;
-	if (elem->sep != SPL_SPRLU)
+	ret = -4735;
+	if (job->sep != SPL_SPRLU)
+	{
 		waitpid(pid_child, &status, WUNTRACED); //WUNTRACED pour le Ctrl-Z
-	return (status);
+		if (elem->sep != SPL_PIPE)
+			ret = right_return(status);
+	}
+	return (ret);
 }
 
 /*
@@ -106,14 +83,14 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	if ((child = fork()) == 0)
 		shell_child(elem, shell, job);
 	else
-		elem->ret = shell_father(child, elem);
+		elem->ret = shell_father(child, elem, job);
 	if (elem->ret == 4735 || job->sep == SPL_SPRLU)
 	{
 		elem->stopped = 1;
 		elem->done = 0;
 		job->running = 999;
 	}
-	if (elem->ret == 3)
+	if (elem->ret == 131)
 		ft_dprintf(2, "Quit : 3\n");
 	jsig = getter_job();
 	elem->pid = child;
@@ -121,7 +98,7 @@ int		shell_execve(t_cmd *elem, t_shell *shell, t_job *job)
 	{
 		if ((job->sep == SPL_SPRLU || elem->ret == 4735) && !job->pgid)
 			job->pgid = child;
-		setpgid (child, job->pgid);
+		setpgid(child, job->pgid);
 	}
 	return (elem->ret);
 }
@@ -143,7 +120,7 @@ int		shell_exec(t_cmd *elem, t_shell *shell, t_job *job)
 
 	is_builtin = 0;
 	if (job->sep != SPL_SPRLU && !elem->bad_substitution &&
-			(is_builtin = shell_is_builtin(elem, shell)))
+			(is_builtin = shell_is_builtin(elem)))
 	{
 		if (!shell_read_input(elem, shell) || !shell_set_output(elem, shell))
 			return (1);

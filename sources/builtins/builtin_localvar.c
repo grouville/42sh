@@ -13,19 +13,35 @@
 
 #include "shell.h"
 
-char		**del_locvars(char **args, int i)
+char		**save_locvars(char **args, int nb_locvar)
+{
+	char	**ret;
+	int		j;
+
+	ret = (char **)malloc(sizeof(char *) * (nb_locvar + 1));
+	ret[nb_locvar] = NULL;
+	j = 0;
+	while (j < nb_locvar)
+	{
+		ret[j] = ft_strdup(args[j]);
+		j++;
+	}
+	return (ret);
+}
+
+char		**del_locvars(char ***args, int i)
 {
 	int		len;
 	char	**ret;
 	int		j;
 
-	len = ft_arrlen(args);
+	len = ft_arrlen(*args);
 	ret = (char **)malloc(sizeof(char *) * (len - i + 1));
 	j = 0;
-	while (args[i])
-		ret[j++] = ft_strdup(args[i++]);
+	while ((*args)[i])
+		ret[j++] = ft_strdup((*args)[i++]);
 	ret[j] = NULL;
-	ft_arrdel(&args);
+	ft_arrdel(args);
 	return (ret);
 }
 
@@ -35,20 +51,23 @@ char		**del_locvars(char **args, int i)
 ** args_raw permet de checker si l'arg est réellement un var ("arg"=notvar)
 */
 
-int			builtin_localvar(char ***ptn_args, char **args_raw)
+int			builtin_localvar(t_cmd *elem)
 {
 	int		i;
 	char	**args;
 
-	args = *ptn_args;
+	if (!(args = elem->args))
+		return (0);
 	if (!ft_strchr(args[0], '='))
 		return (0);
 	i = 0;
 	while (args[i])
 	{
-		if (!ft_strchr(args[i], '=') || !is_var(args_raw[i]))
+		if ((args[i] && !ft_strchr(args[i], '=')) || (elem->args_raw[i] &&
+				!is_var(elem->args_raw[i])))
 		{
-			*ptn_args = del_locvars(args, i);
+			elem->envl_exec = save_locvars(args, i);
+			elem->args = del_locvars(&elem->args, i);
 			return (0);
 		}
 		i++;

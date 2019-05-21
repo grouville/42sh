@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/02/23 20:20:21 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/02/23 20:20:21 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 18:31:15 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -44,7 +44,7 @@ void	clean_redi(t_output **redi)
 	free(*redi);
 }
 
-int 	clean_jobs(t_job **jobs)
+int		clean_jobs(t_job **jobs)
 {
 	t_job	*prev;
 
@@ -62,39 +62,6 @@ int 	clean_jobs(t_job **jobs)
 	return (-1);
 }
 
-void	clean_cmd(t_cmd **cmd)
-{
-	t_cmd	*tmp;
-
-	if (cmd && *cmd)
-	{
-		while ((*cmd))
-		{
-			ft_arrdel(&(*cmd)->args);
-			ft_arrdel(&(*cmd)->args_raw);
-			clean_arr_mlti((*cmd)->hrdc);
-			clean_arr_mlti((*cmd)->input);
-			ft_strdel(&(*cmd)->process.fd_stdin);
-			ft_strdel(&(*cmd)->process.fd_stdout);
-			ft_strdel(&(*cmd)->process.fd_stderr);
-			if ((int)(*cmd)->process.stdin_send != -1 &&
-				(int)(*cmd)->process.stdin_send != -2)
-				ft_strdel(&(*cmd)->process.stdin_send);
-			ft_strdel(&(*cmd)->exec);
-			if ((*cmd)->output)
-				clean_redi(&((*cmd)->output));
-			if (!(tmp = (*cmd)->next_cmd))
-			{
-				free(*cmd);
-				return ;
-			}
-			free(*cmd);
-			*cmd = tmp;
-		}
-		*cmd = NULL;
-	}
-}
-
 int		shell_clean_data(t_cmd **cmd, t_shell *shell, BOOL hrdc_tmp)
 {
 	t_cmd *start;
@@ -107,4 +74,22 @@ int		shell_clean_data(t_cmd **cmd, t_shell *shell, BOOL hrdc_tmp)
 	if (hrdc_tmp)
 		ft_strdel(&shell->hrdc_tmp);
 	return (1);
+}
+
+void	clean_jobs_all(void)
+{
+	t_job	*curr;
+	t_job	*tmp;
+	t_js	*jsig;
+
+	jsig = getter_job();
+	curr = jsig->first_job->next;
+	tmp = jsig->first_job;
+	while (curr)
+	{
+		tmp = curr->next;
+		free_job(&curr, NULL);
+		curr = tmp;
+	}
+	free(jsig->first_job);
 }

@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/05/23 13:13:48 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/02 07:48:01 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 23:07:00 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,25 +27,6 @@ int				check_usage(char *cmd)
 	{
 		ft_dprintf(2, "fg: usage: fg [job_spec]\n");
 		return (1);
-	}
-	return (0);
-}
-
-/*
-*** - Aim of the function
-*** - Check if arg is a number
-*/
-
-int				is_number(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (!ft_isdigit(cmd[i]))
-			return (1);
-		i++;
 	}
 	return (0);
 }
@@ -159,7 +140,7 @@ int				ft_builtin_fg(char **cmd)
 		if (check_if_job_exists(cmd[1], &j))
 			return (1);
 	}
-	put_job_in_foreground(j, job_is_stopped(j) ? 1 : 0); // && j->running
+	put_job_in_foreground(j, job_is_stopped(j) && shell_nothere(j) ? 1 : 0);
 	if (ft_strcmp("cat", j->cmds->args[0]) == 0)
 		ft_putchar_fd('\n', 1);
 	return (0);

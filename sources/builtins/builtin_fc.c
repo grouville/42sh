@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/14 13:54:45 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/05/04 10:39:29 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 22:19:51 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -31,17 +31,6 @@ static int		builtin_fc_init_op(char **args, char **op)
 	return (i);
 }
 
-int			builtin_fc_correct_ret(ret)
-{
-	if (ret == 131)
-		ret = 3;
-	else if (ret == 146)
-		ret = 4735;
-	else
-		ret *= 256;
-	return (ret);
-}
-
 static int		builtin_fc_exit(t_fc **fc)
 {
 	int		ret;
@@ -51,6 +40,8 @@ static int		builtin_fc_exit(t_fc **fc)
 	ft_strdel(&(*fc)->first);
 	ft_strdel(&(*fc)->last);
 	ft_strdel(&(*fc)->op);
+	ft_strdel(&(*fc)->old);
+	ft_strdel(&(*fc)->new);
 	while ((*fc)->cmd_list)
 	{
 		tmp = (*fc)->cmd_list->next;
@@ -60,7 +51,6 @@ static int		builtin_fc_exit(t_fc **fc)
 	}
 	free((*fc));
 	unlink("/tmp/.42sh-fc_cmd_list");
-	ret = builtin_fc_correct_ret(ret);
 	return (ret);
 }
 
@@ -120,13 +110,14 @@ int				builtin_fc(char **args, t_shell *shell)
 	if (!builtin_fc_init(&fc, shell, args))
 	{
 		builtin_fc_search_first_and_last(args, fc);
+		if (fc->first && fc->op && !ft_strchr(fc->op, 'l') &&
+		ft_strchr(fc->op, 's'))
+			buitlin_fc_substitution_get_old_new(fc);
 		if (!fc->first || (fc->first &&
 		!(fc->ret = builtin_fc_search_occurence(fc, shell->hist))))
 			if (!fc->op || ((ft_strchr(fc->op, 'e') || ft_strchr(fc->op, 's'))
 			&& !ft_strchr(fc->op, 'l')))
-			{
 				builtin_fc_execute_commands(fc, shell);
-			}
 	}
 	return (builtin_fc_exit(&fc));
 }

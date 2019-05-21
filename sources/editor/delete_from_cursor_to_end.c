@@ -17,13 +17,17 @@ void			delete_from_cursor_to_end(t_editor *ed)
 {
 	char *tmp;
 
+	tmp = NULL;
 	ft_strdel(&ed->clipboard);
 	ft_putstr("\E[0J");
 	tmp = ft_strsub(ed->hist->cmd, 0,
 	ft_strlen(ed->hist->cmd) - ft_strlen(ed->hist->cmd + ed->cursor_str_pos));
 	ed->clipboard = ft_strdup(ed->hist->cmd + ed->cursor_str_pos);
 	ft_strdel(&(ed->hist->cmd));
-	ed->hist->cmd = ft_strdup(tmp);
+	if (ft_strlen(tmp))
+		ed->hist->cmd = tmp;
+	else
+		ft_strdel(&tmp);
 	ed->last_char = ed->cur_col;
 	ed->last_row = ed->cur_row;
 	ed->cursor_str_pos = ft_strlen(ed->hist->cmd);

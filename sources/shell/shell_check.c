@@ -13,35 +13,6 @@
 
 #include "shell.h"
 
-void	shell_prepare_alias(t_cmd *elem, char *alias_var)
-{
-	int			nb_arg;
-	char		**args;
-	int			i;
-	int			n;
-	char		*tmp;
-
-	tmp = alias_var;
-	if (ft_strchr("'\"", alias_var[0]))
-	{
-		alias_var++;
-		alias_var[ft_strlen(alias_var) - 1] = '\0';
-	}
-	nb_arg = get_nbarg(alias_var, 0);
-	args = (char **)malloc(sizeof(char *) * (nb_arg + ft_arrlen(elem->args)));
-	args[nb_arg + ft_arrlen(elem->args) - 1] = NULL;
-	i = 0;
-	while (i < nb_arg)
-		args[i++] = get_arg(&alias_var, elem);
-	ft_strdel(&tmp);
-	n = 1;
-	while (elem->args[n])
-		args[i++] = ft_strdup(elem->args[n++]);
-	i = 0;
-	ft_arrdel(&elem->args);
-	elem->args = args;
-}
-
 BOOL	shell_hrdc_quotesub(t_cmd *cmd, t_shell *shell, t_prompt *prompt)
 {
 	int i;
@@ -64,9 +35,6 @@ BOOL	cmd_check(t_cmd **cmd, t_shell *shell, t_prompt *prompt)
 	next = *cmd;
 	while ((next = next->next_cmd))
 	{
-		if (get_envp(shell->alias, next->args[0]))
-			shell_prepare_alias(next,
-							ft_strdup(get_envp(shell->alias, next->args[0])));
 		if (next->hrdc && ((int)next->hrdc[0] < -3 || (int)next->hrdc[0] > -1))
 			return (shell_hrdc_quotesub((*cmd = next), shell, prompt));
 	}

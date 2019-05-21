@@ -49,7 +49,7 @@ void	shell_save_histo(t_shell *shl)
 void	shell_check_backslash_end(char **line)
 {
 	int		i;
-	char 	*del;
+	char	*del;
 
 	i = 0;
 	while (*line && (*line)[i])
@@ -78,7 +78,9 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 	}
 	if (!hrdc_fill(prmt, cmd, shl, ret) && !check_shrt(prmt, ret, shl))
 		return (-1);
-	shell_check_backslash_end(&shl->str);
+	if (*prmt == PROMPT || *prmt == BACKSLASH || *prmt == D_QUOTE)
+		shell_check_backslash_end(&shl->str);
+	shl->str = shell_alias(shl->str, shl->alias);
 	if ((shl->str && ((*cmd) = shell_split(shl->str, shl->envp, prmt))) ||
 			(*prmt == PROMPT && *cmd && ((*cmd)->process).stdin_send))
 	{
@@ -86,7 +88,7 @@ int		shell_command_execution(t_shell *shl, t_cmd **cmd, t_shortcut ret,
 			return (1);
 		shell_save_histo(shl);
 		if (check_syntax_err(*cmd))
-			return(shell_clean_data(cmd, shl, 0));
+			return (shell_clean_data(cmd, shl, 0));
 		else if (shell_process(jobs, cmd, shl) == -1)
 			return (-1);
 	}
@@ -105,12 +107,13 @@ int		main(void)
 	shell_init(&shl, &prmt, &cmd, environ, &jobs);
 	while ((ret = get_stdin(shl, &prmt)) != -1)
 	{
-		shl->count += 1;
+		if (prmt == PROMPT)
+			shl->count += 1;
 		if (!shl->str && prmt == PROMPT)
 			do_job_notification(&cmd, shl, NULL);
 		ret = shell_command_execution(shl, &cmd, ret, &prmt, jobs);
-		if (ret == -1 && !check_jobs_on_exit(&cmd, shl))
-				break ;
+		if (ret == -1 && !check_jobs_on_exit(shl))
+			break ;
 		if (shl->str && prmt == PROMPT)
 			ft_strdel(&shl->str);
 	}

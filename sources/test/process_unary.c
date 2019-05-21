@@ -55,7 +55,7 @@ void			check_option_norm(t_test_tok tok, struct stat buf, int *ret,
 	else if (tok == T_X)
 		*ret = (buf.st_mode & S_IXUSR ? 0 : 1);
 	else if (tok == T_Z)
-		*ret = (ft_strcmp(arg, " ") ? 0 : 1);
+		*ret = (!ft_strcmp(arg, " ") ? 0 : 1);
 }
 
 /*
@@ -87,7 +87,7 @@ void			check_option(t_test_tok tok, struct stat buf, int *ret,
 	else if (tok == T_G)
 		*ret = (buf.st_mode & S_ISGID ? 0 : 1);
 	else if (tok == T_LL)
-		*ret = (buf.st_mode & S_IFLNK ? 0 : 1);
+		*ret = (S_ISLNK(buf.st_mode) ? 0 : 1);
 	else if (tok == T_P)
 		*ret = (S_ISFIFO(buf.st_mode) ? 0 : 1);
 	else if (tok == T_R)
@@ -117,14 +117,16 @@ int				process_unary(t_test_tok tok, char *arg)
 	ret = 0;
 	buf.st_mode = 0;
 	buf.st_size = 0;
-	path = find_file_path(arg);
-	if ((stat(path, &buf) == -1) &&
-		(tok == T_E || tok == T_R || tok == T_LL || tok == T_G
-		|| tok == T_S || tok == T_U || tok == T_W || tok == T_X))
-	{
-		ft_strdel(&path);
+	if (*arg == '/')
+		path = ft_strdup(arg);
+	else
+		path = find_file_path(arg);
+	if ((stat(path, &buf) == -1) && (tok == T_E || tok == T_R
+		|| tok == T_G || tok == T_S || tok == T_U || tok == T_W
+		|| tok == T_X) && !ft_strdelint(&path))
 		return (1);
-	}
+	else if (tok == T_LL && lstat(path, &buf) == -1 && !ft_strdelint(&path))
+		return (1);
 	check_option(tok, buf, &ret, arg);
 	free(path);
 	return (ret);

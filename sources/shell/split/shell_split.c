@@ -58,6 +58,22 @@ BOOL	ft_isempty(char *str)
 		return (0);
 }
 
+int		shell_split_err(t_cmd *cmd, t_prompt *prompt)
+{
+	t_cmd *tmp;
+
+	if (!cmd->args || (ft_strlen(*cmd->args) && (cmd->sep == SPL_PIPE ||
+			cmd->sep == DBL_PIPE || cmd->sep == DBL_SPRLU)))
+	{
+		*prompt = B_QUOTE;
+		tmp = cmd->start;
+		clean_cmd(&cmd->start->next_cmd);
+		free(tmp);
+		return (0);
+	}
+	return (1);
+}
+
 /*
 ** split line jusqu'au prochain delimiteur
 ** Le premier maillon start de {cmd} (pointé par tous les autres) est vide.
@@ -66,7 +82,6 @@ BOOL	ft_isempty(char *str)
 t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 {
 	t_cmd	*cmd;
-	t_cmd	*tmp;
 
 	if (ft_isempty(line) || !iscomplet(line, prompt))
 		return (NULL);
@@ -80,15 +95,8 @@ t_cmd	*shell_split(char *line, char **envp, t_prompt *prompt)
 		if (!stdout_to(cmd->output))
 			break ;
 	}
-	if (!cmd->args || (ft_strlen(*cmd->args) && (cmd->sep == SPL_PIPE ||
-			cmd->sep == DBL_PIPE || cmd->sep == DBL_SPRLU)))
-	{
-		*prompt = B_QUOTE;
-		tmp = cmd->start;
-		clean_cmd(&cmd->start->next_cmd);
-		free(tmp);
+	if (shell_split_err(cmd, prompt) == 0)
 		return (NULL);
-	}
 	else
 		*prompt = PROMPT;
 	return (cmd->start);

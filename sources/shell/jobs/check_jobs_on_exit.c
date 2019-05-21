@@ -6,7 +6,7 @@
 /*   By: dewalter <marvin@le-101.fr>                +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/03/16 11:01:40 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 10:48:34 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 18:36:59 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -18,47 +18,47 @@
 *** - Check jobs on exit. If one is stopped, returns 1
 */
 
-int     check_any_stopped_job_left(void)
+int		check_any_stopped_job_left(void)
 {
-    t_js	    *jsig;
-    t_job       *job;
-    t_cmd       *elem;
+	t_js		*jsig;
+	t_job		*job;
+	t_cmd		*elem;
 
 	jsig = getter_job();
-    job = jsig->first_job;
-    while (job)
-    {
-        elem = job->cmds;
-        while (elem)
-        {
-            if (elem->stopped && !elem->done)
-                return (1);
-            elem = elem->next_cmd;
-        }
-        job = job->next;
-    }
-    return (0);
+	job = jsig->first_job;
+	while (job)
+	{
+		elem = job->cmds;
+		while (elem)
+		{
+			if (elem->stopped && !elem->done)
+				return (1);
+			elem = elem->next_cmd;
+		}
+		job = job->next;
+	}
+	return (0);
 }
 
-void    kill_all_processes(void)
+void	kill_all_processes(void)
 {
-    t_js	    *jsig;
-    t_job       *job;
-    t_cmd       *elem;
+	t_js		*jsig;
+	t_job		*job;
+	t_cmd		*elem;
 
 	jsig = getter_job();
-    job = jsig->first_job;
-    while (job)
-    {
-        elem = job->cmds;
-        while (elem)
-        {
-            if (elem->stopped && !elem->done)
-                kill(elem->pid, SIGKILL);
-            elem = elem->next_cmd;
-        }
-        job = job->next;
-    }
+	job = jsig->first_job;
+	while (job)
+	{
+		elem = job->cmds;
+		while (elem)
+		{
+			if (elem->stopped && !elem->done)
+				kill(elem->pid, SIGKILL);
+			elem = elem->next_cmd;
+		}
+		job = job->next;
+	}
 }
 
 /*
@@ -66,21 +66,20 @@ void    kill_all_processes(void)
 *** - Check jobs on exit. If one is stopped, returns 1
 */
 
-int     check_jobs_on_exit(t_cmd **cmd, t_shell	*shl)
+int		check_jobs_on_exit(t_shell *shl)
 {
-    static int  boul = 0;
-    int         is_stopped;
+	static int	boul = 0;
+	int			is_stopped;
 
-//	do_job_notification(cmd, shl, NULL);
-    is_stopped = check_any_stopped_job_left();
-    if (is_stopped && !boul)
-    {
-        ft_dprintf(2, "there are stopped jobs left\n");
-        ft_strdel(&shl->str);
-        boul++;
-        return (1);
-    }
-    else if (is_stopped && boul)
-        kill_all_processes();
-    return (0);
+	is_stopped = check_any_stopped_job_left();
+	if (is_stopped && !boul)
+	{
+		ft_dprintf(2, "there are stopped jobs left\n");
+		ft_strdel(&shl->str);
+		boul++;
+		return (1);
+	}
+	else if (is_stopped && boul)
+		kill_all_processes();
+	return (0);
 }

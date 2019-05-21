@@ -45,14 +45,14 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 		int last_nb, t_data *hist)
 {
 	t_data	*tmp;
-	int		first_occurence;
+	int		first;
 
 	tmp = hist;
-	first_occurence = 0;
+	first = 0;
 	while (tmp)
 	{
-		if ((!first_occurence && first_nb == tmp->nb && (first_occurence = 1))
-		|| (first_occurence && last_nb && first_nb != tmp->nb))
+		if ((!first && first_nb == tmp->nb && (first = 1))
+		|| (first && last_nb && first_nb != tmp->nb && last_nb <= tmp->nb))
 		{
 			if (fc->fd >= 0 && write(fc->fd, tmp->cmd, ft_strlen(tmp->cmd))
 			&& write(fc->fd, "\n", 1))
@@ -64,10 +64,10 @@ static void		builtin_fc_browse_history_for_occurence(t_fc *fc, int first_nb,
 				ft_dprintf(1, "%s\n", tmp->cmd);
 			}
 		}
-		if (first_occurence && (!last_nb || first_nb == last_nb ||
+		if (first && (!last_nb || first_nb == last_nb ||
 		last_nb == tmp->nb))
 			break ;
-		tmp = first_occurence && last_nb > first_nb ? tmp->next : tmp->prev;
+		tmp = first && last_nb > first_nb ? tmp->next : tmp->prev;
 	}
 }
 
@@ -96,6 +96,23 @@ void			builtin_fc_search_first_and_last(char **args, t_fc *fc)
 		fc->first = ft_strdup("-1");
 }
 
+void			buitlin_fc_substitution_get_old_new(t_fc *fc)
+{
+	if (ft_strchr(fc->first, '='))
+	{
+		fc->old = get_var(fc->first);
+		fc->new = get_value(fc->first);
+		if (fc->last)
+			ft_swap((int*)&fc->first, (int*)&fc->last);
+		else
+		{
+			ft_strdel(&fc->first);
+			fc->first = ft_strdup("-1");
+		}
+	}
+	ft_strdel(&fc->last);
+}
+
 int				builtin_fc_search_occurence(t_fc *fc, t_data *hist)
 {
 	int first_nb;
@@ -104,7 +121,7 @@ int				builtin_fc_search_occurence(t_fc *fc, t_data *hist)
 	first_nb = 0;
 	last_nb = 0;
 	if (((first_nb = builtin_search_occurence_pos(fc,
-	hist, 0)) != -1) && fc->last)
+	hist, 0)) != -1) && fc->last && (!fc->op || !ft_strchr(fc->op, 's')))
 		last_nb = builtin_search_occurence_pos(fc, hist, 1);
 	if (first_nb == -1 || last_nb == -1 || ((!fc->op || (fc->op
 	&& (ft_strchr(fc->op, 'e') || ft_strchr(fc->op, 's'))

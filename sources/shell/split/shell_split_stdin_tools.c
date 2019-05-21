@@ -32,7 +32,7 @@ void	complete_stdin(char **arg, char quote, char **std_in)
 void	complete_all_stdin(char **arg, char quote, t_cmd *cmd)
 {
 	int		len;
-	char 	*tmp;
+	char	*tmp;
 
 	complete_stdin(arg, quote, cmd->hrdc);
 	complete_stdin(arg, quote, cmd->input);
@@ -45,7 +45,7 @@ void	complete_all_stdin(char **arg, char quote, t_cmd *cmd)
 	}
 }
 
-int			len_stdin(char *str, char quote)
+int		len_stdin(char *str, char quote)
 {
 	int i;
 
@@ -67,7 +67,7 @@ int			len_stdin(char *str, char quote)
 	return (i);
 }
 
-int			shell_stdin_sub(char **arg, int i, char ***std_in)
+int		shell_stdin_sub(char **arg, int i, char ***std_in)
 {
 	int		last;
 	char	quote;

@@ -13,7 +13,7 @@
 
 #include "shell.h"
 
-size_t 		shell_argsub_len_var(char *argi)
+size_t		shell_argsub_len_var(char *argi)
 {
 	size_t	len;
 	size_t	accolade;
@@ -28,12 +28,11 @@ size_t 		shell_argsub_len_var(char *argi)
 			len++;
 			break ;
 		}
-
 	}
 	return (len);
 }
 
-char 		*shell_argsub_delaccolade(char *arg)
+char		*shell_argsub_delaccolade(char *arg)
 {
 	char *tmp;
 
@@ -47,10 +46,10 @@ char 		*shell_argsub_delaccolade(char *arg)
 		return (arg);
 }
 
-char 		*clean_value(char *value)
+char		*clean_value(char *value)
 {
-	int 	i;
-	char 	*tmp;
+	int		i;
+	char	*tmp;
 
 	if (value == NULL)
 		return (NULL);
@@ -68,7 +67,8 @@ char 		*clean_value(char *value)
 		i++;
 	}
 	tmp = value + i - 1;
-	ft_strdelchar(&tmp, '\'');
+	if (i > 0 && ft_strlen(tmp) > 0)
+		ft_strdelchar(&tmp, '\'');
 	return (value);
 }
 
@@ -81,7 +81,6 @@ int			shell_argsub_env(char **arg, int i, char **envp, char **envl)
 	tmp = *arg + i;
 	if ((len = shell_argsub_len_var(tmp)) == 1)
 		return (i);
-
 	tmp[0] = '\0';
 	tmp = shell_argsub_delaccolade(ft_strsub(tmp, 1, len - 1));
 	value = get_envp(envp, tmp) ? get_envp(envp, tmp) : get_envp(envl, tmp);

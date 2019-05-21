@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/06/28 20:39:43 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/06/28 20:39:57 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 20:43:08 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -24,11 +24,13 @@
 ** return -2 dans le cas de bad subsitution --> cancel cmd
 */
 
-int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
+int		shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 {
 	int fd[3];
 
 	(*elem)->done = 1;
+	if (shell_add_local_var(*elem, shell))
+		return (1);
 	shell_prepare_args(*elem, shell);
 	shell_save_fd(fd);
 	if ((*elem)->sep == SPL_PIPE)
@@ -50,17 +52,13 @@ int 	shell_process_cmd(t_cmd **elem, t_shell *shell, t_job *job)
 	return (1);
 }
 
-
-
 int		launch_job(t_job *job, t_shell *shell)
 {
 	t_cmd	*elem;
-	t_js	*jsig;
 	BOOL	suspended;
-	int 	ret;
+	int		ret;
 
 	suspended = 0;
-	jsig = getter_job();
 	elem = job->cmds;
 	while (elem)
 	{
@@ -73,8 +71,8 @@ int		launch_job(t_job *job, t_shell *shell)
 			put_process_suspended(job, elem);
 		elem = elem->next_cmd;
 	}
-	if (!jsig->shell_is_interactive)
-		wait_for_job (job);
+	if (!getter_job()->shell_is_interactive)
+		wait_for_job(job);
 	else if (job->sep != SPL_SPRLU)
 		put_job_in_foreground(job, 0);
 	else if (!suspended)
@@ -100,7 +98,7 @@ void	shell_skip_job(t_job *job)
 
 int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 {
-	int 	ret;
+	int		ret;
 	t_job	*job;
 
 	do_job_notification(NULL, shell, cmd);
@@ -127,6 +125,9 @@ int		shell_process(t_job *jobs, t_cmd **cmd, t_shell *shell)
 	return (1);
 }
 
+/*
+** Permet de lire la structure cmd contenu dans chaque job
+*/
 
 void	read_lexing(t_cmd *elem)
 {

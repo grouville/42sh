@@ -99,3 +99,26 @@ void		check_path_loop(char **path_env, char **path, char **str,
 	if (!(*path))
 		*path = NULL;
 }
+
+int			ft_usage_is_good(char *limitor, char *str)
+{
+	int		i;
+	int		n;
+	BOOL	limitor_ok;
+
+	i = 1;
+	while (str[i])
+	{
+		limitor_ok = 0;
+		n = 0;
+		while (limitor[n])
+		{
+			if (str[i] == limitor[n++])
+				limitor_ok = 1;
+		}
+		if (limitor_ok == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}

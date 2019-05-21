@@ -23,7 +23,10 @@ static void		paste_clipboard_into_line(t_editor *ed)
 	ft_strjoin_free(&tmp, ed->clipboard);
 	ft_strjoin_free(&tmp, ed->hist->cmd + ed->cursor_str_pos);
 	ft_strdel(&(ed->hist->cmd));
-	ed->hist->cmd = ft_strdup(tmp);
+	if (ft_strlen(tmp))
+		ed->hist->cmd = tmp;
+	else
+		ft_strdel(&tmp);
 	ft_putstr("\E[J");
 	print_line(ed->hist->cmd, ed->cursor_str_pos, ed->cur_col, ed->ws_col);
 	ed->cursor_str_pos = ft_strlen(ed->hist->cmd);

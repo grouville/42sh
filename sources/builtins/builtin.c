@@ -76,36 +76,10 @@ int		builtin_set(t_shell *shell, char **args)
 	return (EXIT_SUCCESS);
 }
 
-BOOL	shell_is_builtin(t_cmd *elem, t_shell *shell)
-{
-	int i;
-
-	if (elem->args[0] && builtin_localvar(&elem->args, elem->args_raw))
-	{
-		i = 0;
-		while (elem->args[i])
-			builtin_env_add(&shell->envp, &shell->envl, elem->args[i++]);
-		ft_arrdel(&elem->args);
-		return (1);
-	}
-	else if (elem->args[0] && (ft_strcmp("hash", elem->args[0]) == 0 ||
-	!ft_strcmp("echo", elem->args[0]) || !ft_strcmp("cd", elem->args[0]) ||
-	!ft_strcmp("set", elem->args[0]) || !ft_strcmp("unset", elem->args[0]) ||
-	!ft_strcmp("export", elem->args[0]) || !ft_strcmp("type", elem->args[0]) ||
-	!ft_strcmp("alias", elem->args[0]) || !ft_strcmp("fc", elem->args[0]) ||
-	!ft_strcmp("unalias", elem->args[0]) || !ft_strcmp("test", elem->args[0]) ||
-	!ft_strcmp("fg", elem->args[0]) || !ft_strcmp("bg", elem->args[0]) ||
-	!ft_strcmp("jobs", elem->args[0]) ||
-	!ft_strcmp("exit", elem->args[0])) && (elem->done = 1))
-		return (1);
-	else
-		return (0);
-}
-
 void	shell_builtin2(t_cmd *elem, t_shell *shell)
 {
 	if (elem->args && elem->args[0] && ft_strcmp("type", elem->args[0]) == 0)
-		elem->ret = builtin_type(elem->args + 1, shell->envp);
+		elem->ret = builtin_type(elem->args + 1, shell->envp, shell->envl);
 	if (elem->args && elem->args[0] && ft_strcmp("fc", elem->args[0]) == 0)
 		elem->ret = builtin_fc(elem->args + 1, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("test", elem->args[0]) == 0)
@@ -130,7 +104,7 @@ int		shell_builtin(t_cmd *elem, t_shell *shell)
 {
 	int ret;
 
-	ret = shell_is_builtin(elem, shell);
+	ret = shell_is_builtin(elem);
 	if (elem->args && elem->args[0] && ft_strcmp("hash", elem->args[0]) == 0)
 		elem->ret = ft_builtin_hash(elem->args, shell);
 	if (elem->args && elem->args[0] && ft_strcmp("echo", elem->args[0]) == 0)

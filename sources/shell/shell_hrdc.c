@@ -6,7 +6,7 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/02 17:55:46 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/02 17:55:46 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/05 15:56:52 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -78,18 +78,16 @@ void	hrdc_fill_stdin(t_prompt *prompt, t_cmd **cmd, t_shell *shell)
 ** mais remet à NULL si rien
 */
 
-int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd)
+int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd, int nb_line)
 {
-	ft_dprintf(2, "42sh: warning: here-document at line 84 delimited by "
-				"end-of-file (wanted `%s')\n", get_next_hrdc((*cmd)->hrdc));
-	//while (get_next_hrdc((*cmd)->hrdc))
-	//	del_next_hrdc((*cmd)->hrdc);
-	clean_cmd(&(*cmd)->start);
-	*cmd = NULL;
-	//free((*cmd)->hrdc);
-	/*if ((int)(*cmd)->process.stdin_send == -1)
+	ft_dprintf(2, "42sh: warning: here-document at line %d delimited by "
+		"end-of-file (wanted `%s')\n", nb_line, get_next_hrdc((*cmd)->hrdc));
+	while (get_next_hrdc((*cmd)->hrdc))
+		del_next_hrdc((*cmd)->hrdc);
+	free((*cmd)->hrdc);
+	if ((int)(*cmd)->process.stdin_send == -1)
 		(*cmd)->process.stdin_send = NULL;
-	(*cmd)->hrdc = NULL;*/
+	(*cmd)->hrdc = NULL;
 	*prompt = PROMPT;
 	return (1);
 }
@@ -102,7 +100,7 @@ int		hrdc_interrupt_ctrd(t_prompt *prompt, t_cmd **cmd)
 int		hrdc_fill(t_prompt *prompt, t_cmd **cmd, t_shell *shell, t_shortcut ret)
 {
 	if (*prompt == HRDC && ret == CTRLD && !shell->str)
-		return (hrdc_interrupt_ctrd(prompt, cmd));
+		return (hrdc_interrupt_ctrd(prompt, cmd, shell->count));
 	else if (*prompt == HRDC && ret == CTRLC)
 	{
 		*prompt = PROMPT;

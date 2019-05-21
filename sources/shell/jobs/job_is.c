@@ -6,14 +6,14 @@
 /*   By: ythollet <ythollet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/04/17 22:53:51 by ythollet     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/17 22:53:51 by ythollet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 18:55:46 by gurival-    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-# include "shell.h"
+#include "shell.h"
 
-t_job *find_job(pid_t pgid)
+t_job	*find_job(pid_t pgid)
 {
 	t_job	*j;
 	t_js	*jsig;
@@ -33,7 +33,7 @@ t_job *find_job(pid_t pgid)
 ** Return true if all processes in the job have stopped or completed.
 */
 
-int job_is_stopped(t_job *j)
+int		job_is_stopped(t_job *j)
 {
 	t_cmd *p;
 
@@ -51,7 +51,7 @@ int job_is_stopped(t_job *j)
 ** Return true if all processes in the job have completed.
 */
 
-int job_is_completed(t_job *j)
+int		job_is_completed(t_job *j)
 {
 	t_cmd *p;
 
@@ -71,7 +71,7 @@ int job_is_completed(t_job *j)
 ** - returns the corresponding signal
 */
 
-int	job_is_signaled(t_job *j)
+int		job_is_signaled(t_job *j)
 {
 	t_cmd *p;
 
@@ -83,4 +83,23 @@ int	job_is_signaled(t_job *j)
 		p = p->next_cmd;
 	}
 	return (0);
+}
+
+/*
+** Return true if all processes in the job have stopped or completed.
+*/
+
+int		shell_nothere(t_job *j)
+{
+	t_cmd *p;
+
+	p = j->cmds;
+	while (p)
+	{
+		if (p->args && (!ft_strcmp(p->args[0], "./42sh")
+			|| !ft_strcmp(p->args[0], "bash") || !ft_strcmp(p->args[0], "sh")))
+			return (0);
+		p = p->next_cmd;
+	}
+	return (1);
 }

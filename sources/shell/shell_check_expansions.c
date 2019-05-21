@@ -24,7 +24,8 @@ char	*expansions_build_event(char *str)
 	{
 		if (!start && (str)[end] == '!')
 			start = end + 1;
-		else if (start && (str[end] == ' ' || str[end] == '"' || str[end] == '!'))
+		else if (start && (str[end] == ' ' || str[end] == '"' ||
+					str[end] == '!'))
 		{
 			if (str[end] == '!')
 				end++;
@@ -73,7 +74,7 @@ int		check_expansions_new_cmd(t_shell *shell, int i, char **event, char *cmd)
 	len = ft_strlen(new);
 	ft_strjoin_free(&new, shell->str + (i + ft_strlen(*event) + 1));
 	if (ft_atoi(nb))
-	ft_strjoin_free(&new, add + ft_strlen(nb));
+		ft_strjoin_free(&new, add + ft_strlen(nb));
 	ft_strdel(&shell->str);
 	ft_strdel(&nb);
 	shell->str = new;
@@ -122,9 +123,9 @@ BOOL	check_expansions(t_shell *shell)
 		else if (shell->str[d[0]] == d[1] && d[1] != 0)
 			d[1] = 0;
 		if (shell->str[d[0]] == '!' && shell->str[d[0] + 1] != '\"' &&
-		shell->str[d[0] + 1] != ' ' && shell->str[d[0] + 1] && d[1] != '\'')
+		shell->str[d[0] + 1] != ' ' && shell->str[d[0] + 1] && d[1] != '\'' &&
+		shell->str[d[0] + 1] != '=' && (d[2] = 1))
 		{
-			d[2] = 1;
 			if ((d[0] = expansions_add_event(shell, d[0])) == -1)
 				return (1);
 			continue ;

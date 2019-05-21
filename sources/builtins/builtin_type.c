@@ -6,27 +6,33 @@
 /*   By: dewalter <dewalter@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2019/01/28 18:21:28 by dewalter     #+#   ##    ##    #+#       */
-/*   Updated: 2019/04/01 07:42:00 by dewalter    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/05/04 17:50:17 by dewalter    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "shell.h"
 
-void	builtin_type_free(t_type *tp)
+int		builtin_type_free(t_type *tp)
 {
 	int		i;
+	int		ret;
 
 	i = 0;
-	while (tp->bin[i])
-		ft_strdel(&(tp->bin)[i++]);
-	ft_strdel(&tp->bin[i]);
+	ret = tp->match[1];
+	if (tp->bin)
+	{
+		while (tp->bin[i])
+			ft_strdel(&(tp->bin)[i++]);
+		ft_strdel(&tp->bin[i]);
+		free(tp->bin);
+	}
 	ft_strdel(&tp->op);
-	free(tp->bin);
 	free(tp);
+	return (ret);
 }
 
-int		builtin_type_init(t_type **tp, char **envp, char **args)
+int		builtin_type_init(t_type **tp, char **envp, char **envl, char **args)
 {
 	if (!(*tp = (t_type*)malloc(sizeof(t_type))))
 		exit(EXIT_FAILURE);
@@ -40,7 +46,8 @@ int		builtin_type_init(t_type **tp, char **envp, char **args)
 		free(*tp);
 		return (1);
 	}
-	(*tp)->b_path = get_envp(envp, "PATH");
+	(*tp)->b_path = get_envp((check_if_env_var_existing(envp, "PATH") ? envp :
+	envl), "PATH");
 	(*tp)->bin = ft_strsplit((*tp)->b_path, ':');
 	(*tp)->match[1] = 0;
 	return (0);
@@ -71,11 +78,11 @@ void	builtin_type_search_bin(t_type *tp, char **args)
 	}
 }
 
-int		builtin_type(char **args, char **envp)
+int		builtin_type(char **args, char **envp, char **envl)
 {
 	t_type *tp;
 
-	if (builtin_type_init(&tp, envp, args) == 1)
+	if (builtin_type_init(&tp, envp, envl, args) == 1)
 		return (1);
 	while (args[++tp->i] && (tp->j = -1) == -1)
 	{
@@ -96,6 +103,5 @@ int		builtin_type(char **args, char **envp)
 		&& (tp->match[1] = 1))
 			ft_dprintf(2, "42sh: type: %s: not found\n", args[tp->i]);
 	}
-	builtin_type_free(tp);
-	return (tp->match[1]);
+	return (builtin_type_free(tp));
 }
